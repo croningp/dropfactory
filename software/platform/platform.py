@@ -20,7 +20,6 @@ def home():
     Z.home()
     XY.home()
 
-1645
 def cycle():
     XY.move_to([16700, 11200])
     Z.move_to([38000])
