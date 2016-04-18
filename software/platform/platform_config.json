@@ -60,6 +60,19 @@
       "config": {
         "reverted_switch": true,
         "enabled_acceleration": false,
+        "reverted_direction": true,
+        "speed": 6000,
+        "homing_speed": 6000,
+        "max_speed": 2000,
+        "acceleration": 500
+      }
+    },
+    "S2": {
+      "command_id": "S2",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": false,
+        "reverted_direction": true,
         "speed": 6000,
         "homing_speed": 6000,
         "max_speed": 2000,
@@ -87,6 +100,12 @@
         "max_speed": 2000,
         "acceleration": 500
       }
+    },
+    "S3": {
+      "command_id": "S3"
+    },
+    "A1": {
+      "command_id": "A1"
     }
   }
 }
