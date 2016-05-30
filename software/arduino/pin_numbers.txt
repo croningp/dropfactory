@@ -10,7 +10,7 @@ For ramps1.4
 
 #define Z_STEP_PIN         46
 #define Z_DIR_PIN          48
-#define Z_ENABLE_PIN       63
+#define Z_ENABLE_PIN       62
 
 #define Z2_STEP_PIN        36
 #define Z2_DIR_PIN         34

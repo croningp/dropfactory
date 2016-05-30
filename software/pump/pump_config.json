@@ -1,0 +1,66 @@
+{
+  "io": {
+      "port": "/dev/ttyUSB0",
+      "baudrate": 9600,
+      "timeout": 1
+  },
+  "default":{
+      "micro_step_mode": 2,
+      "initialize_mode": "right"
+  },
+  "groups": {
+      "oils": ["dep","octanoic","octanol","pentanol"]
+  },
+  "pumps": {
+      "acetone_oil": {
+        "switch": "0",
+        "volume": 2.5,
+        "top_velocity": 3000
+      },
+      "waste_oil": {
+        "switch": "1",
+        "volume": 12.5,
+        "top_velocity": 3000
+      },
+      "acetone_dish": {
+        "switch": "2",
+        "volume": 5,
+        "top_velocity": 3000
+      },
+      "waste_dish": {
+        "switch": "3",
+        "volume": 12.5,
+        "top_velocity": 3000
+      },
+      "water_dish": {
+        "switch": "4",
+        "volume": 5,
+        "top_velocity": 3000
+      },
+      "surfactant": {
+        "switch": "5",
+        "volume": 5,
+        "top_velocity": 3000
+      },
+      "dep": {
+        "switch": "6",
+        "volume": 1,
+        "top_velocity": 3000
+      },
+      "octanoic": {
+        "switch": "7",
+        "volume": 1,
+        "top_velocity": 3000
+      },
+      "octanol": {
+        "switch": "8",
+        "volume": 1,
+        "top_velocity": 3000
+      },
+      "pentanol": {
+        "switch": "9",
+        "volume": 1,
+        "top_velocity": 3000
+      }
+  }
+}
