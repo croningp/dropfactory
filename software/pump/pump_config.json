@@ -15,7 +15,7 @@
   "pumps": {
       "acetone_oil": {
         "switch": "0",
-        "volume": 2.5
+        "volume": 5
       },
       "waste_oil": {
         "switch": "1",

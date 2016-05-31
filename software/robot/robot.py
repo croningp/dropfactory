@@ -31,10 +31,12 @@ STIRRER = cmdMng.A1
 
 
 def home():
+    SYRINGE.home(wait=False)
+    CLEAN_HEAD_MIXTURE.home(wait=False)
     Z.home()
     XY.home()
-    SYRINGE.home()
-    CLEAN_HEAD_MIXTURE.home()
+    SYRINGE.wait_until_idle()
+    CLEAN_HEAD_MIXTURE.wait_until_idle()
 
 def rotate_geneva_wheels():
     N_STEPS = 200

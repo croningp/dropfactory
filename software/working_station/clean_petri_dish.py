@@ -46,8 +46,9 @@ class CleanPetriDish(Task):
     def empty_dish(self, volume_in_ml=VOLUME_WASTE):
         self.waste_pump.pump(volume_in_ml, from_valve=OUTLET)
 
-    def flush_waste(self, volume_in_ml=VOLUME_WASTE):
-        self.waste_pump.deliver(volume_in_ml ,to_valve=INLET)
+    def flush_waste(self):
+        self.waste_pump.set_valve_position(INLET)
+        self.waste_pump.go_to_volume(0)
 
     def load_water(self):
         self.water_pump.pump(VOLUME_DISH ,from_valve=INLET)
@@ -111,7 +112,7 @@ class CleanPetriDish(Task):
 
         # put the head up and flush waste
         self.wait_until_pumps_idle()
-        self.flush_waste(FINAL_VOLUME_WASTE)
+        self.flush_waste()
         self.raise_cleaning_head()
 
         # wait all is over before returning

@@ -17,6 +17,9 @@ from robot import robot
 
 from working_station.fill_petri_dish import FillPetriDish
 from working_station.clean_petri_dish import CleanPetriDish
+from working_station.clean_oil_parts import CleanOilParts
+from working_station.clean_oil_parts import CleanSyringe
+
 
 import time
 
@@ -28,18 +31,25 @@ XP = {
 pump.controller.smart_initialize()
 
 a = FillPetriDish(pump.controller.surfactant)
-a.launch(XP)
 
 b= CleanPetriDish(robot.CLEAN_HEAD_DISH,
                   pump.controller.waste_dish, pump.controller.water_dish, pump.controller.acetone_dish)
-b.launch(XP)
+
+c= CleanOilParts(robot.CLEAN_HEAD_MIXTURE,
+                  pump.controller.waste_oil, pump.controller.acetone_oil)
+
+d = CleanSyringe(robot.XY, robot.Z, robot.SYRINGE, pump.controller.waste_oil, pump.controller.acetone_oil)
+
+# a.launch(XP)
+# b.launch(XP)
+# c.launch(XP)
 
 start = time.time()
 
 print 'toto'
 
-
-a.wait_until_idle()
-b.wait_until_idle()
+# a.wait_until_idle()
+# b.wait_until_idle()
+# c.wait_until_idle()
 
 print time.time() - start
