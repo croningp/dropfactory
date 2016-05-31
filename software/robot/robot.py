@@ -1,10 +1,15 @@
-from commanduino import CommandManager
-from commanduino.devices.axis import Axis, MultiAxis
+import os
+import inspect
+HERE_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 import logging
 logging.basicConfig(level=logging.INFO)
 
-cmdMng = CommandManager.from_configfile('./platform_config.json')
+from commanduino import CommandManager
+from commanduino.devices.axis import Axis, MultiAxis
+
+configfile = os.path.join(HERE_PATH, 'robot_config.json')
+cmdMng = CommandManager.from_configfile(configfile)
 
 MICROSTEP = 32.0
 LINEAR_STEPPER_UNIT_PER_STEP = 0.0508  # mm/step
