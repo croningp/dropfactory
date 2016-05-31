@@ -19,9 +19,8 @@ INLET = 'E'
 OUTLET = 'I'
 
 VOLUME_DISH = 3.5
-VOLUME_WASTE_SHORT = 5
-VOLUME_WASTE_LONG = 10
-
+VOLUME_WASTE = 5
+FINAL_VOLUME_WASTE = 10
 
 class CleanPetriDish(Task):
 
@@ -38,25 +37,82 @@ class CleanPetriDish(Task):
         self.water_pump.wait_until_idle()
         self.acetone_pump.wait_until_idle()
 
-    def main(self):
-        # put the head down
+    def lower_cleaning_head(self):
         self.clean_head.set_angle(CLEAN_HEAD_DOWN)
 
-        # suck what is there and fill syringes
-        self.waste_pump.pump(VOLUME_WASTE_SHORT ,from_valve=OUTLET)
-        # self.water_pump.pump(VOLUME_DISH ,from_valve=INLET)
+    def raise_cleaning_head(self):
+        self.clean_head.set_angle(CLEAN_HEAD_UP)
+
+    def empty_dish(self, volume_in_ml=VOLUME_WASTE):
+        self.waste_pump.pump(volume_in_ml, from_valve=OUTLET)
+
+    def flush_waste(self, volume_in_ml=VOLUME_WASTE):
+        self.waste_pump.deliver(volume_in_ml ,to_valve=INLET)
+
+    def load_water(self):
+        self.water_pump.pump(VOLUME_DISH ,from_valve=INLET)
+
+    def deliver_water(self):
+        self.water_pump.deliver(VOLUME_DISH ,to_valve=OUTLET)
+
+    def load_acetone(self):
         self.acetone_pump.pump(VOLUME_DISH ,from_valve=INLET)
+
+    def deliver_acetone(self):
+        self.acetone_pump.deliver(VOLUME_DISH ,to_valve=OUTLET)
+
+    def main(self):
+        # put the head down
+        self.lower_cleaning_head()
+
+        # suck what is there and fill syringes
+        self.wait_until_pumps_idle()
+        self.load_water()
+        self.load_acetone()
+        self.empty_dish()
 
         # fill with acetone while flushing waste
         self.wait_until_pumps_idle()
-        self.acetone_pump.deliver(VOLUME_DISH ,to_valve=OUTLET)
-        self.waste_pump.deliver(VOLUME_WASTE_SHORT ,to_valve=INLET)
+        self.deliver_acetone()
+        self.flush_waste()
 
-        # empty dish
+        # empty dish and reload acetone
         self.wait_until_pumps_idle()
-        self.waste_pump.pump(VOLUME_WASTE_LONG ,from_valve=OUTLET)
+        self.load_acetone()
+        self.empty_dish()
+
+        # fill with water while flushing waste
+        self.wait_until_pumps_idle()
+        self.deliver_water()
+        self.flush_waste()
+
+        # empty dish and reload acetone
+        self.wait_until_pumps_idle()
+        self.empty_dish()
+
+        # fill with acetone while flushing waste
+        self.wait_until_pumps_idle()
+        self.deliver_acetone()
+        self.flush_waste()
+
+        # empty dish and reload acetone
+        self.wait_until_pumps_idle()
+        self.load_acetone()
+        self.empty_dish()
+
+        # fill with acetone while flushing waste
+        self.wait_until_pumps_idle()
+        self.deliver_acetone()
+        self.flush_waste()
+
+        # empty dish and reload acetone
+        self.wait_until_pumps_idle()
+        self.empty_dish(FINAL_VOLUME_WASTE)
 
         # put the head up and flush waste
         self.wait_until_pumps_idle()
-        self.clean_head.set_angle(CLEAN_HEAD_UP)
-        self.waste_pump.deliver(VOLUME_WASTE_LONG ,to_valve=INLET, wait=True)
+        self.flush_waste(FINAL_VOLUME_WASTE)
+        self.raise_cleaning_head()
+
+        # wait all is over before returning
+        self.wait_until_pumps_idle()
