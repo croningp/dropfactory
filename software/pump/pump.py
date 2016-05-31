@@ -1,6 +1,8 @@
+import os
+import inspect
+HERE_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
 from pycont.controller import MultiPumpController
 
-import logging
-logging.basicConfig(level=logging.INFO)
-
-controller = MultiPumpController.from_configfile('./pump_config.json')
+configfile = os.path.join(HERE_PATH, 'pump_config.json')
+controller = MultiPumpController.from_configfile(configfile)
