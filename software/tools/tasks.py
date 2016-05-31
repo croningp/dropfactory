@@ -1,8 +1,6 @@
 import time
 import threading
 
-from exception import NotImplementedError
-
 SLEEP_TIME = 0.1
 
 
