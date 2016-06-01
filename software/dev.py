@@ -13,12 +13,18 @@ logging.basicConfig(level=logging.INFO)
 
 ##
 from pump import pump
-from robot import robot
+if not pump.controller.are_pumps_initialized():
+    raise Exception('Pumps not initalized, run initialize.py script first')
 
+raw_input('\n### Robot homing:\nMake sure the syringe and xyz system can go home safely, then press enter')
+from robot import robot
+robot.home()
+
+
+##
 from working_station.fill_petri_dish import FillPetriDish
 from working_station.clean_petri_dish import CleanPetriDish
 from working_station.clean_oil_parts import CleanOilParts
-from working_station.clean_oil_parts import CleanSyringe
 
 
 import time
@@ -28,17 +34,15 @@ XP = {
 'surfactant_volume': 3.5
 }
 
-pump.controller.smart_initialize()
-
 a = FillPetriDish(pump.controller.surfactant)
 
 b= CleanPetriDish(robot.CLEAN_HEAD_DISH,
                   pump.controller.waste_dish, pump.controller.water_dish, pump.controller.acetone_dish)
 
-c= CleanOilParts(robot.CLEAN_HEAD_MIXTURE,
+c = CleanOilParts(robot.XY,
+                  robot.Z,
+                  robot.SYRINGE, robot.CLEAN_HEAD_MIXTURE,
                   pump.controller.waste_oil, pump.controller.acetone_oil)
-
-d = CleanSyringe(robot.XY, robot.Z, robot.SYRINGE, pump.controller.waste_oil, pump.controller.acetone_oil)
 
 # a.launch(XP)
 # b.launch(XP)

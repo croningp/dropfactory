@@ -6,7 +6,7 @@
   },
   "default":{
       "micro_step_mode": 2,
-      "initialize_mode": "right",
+      "initialize_valve_position": "E",
       "top_velocity": 6000
   },
   "groups": {

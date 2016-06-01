@@ -12,32 +12,60 @@ root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
 from tools.tasks import Task
+from constants import CLEAN_HEAD_MIXTURE_DOWN
+from constants import SYRINGE_MAX
 
 SLEEP_TIME = 0.1
 
-CLEAN_HEAD_DOWN = 28
-
 OUTLET_WASTE = 'E'
-INLET_WASTE_HEAD = 'O'
+INLET_WASTE_TUBE = 'O'
 INLET_WASTE_VIAL = 'I'
 
 INLET_ACETONE = 'E'
-OUTLET_ACETONE_HEAD = 'I'
+OUTLET_ACETONE_TUBE = 'I'
 OUTLET_ACETONE_VIAL = 'O'
 
+# vial cleaning
 VOLUME_VIAL = 2.5
 VOLUME_EMPTY_VIAL = 5
 
-VOLUME_TUBE = 0.6
-VOLUME_EMPTY_TUBE = 2
-
 XY_ABOVE_VIAL = [95, 15]
 SYRINGE_ABOVE_VIAL_LEVEL = 110
-SYRINGE_IN_ACETONE_LEVEL = 145
-SYRINGE_EMPTY_LEVEL = 96
-SYRINGE_FILL_LEVEL = 50
+SYRINGE_IN_ACETONE_LEVEL = 147
+SYRINGE_EMPTY_LEVEL = SYRINGE_MAX
+SYRINGE_FILL_LEVEL = SYRINGE_MAX - 100  # 100uL
 N_REPEAT_SYRINGE_ACETONE = 2
 N_REPEAT_SYRINGE_AIR = 5
+
+# tube cleaning
+VOLUME_TUBE = 0.6
+VOLUME_EMPTY_TUBE = 2
+N_WASH_TUBE = 5
+
+class CleanOilParts(Task):
+
+    def __init__(self, xy_axis, z_axis, syringe, clean_head, waste_pump, acetone_pump):
+        Task.__init__(self)
+        self.clean_syringe = CleanSyringe(xy_axis, z_axis, syringe, waste_pump, acetone_pump)
+        self.clean_tube = CleanTube(clean_head, waste_pump, acetone_pump)
+        self.start()
+
+    def main(self):
+        # The problem is that tube and syringe clean share the same pump..
+
+        # fill vials with acetone
+        self.clean_syringe.start_fill_vial_step()
+        self.clean_syringe.wait_until_idle()
+
+        # start cleaning syringe while cleaning oils
+        self.clean_syringe.start_cleaning_syringe_step()
+        self.clean_tube.launch(self.XP_dict)
+        self.clean_tube.wait_until_idle()
+        self.clean_syringe.wait_until_idle()
+
+        # empty vials
+        self.clean_syringe.start_empty_vial_step()
+        self.clean_syringe.wait_until_idle()
 
 class CleanSyringe(threading.Thread):
 
@@ -122,7 +150,7 @@ class CleanSyringe(threading.Thread):
             self.syringe.move_to(SYRINGE_EMPTY_LEVEL)
 
 
-class CleanOilParts(Task):
+class CleanTube(Task):
 
     def __init__(self, clean_head, waste_pump, acetone_pump):
         Task.__init__(self)
@@ -136,16 +164,13 @@ class CleanOilParts(Task):
         self.acetone_pump.wait_until_idle()
 
     def lower_cleaning_head(self):
-        self.clean_head.move_to(CLEAN_HEAD_DOWN)
+        self.clean_head.move_to(CLEAN_HEAD_MIXTURE_DOWN)
 
     def raise_cleaning_head(self):
         self.clean_head.home()
 
-    def empty_vial(self, volume_in_ml=VOLUME_EMPTY_VIAL):
-        self.waste_pump.pump(volume_in_ml, from_valve=INLET_WASTE_VIAL)
-
     def empty_tube(self, volume_in_ml=VOLUME_EMPTY_TUBE):
-        self.waste_pump.pump(volume_in_ml, from_valve=INLET_WASTE_VIAL)
+        self.waste_pump.pump(volume_in_ml, from_valve=INLET_WASTE_TUBE)
 
     def flush_waste(self):
         self.waste_pump.set_valve_position(OUTLET_WASTE)
@@ -154,25 +179,25 @@ class CleanOilParts(Task):
     def load_acetone(self, volume_in_ml):
         self.acetone_pump.pump(volume_in_ml ,from_valve=INLET_ACETONE)
 
-    def deliver_acetone_to_vial(self):
-        self.acetone_pump.deliver(VOLUME_VIAL ,to_valve=OUTLET_ACETONE_VIAL)
-
     def deliver_acetone_to_tube(self):
-        self.acetone_pump.deliver(VOLUME_TUBE ,to_valve=OUTLET_ACETONE_HEAD)
+        self.acetone_pump.deliver(VOLUME_TUBE ,to_valve=OUTLET_ACETONE_TUBE)
 
     def main(self):
+        self.load_acetone(N_WASH_TUBE * VOLUME_TUBE)
         self.lower_cleaning_head()
 
         self.wait_until_pumps_idle()
-        self.load_acetone(VOLUME_VIAL)
+        self.empty_tube()
 
-        self.wait_until_pumps_idle()
-        self.deliver_acetone_to_vial()
+        for _ in range(N_WASH_TUBE):
+            self.wait_until_pumps_idle()
+            self.deliver_acetone_to_tube()
 
-        self.wait_until_pumps_idle()
-        self.empty_vial()
+            self.wait_until_pumps_idle()
+            self.empty_tube()
 
         self.wait_until_pumps_idle()
         self.flush_waste()
 
         self.raise_cleaning_head()
+        self.wait_until_pumps_idle()

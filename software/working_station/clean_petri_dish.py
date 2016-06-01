@@ -10,10 +10,8 @@ root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
 from tools.tasks import Task
-
-
-CLEAN_HEAD_UP = 50
-CLEAN_HEAD_DOWN = 20
+from constants import CLEAN_HEAD_DISH_UP
+from constants import CLEAN_HEAD_DISH_DOWN
 
 INLET = 'E'
 OUTLET = 'I'
@@ -38,10 +36,10 @@ class CleanPetriDish(Task):
         self.acetone_pump.wait_until_idle()
 
     def lower_cleaning_head(self):
-        self.clean_head.set_angle(CLEAN_HEAD_DOWN)
+        self.clean_head.set_angle(CLEAN_HEAD_DISH_DOWN)
 
     def raise_cleaning_head(self):
-        self.clean_head.set_angle(CLEAN_HEAD_UP)
+        self.clean_head.set_angle(CLEAN_HEAD_DISH_UP)
 
     def empty_dish(self, volume_in_ml=VOLUME_WASTE):
         self.waste_pump.pump(volume_in_ml, from_valve=OUTLET)
