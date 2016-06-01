@@ -1,6 +1,6 @@
 {
   "io": {
-      "port": "/dev/ttyUSB0",
+      "port": "/dev/ttyUSB1",
       "baudrate": 9600,
       "timeout": 1
   },
@@ -47,10 +47,12 @@
       },
       "octanol": {
         "switch": "8",
+        "initialize_valve_position": "I",
         "volume": 1
       },
       "pentanol": {
         "switch": "9",
+        "initialize_valve_position": "I",
         "volume": 1
       }
   }

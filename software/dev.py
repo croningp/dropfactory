@@ -25,13 +25,20 @@ robot.home()
 from working_station.fill_petri_dish import FillPetriDish
 from working_station.clean_petri_dish import CleanPetriDish
 from working_station.clean_oil_parts import CleanOilParts
+from working_station.fill_oil_tube import FillOilTube
 
 
 import time
 
 
 XP = {
-'surfactant_volume': 3.5
+    'surfactant_volume': 3.5,
+    'formulation': {
+        'octanol': 1,
+        'octanoic': 1,
+        'pentanol': 0,
+        'dep': 0.1
+    }
 }
 
 a = FillPetriDish(pump.controller.surfactant)
@@ -44,16 +51,18 @@ c = CleanOilParts(robot.XY,
                   robot.SYRINGE, robot.CLEAN_HEAD_MIXTURE,
                   pump.controller.waste_oil, pump.controller.acetone_oil)
 
+d = FillOilTube(pump.controller)
+
 # a.launch(XP)
 # b.launch(XP)
 # c.launch(XP)
-
-start = time.time()
-
-print 'toto'
-
+#
+# start = time.time()
+#
+# print 'toto'
+#
 # a.wait_until_idle()
 # b.wait_until_idle()
 # c.wait_until_idle()
-
-print time.time() - start
+#
+# print time.time() - start

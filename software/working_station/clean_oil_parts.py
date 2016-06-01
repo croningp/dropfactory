@@ -14,6 +14,7 @@ sys.path.append(root_path)
 from tools.tasks import Task
 from constants import CLEAN_HEAD_MIXTURE_DOWN
 from constants import SYRINGE_MAX
+from constants import Z_FREE_LEVEL
 
 SLEEP_TIME = 0.1
 
@@ -30,12 +31,15 @@ VOLUME_VIAL = 2.5
 VOLUME_EMPTY_VIAL = 5
 
 XY_ABOVE_VIAL = [95, 15]
-SYRINGE_ABOVE_VIAL_LEVEL = 110
+SYRINGE_ABOVE_VIAL_LEVEL = Z_FREE_LEVEL
 SYRINGE_IN_ACETONE_LEVEL = 147
+
 SYRINGE_EMPTY_LEVEL = SYRINGE_MAX
-SYRINGE_FILL_LEVEL = SYRINGE_MAX - 100  # 100uL
+SYRINGE_FILL_AIR_LEVEL = SYRINGE_MAX - 50  # 100uL
+SYRINGE_FILL_ACETONE_LEVEL = SYRINGE_MAX - 100  # 100uL
+
 N_REPEAT_SYRINGE_ACETONE = 2
-N_REPEAT_SYRINGE_AIR = 5
+N_REPEAT_SYRINGE_AIR = 4
 
 # tube cleaning
 VOLUME_TUBE = 0.6
@@ -54,18 +58,23 @@ class CleanOilParts(Task):
         # The problem is that tube and syringe clean share the same pump..
 
         # fill vials with acetone
-        self.clean_syringe.start_fill_vial_step()
-        self.clean_syringe.wait_until_idle()
+        self.clean_syringe.fill_vial()  # this is blocking
 
-        # start cleaning syringe while cleaning oils
+        # once pump ready again:clean tube and syringe
         self.clean_syringe.start_cleaning_syringe_step()
         self.clean_tube.launch(self.XP_dict)
+
+        # when cleaning syringe step is over: dry syringe and empty vials
+        self.clean_syringe.wait_until_idle()
+        self.clean_syringe.start_drying_syringe_step()
+
+        # only tube is clean, we can empty the vial (shared pump)
         self.clean_tube.wait_until_idle()
+        self.clean_syringe.empty_vial()  # this is blocking
+
+        # wait before closing
         self.clean_syringe.wait_until_idle()
 
-        # empty vials
-        self.clean_syringe.start_empty_vial_step()
-        self.clean_syringe.wait_until_idle()
 
 class CleanSyringe(threading.Thread):
 
@@ -75,8 +84,8 @@ class CleanSyringe(threading.Thread):
         self.interrupted = threading.Lock()
 
         self.filling_vial = False
-        self.emptying_vial = False
         self.cleaning_syringe = False
+        self.drying_syringe = False
 
         self.xy_axis = xy_axis
         self.z_axis = z_axis
@@ -89,64 +98,65 @@ class CleanSyringe(threading.Thread):
     def run(self):
         self.interrupted.acquire()
         while self.interrupted.locked():
-            if self.filling_vial:
-                self.fill_vial()
-                self.filling_vial = False
-            elif self.emptying_vial:
-                self.empty_vial()
-                self.emptying_vial = False
-            elif self.cleaning_syringe:
+            if self.cleaning_syringe:
                 self.clean_syringe()
                 self.cleaning_syringe = False
+            elif self.drying_syringe:
+                self.dry_syringe()
+                self.drying_syringe = False
             else:
                 time.sleep(SLEEP_TIME)
 
     def wait_until_idle(self):
-        while self.filling_vial or self.emptying_vial or self.cleaning_syringe:
+        while self.cleaning_syringe or self.drying_syringe:
             time.sleep(SLEEP_TIME)
 
-    def start_fill_vial_step(self):
-        self.filling_vial = True
-
     def fill_vial(self):
+        self.xy_axis.wait_until_idle()
         self.acetone_pump.wait_until_idle()
-        self.acetone_pump.pump(VOLUME_VIAL ,from_valve=INLET_ACETONE, wait=True)
-        self.acetone_pump.deliver(VOLUME_VIAL ,to_valve=OUTLET_ACETONE_VIAL, wait=True)
 
-    def start_empty_vial_step(self):
-        self.emptying_vial = True
-
-    def empty_vial(self):
-        self.waste_pump.wait_until_idle()
-        self.waste_pump.pump(VOLUME_EMPTY_VIAL, from_valve=INLET_WASTE_VIAL, wait=True)
-        self.waste_pump.deliver(VOLUME_EMPTY_VIAL ,to_valve=OUTLET_WASTE, wait=True)
-
-    def start_cleaning_syringe_step(self):
-        self.cleaning_syringe = True
-
-    def clean_syringe(self):
         # we raise an error binstead of going to the level, because we can not assume where the head is, the user should be smart and this is the only protection we can implement
         if self.z_axis.get_current_position() > SYRINGE_ABOVE_VIAL_LEVEL:
             raise Exception('Syringe is too low!!!')
 
         # move syringe into vials
-        self.xy_axis.move_to(XY_ABOVE_VIAL)
-        self.z_axis.move_to(SYRINGE_IN_ACETONE_LEVEL)
+        self.xy_axis.move_to(XY_ABOVE_VIAL, wait=False)
+        self.acetone_pump.transfer(VOLUME_VIAL ,from_valve=INLET_ACETONE, to_valve=OUTLET_ACETONE_VIAL)
 
-        # emoty syringe
-        self.syringe.move_to(SYRINGE_EMPTY_LEVEL)
+    def empty_vial(self):
+        self.waste_pump.wait_until_idle()
+        self.waste_pump.transfer(VOLUME_EMPTY_VIAL, from_valve=INLET_WASTE_VIAL, to_valve=OUTLET_WASTE)
+
+    def start_cleaning_syringe_step(self):
+        self.cleaning_syringe = True
+
+    def clean_syringe(self):
+        # just in case wait for the xy to be there from fill vial step
+        self.xy_axis.wait_until_idle()
+
+        # move above vial
+        self.z_axis.move_to(SYRINGE_ABOVE_VIAL_LEVEL)
+
+        # empty syringe
+        self.syringe.move_to(SYRINGE_EMPTY_LEVEL, wait=False)
+        self.z_axis.move_to(SYRINGE_IN_ACETONE_LEVEL)
+        self.syringe.wait_until_idle()
 
         # flush acetone into it
         for _ in range(N_REPEAT_SYRINGE_ACETONE):
-            self.syringe.move_to(SYRINGE_FILL_LEVEL)
+            self.syringe.move_to(SYRINGE_FILL_ACETONE_LEVEL)
             self.syringe.move_to(SYRINGE_EMPTY_LEVEL)
 
         # go up
         self.z_axis.move_to(SYRINGE_ABOVE_VIAL_LEVEL)
 
-        # flush air into it
+    def start_drying_syringe_step(self):
+        self.drying_syringe = True
+
+    def dry_syringe(self):
+        # flush air into the syringe
         for _ in range(N_REPEAT_SYRINGE_AIR):
-            self.syringe.move_to(SYRINGE_FILL_LEVEL)
+            self.syringe.move_to(SYRINGE_FILL_AIR_LEVEL)
             self.syringe.move_to(SYRINGE_EMPTY_LEVEL)
 
 

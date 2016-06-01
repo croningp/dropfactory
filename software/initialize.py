@@ -25,8 +25,6 @@ from constants import CLEAN_HEAD_MIXTURE_DOWN
 
 robot.CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_DOWN)
 robot.CLEAN_HEAD_MIXTURE.move_to(CLEAN_HEAD_MIXTURE_DOWN)
-pump.controller.apply_command_to_all_pumps('initialize_valve_only')
-pump.controller.apply_command_to_all_pumps('set_valve_position', 'E')
-pump.controller.apply_command_to_all_pumps('initialize_no_valve')
+pump.controller.smart_initialize()
 robot.CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
 robot.CLEAN_HEAD_MIXTURE.home()

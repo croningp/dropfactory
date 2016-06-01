@@ -12,6 +12,7 @@ sys.path.append(root_path)
 
 from constants import CLEAN_HEAD_MIXTURE_MAX
 from constants import SYRINGE_MAX
+from constants import CLEAN_HEAD_DISH_UP
 
 from commanduino import CommandManager
 from commanduino.devices.axis import Axis, MultiAxis
@@ -41,6 +42,7 @@ STIRRER = cmdMng.A1
 def home():
     SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
+    CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
     Z.home()
     XY.home()
     SYRINGE.wait_until_idle()
@@ -48,6 +50,14 @@ def home():
 
 
 def rotate_geneva_wheels():
+    mixture_head_position = CLEAN_HEAD_MIXTURE.get_current_position()
+    if mixture_head_position != 0:
+        raise Exception('Cannot rotate geneva wheels, cleaning head mixture is not home')
+
+    dish_head_position = CLEAN_HEAD_DISH.get_angle()
+    if dish_head_position != CLEAN_HEAD_DISH_UP:
+        raise Exception('Cannot rotate geneva wheels, cleaning head dish is not in up position')
+
     N_STEPS = 200
     GENEVA_DISH.move(-N_STEPS * MICROSTEP, wait=False)
     GENEVA_MIXTURE.move(N_STEPS * MICROSTEP, wait=False)
