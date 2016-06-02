@@ -13,8 +13,8 @@ sys.path.append(root_path)
 
 from tools.tasks import Task
 from constants import CLEAN_HEAD_MIXTURE_DOWN
-from constants import SYRINGE_MAX
 from constants import Z_FREE_LEVEL
+from constants import XY_ABOVE_VIAL
 
 SLEEP_TIME = 0.1
 
@@ -30,13 +30,10 @@ OUTLET_ACETONE_VIAL = 'O'
 VOLUME_VIAL = 2.5
 VOLUME_EMPTY_VIAL = 5
 
-XY_ABOVE_VIAL = [95, 15]
-SYRINGE_ABOVE_VIAL_LEVEL = Z_FREE_LEVEL
 SYRINGE_IN_ACETONE_LEVEL = 147
 
-SYRINGE_EMPTY_LEVEL = SYRINGE_MAX
-SYRINGE_FILL_AIR_LEVEL = SYRINGE_MAX - 50  # 100uL
-SYRINGE_FILL_ACETONE_LEVEL = SYRINGE_MAX - 100  # 100uL
+SYRINGE_FILL_AIR_VOLUME = 50  # uL
+SYRINGE_FILL_ACETONE_VOLUME = 100  # uL
 
 N_REPEAT_SYRINGE_ACETONE = 2
 N_REPEAT_SYRINGE_AIR = 4
@@ -112,14 +109,15 @@ class CleanSyringe(threading.Thread):
             time.sleep(SLEEP_TIME)
 
     def fill_vial(self):
+        # wait for stuff to be ready
         self.xy_axis.wait_until_idle()
         self.acetone_pump.wait_until_idle()
 
         # we raise an error binstead of going to the level, because we can not assume where the head is, the user should be smart and this is the only protection we can implement
-        if self.z_axis.get_current_position() > SYRINGE_ABOVE_VIAL_LEVEL:
+        if self.z_axis.get_current_position() > Z_FREE_LEVEL:
             raise Exception('Syringe is too low!!!')
 
-        # move syringe into vials
+        # move above vial
         self.xy_axis.move_to(XY_ABOVE_VIAL, wait=False)
         self.acetone_pump.transfer(VOLUME_VIAL ,from_valve=INLET_ACETONE, to_valve=OUTLET_ACETONE_VIAL)
 
@@ -131,33 +129,44 @@ class CleanSyringe(threading.Thread):
         self.cleaning_syringe = True
 
     def clean_syringe(self):
-        # just in case wait for the xy to be there from fill vial step
+        # wait for stuff to be ready
         self.xy_axis.wait_until_idle()
+        self.z_axis.wait_until_idle()
+        self.syringe.wait_until_idle()
 
         # move above vial
-        self.z_axis.move_to(SYRINGE_ABOVE_VIAL_LEVEL)
+        # we raise an error binstead of going to the level, because we can not assume where the head is, the user should be smart and this is the only protection we can implement
+        if self.z_axis.get_current_position() > Z_FREE_LEVEL:
+            raise Exception('Syringe is too low!!!')
+            
+        # move in vial
+        self.xy_axis.move_to(XY_ABOVE_VIAL)  # this is already done in fill vial step, but this is to make sure it works stand alone mode too
+        self.z_axis.move_to(Z_FREE_LEVEL)
 
         # empty syringe
-        self.syringe.move_to(SYRINGE_EMPTY_LEVEL, wait=False)
+        self.syringe.go_to_volume(0, wait=False)
         self.z_axis.move_to(SYRINGE_IN_ACETONE_LEVEL)
         self.syringe.wait_until_idle()
 
         # flush acetone into it
         for _ in range(N_REPEAT_SYRINGE_ACETONE):
-            self.syringe.move_to(SYRINGE_FILL_ACETONE_LEVEL)
-            self.syringe.move_to(SYRINGE_EMPTY_LEVEL)
+            self.syringe.pump(SYRINGE_FILL_ACETONE_VOLUME)
+            self.syringe.deliver(SYRINGE_FILL_ACETONE_VOLUME)
 
         # go up
-        self.z_axis.move_to(SYRINGE_ABOVE_VIAL_LEVEL)
+        self.z_axis.move_to(Z_FREE_LEVEL)
 
     def start_drying_syringe_step(self):
         self.drying_syringe = True
 
     def dry_syringe(self):
+        # wait for stuff to be ready
+        self.syringe.wait_until_idle()
+
         # flush air into the syringe
         for _ in range(N_REPEAT_SYRINGE_AIR):
-            self.syringe.move_to(SYRINGE_FILL_AIR_LEVEL)
-            self.syringe.move_to(SYRINGE_EMPTY_LEVEL)
+            self.syringe.pump(SYRINGE_FILL_AIR_VOLUME)
+            self.syringe.deliver(SYRINGE_FILL_AIR_VOLUME)
 
 
 class CleanTube(Task):
@@ -193,12 +202,19 @@ class CleanTube(Task):
         self.acetone_pump.deliver(VOLUME_TUBE ,to_valve=OUTLET_ACETONE_TUBE)
 
     def main(self):
-        self.load_acetone(N_WASH_TUBE * VOLUME_TUBE)
-        self.lower_cleaning_head()
+        # wait stuff ready
+        self.clean_head.wait_until_idle()
+        self.wait_until_pumps_idle()
 
+        # load acetone while lowering head
+        self.load_acetone(N_WASH_TUBE * VOLUME_TUBE)  #  loading acetone for several wash (N_WASH_TUBE)
+        self.lower_cleaning_head()  # this is blocking
+
+        # start cleaning cycle when pump loaded
         self.wait_until_pumps_idle()
         self.empty_tube()
 
+        # poor acetone and empty
         for _ in range(N_WASH_TUBE):
             self.wait_until_pumps_idle()
             self.deliver_acetone_to_tube()
@@ -206,8 +222,9 @@ class CleanTube(Task):
             self.wait_until_pumps_idle()
             self.empty_tube()
 
+        # flush waste
         self.wait_until_pumps_idle()
         self.flush_waste()
 
-        self.raise_cleaning_head()
-        self.wait_until_pumps_idle()
+        self.raise_cleaning_head() # this is blocking
+        self.wait_until_pumps_idle() # to ensure waste finished flushing

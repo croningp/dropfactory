@@ -10,24 +10,17 @@ root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
 from tools.tasks import Task
-
-INLET = 'E'
-OUTLET = 'O'
+from webcam import webcam
 
 
-class FillPetriDish(Task):
+class RecordVideo(Task):
 
-    def __init__(self, surfactant_pump):
+    def __init__(self):
         Task.__init__(self)
-        self.surfactant_pump = surfactant_pump
         self.start()
 
     def main(self):
-        # wait
-        self.surfactant_pump.wait_until_idle()
+        video_info = self.XP_dict['video_info']
 
-        # transfer the correct amount, blocking call
-        self.surfactant_pump.transfer(
-            self.XP_dict['surfactant_volume'],
-            from_valve=INLET,
-            to_valve=OUTLET)
+        webcam.video_recorder.record_to_file(video_info['path'], duration_in_sec=video_info['duration'])
+        webcam.video_recorder.wait_until_idle()

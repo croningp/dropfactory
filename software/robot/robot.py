@@ -11,11 +11,13 @@ root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
 from constants import CLEAN_HEAD_MIXTURE_MAX
-from constants import SYRINGE_MAX
 from constants import CLEAN_HEAD_DISH_UP
+from constants import XY_ABOVE_VIAL
+from constants import Z_FREE_LEVEL
 
 from commanduino import CommandManager
 from commanduino.devices.axis import Axis, MultiAxis
+from syringe import Syringe
 
 configfile = os.path.join(HERE_PATH, 'robot_config.json')
 cmdMng = CommandManager.from_configfile(configfile)
@@ -32,21 +34,32 @@ XY = MultiAxis(X, Y)
 GENEVA_DISH = cmdMng.G1
 GENEVA_MIXTURE = cmdMng.G2
 
-SYRINGE = Axis(cmdMng.S1, LINEAR_STEPPER_UNIT_PER_STEP * SYRINGUE_UNIT_PER_MM / MICROSTEP, 0, SYRINGE_MAX)
+SYRINGE_MAX = 235
+SYRINGE_AXIS = Axis(cmdMng.S1, LINEAR_STEPPER_UNIT_PER_STEP * SYRINGUE_UNIT_PER_MM / MICROSTEP, 0, SYRINGE_MAX)
+SYRINGE = Syringe(SYRINGE_AXIS, SYRINGE_MAX)
+
 CLEAN_HEAD_DISH = cmdMng.S3
+
 CLEAN_HEAD_MIXTURE = Axis(cmdMng.S2, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, CLEAN_HEAD_MIXTURE_MAX)
 
 STIRRER = cmdMng.A1
 
 
-def home():
+def init():
+    # order is really important here!
+    raw_input('\n### Robot initialization:\nMake sure the syringe and xyz system can go init safely, then press enter')
     SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
     CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
     Z.home()
     XY.home()
-    SYRINGE.wait_until_idle()
     CLEAN_HEAD_MIXTURE.wait_until_idle()
+    SYRINGE.wait_until_idle()
+    response = raw_input('## Do you want to empty the syringe in the vial [y/N]: ')
+    if response in ['y', 'Y']:
+        XY.move_to(XY_ABOVE_VIAL)
+        Z.move_to(Z_FREE_LEVEL)
+    SYRINGE.init()
 
 
 def rotate_geneva_wheels():

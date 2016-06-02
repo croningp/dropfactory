@@ -1,6 +1,6 @@
 {
   "io": {
-      "port": "/dev/ttyUSB1",
+      "port": "/dev/ttyUSB0",
       "baudrate": 9600,
       "timeout": 1
   },
@@ -23,7 +23,8 @@
       },
       "acetone_dish": {
         "switch": "2",
-        "volume": 5
+        "volume": 5,
+        "top_velocity": 12000
       },
       "waste_dish": {
         "switch": "3",
@@ -31,7 +32,8 @@
       },
       "water_dish": {
         "switch": "4",
-        "volume": 5
+        "volume": 5,
+        "top_velocity": 12000
       },
       "surfactant": {
         "switch": "5",

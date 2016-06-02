@@ -45,10 +45,15 @@ class FillOilTube(Task):
 
     def main(self):
 
+        # get the field of interest
         formulation = self.XP_dict['formulation']
 
+        # normallize ratios and compute oil volumes
         normalized_values = proba_normalize(formulation.values())
         oil_volumes = normalized_values * TUBE_VOLUME
+
+        # wait
+        self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
 
         # pump
         for i in range(len(formulation)):

@@ -61,11 +61,14 @@ class CleanPetriDish(Task):
         self.acetone_pump.deliver(VOLUME_DISH ,to_valve=OUTLET)
 
     def main(self):
+        # wait stuff ready
+        # self.clean_head is always ready it is a servo
+        self.wait_until_pumps_idle()
+
         # put the head down
         self.lower_cleaning_head()
 
         # suck what is there and fill syringes
-        self.wait_until_pumps_idle()
         self.load_water()
         self.load_acetone()
         self.empty_dish()
