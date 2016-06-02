@@ -53,6 +53,9 @@ class MakeDroplets(threading.Thread):
             else:
                 time.sleep(SLEEP_TIME)
 
+    def stop(self):
+        self.interrupted.release()
+
     def wait_until_idle(self):
         while self.filling_syringe:
             time.sleep(SLEEP_TIME)

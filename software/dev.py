@@ -46,17 +46,15 @@ XP_dict = {
     },
     'droplets': [
         {
-          'volume': 2,
-          'position': [0, 0]
+            'volume': 2,
+            'position': [0, 0]
         },
         {
-          'volume': 4,
-          'position': [10, 0]
+            'volume': 4,
+            'position': [10, 0]
         }
     ]
 }
-
-
 
 
 fill_dish_station = FillPetriDish(pump.controller.surfactant)
@@ -64,15 +62,16 @@ fill_dish_station = FillPetriDish(pump.controller.surfactant)
 fill_oil_station = FillOilTube(pump.controller)
 
 clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
-                  pump.controller.waste_dish,
-                  pump.controller.water_dish,
-                  pump.controller.acetone_dish)
+                                    pump.controller.waste_dish,
+                                    pump.controller.water_dish,
+                                    pump.controller.acetone_dish)
 
 clean_oils_station = CleanOilParts(robot.XY, robot.Z, robot.SYRINGE, robot.CLEAN_HEAD_MIXTURE, pump.controller.waste_oil, pump.controller.acetone_oil)
 
 make_droplet_station = MakeDroplets(robot.XY, robot.Z, robot.SYRINGE)
 
 record_video_station = RecordVideo()
+
 
 def main():
     for _ in range(2):

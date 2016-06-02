@@ -22,6 +22,9 @@ class Task(threading.Thread):
             else:
                 time.sleep(SLEEP_TIME)
 
+    def stop(self):
+        self.interrupted.release()
+
     def launch(self, XP_dict):
         self.XP_dict = XP_dict
         self.running = True

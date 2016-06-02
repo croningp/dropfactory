@@ -1,7 +1,7 @@
 from collections import deque
 
 
-class XPManager(object):
+class XPQueue(object):
 
     def __init__(self, queue_size):
         self.queue_size = queue_size

@@ -43,6 +43,7 @@ VOLUME_TUBE = 0.6
 VOLUME_EMPTY_TUBE = 2
 N_WASH_TUBE = 5
 
+
 class CleanOilParts(Task):
 
     def __init__(self, xy_axis, z_axis, syringe, clean_head, waste_pump, acetone_pump):
@@ -51,26 +52,36 @@ class CleanOilParts(Task):
         self.clean_tube = CleanTube(clean_head, waste_pump, acetone_pump)
         self.start()
 
+    def launch(self, XP_dict, clean_syringe=True):
+        self.XP_dict = XP_dict
+        self.clean_syringe = clean_syringe
+        self.running = True
+
     def main(self):
         # The problem is that tube and syringe clean share the same pump..
 
-        # fill vials with acetone
-        self.clean_syringe.fill_vial()  # this is blocking
+        if self.clean_syringe:
+            # fill vials with acetone
+            self.clean_syringe.fill_vial()  # this is blocking
+            # clean syringe in background thread
+            self.clean_syringe.start_cleaning_syringe_step()
 
-        # once pump ready again:clean tube and syringe
-        self.clean_syringe.start_cleaning_syringe_step()
+        # start cleaning tube in background thread
         self.clean_tube.launch(self.XP_dict)
 
-        # when cleaning syringe step is over: dry syringe and empty vials
-        self.clean_syringe.wait_until_idle()
-        self.clean_syringe.start_drying_syringe_step()
+        if self.clean_syringe:
+            # when cleaning syringe step is over: dry syringe and empty vials
+            self.clean_syringe.wait_until_idle()
+            self.clean_syringe.start_drying_syringe_step()
 
-        # only tube is clean, we can empty the vial (shared pump)
+        # when tube is clean
         self.clean_tube.wait_until_idle()
-        self.clean_syringe.empty_vial()  # this is blocking
 
-        # wait before closing
-        self.clean_syringe.wait_until_idle()
+        if self.clean_syringe:
+            # empty vial
+            self.clean_syringe.empty_vial()  # this is blocking
+            # wait before closing
+            self.clean_syringe.wait_until_idle()
 
 
 class CleanSyringe(threading.Thread):
@@ -104,6 +115,9 @@ class CleanSyringe(threading.Thread):
             else:
                 time.sleep(SLEEP_TIME)
 
+    def stop(self):
+        self.interrupted.release()
+
     def wait_until_idle(self):
         while self.cleaning_syringe or self.drying_syringe:
             time.sleep(SLEEP_TIME)
@@ -119,7 +133,7 @@ class CleanSyringe(threading.Thread):
 
         # move above vial
         self.xy_axis.move_to(XY_ABOVE_VIAL, wait=False)
-        self.acetone_pump.transfer(VOLUME_VIAL ,from_valve=INLET_ACETONE, to_valve=OUTLET_ACETONE_VIAL)
+        self.acetone_pump.transfer(VOLUME_VIAL, from_valve=INLET_ACETONE, to_valve=OUTLET_ACETONE_VIAL)
 
     def empty_vial(self):
         self.waste_pump.wait_until_idle()
@@ -138,7 +152,7 @@ class CleanSyringe(threading.Thread):
         # we raise an error binstead of going to the level, because we can not assume where the head is, the user should be smart and this is the only protection we can implement
         if self.z_axis.get_current_position() > Z_FREE_LEVEL:
             raise Exception('Syringe is too low!!!')
-            
+
         # move in vial
         self.xy_axis.move_to(XY_ABOVE_VIAL)  # this is already done in fill vial step, but this is to make sure it works stand alone mode too
         self.z_axis.move_to(Z_FREE_LEVEL)
@@ -196,10 +210,10 @@ class CleanTube(Task):
         self.waste_pump.go_to_volume(0)
 
     def load_acetone(self, volume_in_ml):
-        self.acetone_pump.pump(volume_in_ml ,from_valve=INLET_ACETONE)
+        self.acetone_pump.pump(volume_in_ml, from_valve=INLET_ACETONE)
 
     def deliver_acetone_to_tube(self):
-        self.acetone_pump.deliver(VOLUME_TUBE ,to_valve=OUTLET_ACETONE_TUBE)
+        self.acetone_pump.deliver(VOLUME_TUBE, to_valve=OUTLET_ACETONE_TUBE)
 
     def main(self):
         # wait stuff ready
@@ -207,7 +221,7 @@ class CleanTube(Task):
         self.wait_until_pumps_idle()
 
         # load acetone while lowering head
-        self.load_acetone(N_WASH_TUBE * VOLUME_TUBE)  #  loading acetone for several wash (N_WASH_TUBE)
+        self.load_acetone(N_WASH_TUBE * VOLUME_TUBE)  # loading acetone for several wash (N_WASH_TUBE)
         self.lower_cleaning_head()  # this is blocking
 
         # start cleaning cycle when pump loaded
@@ -226,5 +240,5 @@ class CleanTube(Task):
         self.wait_until_pumps_idle()
         self.flush_waste()
 
-        self.raise_cleaning_head() # this is blocking
-        self.wait_until_pumps_idle() # to ensure waste finished flushing
+        self.raise_cleaning_head()  # this is blocking
+        self.wait_until_pumps_idle()  # to ensure waste finished flushing

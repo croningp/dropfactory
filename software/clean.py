@@ -37,20 +37,20 @@ XP = {
 
 
 clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
-                  pump.controller.waste_dish,
-                  pump.controller.water_dish,
-                  pump.controller.acetone_dish)
+                                    pump.controller.waste_dish,
+                                    pump.controller.water_dish,
+                                    pump.controller.acetone_dish)
 
 clean_tube_station = CleanTube(robot.CLEAN_HEAD_MIXTURE,
-          pump.controller.waste_oil,
-          pump.controller.acetone_oil)
+                               pump.controller.waste_oil,
+                               pump.controller.acetone_oil)
 
 import time
 
 start_time_total = time.time()
 for i in range(N_POSITION):
     start_time = time.time()
-    print '###\nCleaning {}/{}'.format(i+1, N_POSITION)
+    print '###\nCleaning {}/{}'.format(i + 1, N_POSITION)
 
     # start cleaning
     clean_dish_station.launch(XP)
@@ -63,7 +63,7 @@ for i in range(N_POSITION):
     # rotate
     robot.rotate_geneva_wheels()
 
-    elapsed =  time.time() - start_time
+    elapsed = time.time() - start_time
     print 'It took {} seconds'.format(elapsed)
 
 elapsed_total = time.time() - start_time_total
