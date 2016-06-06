@@ -16,6 +16,9 @@ class Syringe(object):
         self.go_to_volume(0)
         self.current_volume = 0
 
+    def is_empty(self):
+        return self.current_volume == 0
+
     def volume_to_position(self, volume_in_uL):
         return self.empty_level - volume_in_uL
 

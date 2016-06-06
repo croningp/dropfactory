@@ -48,12 +48,13 @@ class CleanOilParts(Task):
 
     def __init__(self, xy_axis, z_axis, syringe, clean_head, waste_pump, acetone_pump):
         Task.__init__(self)
-        self.clean_syringe = CleanSyringe(xy_axis, z_axis, syringe, waste_pump, acetone_pump)
-        self.clean_tube = CleanTube(clean_head, waste_pump, acetone_pump)
+        self.clean_syringe_station = CleanSyringe(xy_axis, z_axis, syringe, waste_pump, acetone_pump)
+        self.clean_tube_station = CleanTube(clean_head, waste_pump, acetone_pump)
         self.start()
 
-    def launch(self, XP_dict, clean_syringe=True):
+    def launch(self, XP_dict, clean_tube=True, clean_syringe=True):
         self.XP_dict = XP_dict
+        self.clean_tube = clean_tube
         self.clean_syringe = clean_syringe
         self.running = True
 
@@ -62,26 +63,28 @@ class CleanOilParts(Task):
 
         if self.clean_syringe:
             # fill vials with acetone
-            self.clean_syringe.fill_vial()  # this is blocking
+            self.clean_syringe_station.fill_vial()  # this is blocking
             # clean syringe in background thread
-            self.clean_syringe.start_cleaning_syringe_step()
+            self.clean_syringe_station.start_cleaning_syringe_step()
 
-        # start cleaning tube in background thread
-        self.clean_tube.launch(self.XP_dict)
+        if self.clean_tube:
+            # start cleaning tube in background thread
+            self.clean_tube_station.launch(self.XP_dict)
 
         if self.clean_syringe:
             # when cleaning syringe step is over: dry syringe and empty vials
-            self.clean_syringe.wait_until_idle()
-            self.clean_syringe.start_drying_syringe_step()
+            self.clean_syringe_station.wait_until_idle()
+            self.clean_syringe_station.start_drying_syringe_step()
 
-        # when tube is clean
-        self.clean_tube.wait_until_idle()
+        if self.clean_tube:
+            # when tube is clean
+            self.clean_tube_station.wait_until_idle()
 
         if self.clean_syringe:
             # empty vial
-            self.clean_syringe.empty_vial()  # this is blocking
+            self.clean_syringe_station.empty_vial()  # this is blocking
             # wait before closing
-            self.clean_syringe.wait_until_idle()
+            self.clean_syringe_station.wait_until_idle()
 
 
 class CleanSyringe(threading.Thread):

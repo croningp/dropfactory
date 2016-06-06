@@ -85,6 +85,10 @@ class MakeDroplets(threading.Thread):
         if self.z_axis.get_current_position() > Z_FREE_LEVEL:
             raise Exception('Syringe is too low!!!')
 
+        # check syringe is empty first
+        if not self.syringe.is_empty():
+            raise Exception('Syringe is not empty!!! so probably not clear')
+
         # move syringe into tube
         self.xy_axis.move_to(XY_ABOVE_TUBE)
         self.z_axis.move_to(Z_SYRINGE_IN_OIL)

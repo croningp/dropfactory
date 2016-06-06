@@ -41,6 +41,8 @@ class XPManager(threading.Thread):
         self.robot = robot
         self.working_station_dict = working_station_dict
 
+        self.start()
+
     def add_XP(self, XP_dict):
         self.xp_queue.add_XP(XP_dict)
 
@@ -64,11 +66,12 @@ class XPManager(threading.Thread):
 
     def handle_XP_ongoing(self):
 
-        # station 1, 5, 6, 7 are doing nothing
+        # station 1, 5, 6, and 7 are doing nothing
 
-        # check if any droplet to be made, thus syringe cleaned
+        clean_tube = False
         clean_syringe = False
 
+        # check if any droplet to be made, thus syringe cleaned
         station_id = 2
         droplet_XP_dict = self.xp_queue.get_XP_ongoing(station_id)
         if droplet_XP_dict is not None:
@@ -83,17 +86,21 @@ class XPManager(threading.Thread):
             self.working_station_dict['fill_dish_station'].launch(XP_dict)
 
         # launch station 3, recording video
+        # also check if droplet was just made before, hence is step 3 filming
         station_id = 3
         XP_dict = self.xp_queue.get_XP_ongoing(station_id)
         if XP_dict is not None:
             self.working_station_dict['record_video_station'].launch(XP_dict)
+            clean_syringe = True
 
         # launch station 4, cleaning
         station_id = 4
         XP_dict = self.xp_queue.get_XP_ongoing(station_id)
         if XP_dict is not None:
-            self.working_station_dict['clean_oils_station'].launch(XP_dict, clean_syringe=clean_syringe)  # only clean syringe if needed, i.e. if droplets to be made
             self.working_station_dict['clean_dish_station'].launch(XP_dict)
+            clean_tube = True
+
+        self.working_station_dict['clean_oils_station'].launch(XP_dict, clean_tube=clean_tube, clean_syringe=clean_syringe)  # only clean tube or syringe if needed. They share a pump so are combined in one working station with condition. XP_dict does not matter
 
         # launch station 2, prepare droplets only once syringe is cleaned
         if droplet_XP_dict is not None:
@@ -101,6 +108,7 @@ class XPManager(threading.Thread):
             self.working_station_dict['make_droplet_station'].start_filling_syringe_step()
 
         # wait for all to finish
+        self.working_station_dict['clean_oils_station'].wait_until_idle()
         self.working_station_dict['clean_dish_station'].wait_until_idle()
         self.working_station_dict['fill_oil_station'].wait_until_idle()
         self.working_station_dict['fill_dish_station'].wait_until_idle()

@@ -21,21 +21,22 @@ robot.init()
 
 
 # load station
+working_station_dict = {}
 from working_station.fill_petri_dish import FillPetriDish
-fill_dish_station = FillPetriDish(pump.controller.surfactant)
+working_station_dict['fill_dish_station'] = FillPetriDish(pump.controller.surfactant)
 
 from working_station.fill_oil_tube import FillOilTube
-fill_oil_station = FillOilTube(pump.controller)
+working_station_dict['fill_oil_station'] = FillOilTube(pump.controller)
 
 from working_station.clean_petri_dish import CleanPetriDish
-clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
+working_station_dict['clean_dish_station'] = CleanPetriDish(robot.CLEAN_HEAD_DISH,
                                     pump.controller.waste_dish,
                                     pump.controller.water_dish,
                                     pump.controller.acetone_dish)
 
 
 from working_station.clean_oil_parts import CleanOilParts
-clean_oils_station = CleanOilParts(robot.XY,
+working_station_dict['clean_oils_station'] = CleanOilParts(robot.XY,
                                    robot.Z,
                                    robot.SYRINGE,
                                    robot.CLEAN_HEAD_MIXTURE,
@@ -43,9 +44,11 @@ clean_oils_station = CleanOilParts(robot.XY,
                                    pump.controller.acetone_oil)
 
 from working_station.make_droplets import MakeDroplets
-make_droplet_station = MakeDroplets(robot.XY, robot.Z, robot.SYRINGE)
+working_station_dict['make_droplet_station'] = MakeDroplets(robot.XY, robot.Z, robot.SYRINGE)
 
 from working_station.record_video import RecordVideo
-record_video_station = RecordVideo()
+working_station_dict['record_video_station'] = RecordVideo()
 
 #
+from tools.xp_manager import XPManager
+manager = XPManager(robot, working_station_dict)
