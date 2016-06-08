@@ -64,18 +64,26 @@ class MakeDroplets(threading.Thread):
         return np.linalg.norm(droplet_position) <= MAX_DIST_TO_CENTER_DROPLET
 
     def load_XP(self, XP_dict):
-        self.droplet_list = XP_dict['droplets']
+        self.any_droplet_to_make = False
+        if 'droplets' in XP_dict:
+            self.droplet_list = XP_dict['droplets']
 
-        total_volume = 2 * SYRINGE_BUFFER_VOLUME
-        for droplet_info in self.droplet_list:
-            total_volume += droplet_info['volume']
+            if len(self.droplet_list) > 0:
+                self.any_droplet_to_make = True
 
-        self.oil_volume_to_pump = total_volume
+                total_volume = 2 * SYRINGE_BUFFER_VOLUME
+                for droplet_info in self.droplet_list:
+                    total_volume += droplet_info['volume']
+
+                self.oil_volume_to_pump = total_volume
 
     def start_filling_syringe_step(self):
         self.filling_syringe = True
 
     def fill_syringe(self):
+        if not self.any_droplet_to_make:
+            return
+
         # wait for stuff to be ready
         self.xy_axis.wait_until_idle()
         self.z_axis.wait_until_idle()
@@ -104,6 +112,9 @@ class MakeDroplets(threading.Thread):
         self.z_axis.move_to(Z_ABOVE_SURFACTANT)
 
     def make_droplets(self):
+        if not self.any_droplet_to_make:
+            return
+
         # make all droplets
         for droplet_info in self.droplet_list:
             self.deliver_droplet(droplet_info)

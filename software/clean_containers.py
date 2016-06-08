@@ -21,7 +21,7 @@ robot.init()
 
 ##
 from working_station.clean_petri_dish import CleanPetriDish
-from working_station.clean_oil_parts import CleanTube
+from working_station.clean_oil_parts import CleanOilParts
 
 from constants import N_POSITION
 
@@ -41,9 +41,12 @@ clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
                                     pump.controller.water_dish,
                                     pump.controller.acetone_dish)
 
-clean_tube_station = CleanTube(robot.CLEAN_HEAD_MIXTURE,
-                               pump.controller.waste_oil,
-                               pump.controller.acetone_oil)
+clean_oil_station = CleanOilParts(robot.XY,
+                                   robot.Z,
+                                   robot.SYRINGE,
+                                   robot.CLEAN_HEAD_MIXTURE,
+                                   pump.controller.waste_oil,
+                                   pump.controller.acetone_oil)
 
 import time
 
@@ -54,11 +57,11 @@ for i in range(N_POSITION):
 
     # start cleaning
     clean_dish_station.launch(XP)
-    clean_tube_station.launch(XP)
+    clean_oil_station.launch(XP, clean_tube=True, clean_syringe=False)
 
     # wait till finished
     clean_dish_station.wait_until_idle()
-    clean_tube_station.wait_until_idle()
+    clean_oil_station.wait_until_idle()
 
     # rotate
     robot.rotate_geneva_wheels()

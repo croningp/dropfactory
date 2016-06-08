@@ -81,7 +81,9 @@ class CleanOilParts(Task):
             self.clean_tube_station.wait_until_idle()
 
         if self.clean_syringe:
-            # empty vial
+            # empty vial and clean it
+            self.clean_syringe_station.empty_vial()  # this is blocking
+            self.clean_syringe_station.fill_vial()  # this is blocking
             self.clean_syringe_station.empty_vial()  # this is blocking
             # wait before closing
             self.clean_syringe_station.wait_until_idle()

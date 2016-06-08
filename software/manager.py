@@ -36,7 +36,7 @@ working_station_dict['clean_dish_station'] = CleanPetriDish(robot.CLEAN_HEAD_DIS
 
 
 from working_station.clean_oil_parts import CleanOilParts
-working_station_dict['clean_oils_station'] = CleanOilParts(robot.XY,
+working_station_dict['clean_oil_station'] = CleanOilParts(robot.XY,
                                    robot.Z,
                                    robot.SYRINGE,
                                    robot.CLEAN_HEAD_MIXTURE,

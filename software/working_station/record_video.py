@@ -20,7 +20,8 @@ class RecordVideo(Task):
         self.start()
 
     def main(self):
-        video_info = self.XP_dict['video_info']
+        if 'video_info' in self.XP_dict:
+            video_info = self.XP_dict['video_info']
 
-        webcam.video_recorder.record_to_file(video_info['path'], duration_in_sec=video_info['duration'])
-        webcam.video_recorder.wait_until_idle()
+            webcam.video_recorder.record_to_file(video_info['path'], duration_in_sec=video_info['duration'])
+            webcam.video_recorder.wait_until_idle()

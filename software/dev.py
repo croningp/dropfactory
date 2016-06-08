@@ -66,7 +66,7 @@ clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
                                     pump.controller.water_dish,
                                     pump.controller.acetone_dish)
 
-clean_oils_station = CleanOilParts(robot.XY, robot.Z, robot.SYRINGE, robot.CLEAN_HEAD_MIXTURE, pump.controller.waste_oil, pump.controller.acetone_oil)
+clean_oil_station = CleanOilParts(robot.XY, robot.Z, robot.SYRINGE, robot.CLEAN_HEAD_MIXTURE, pump.controller.waste_oil, pump.controller.acetone_oil)
 
 make_droplet_station = MakeDroplets(robot.XY, robot.Z, robot.SYRINGE)
 
@@ -78,13 +78,13 @@ def main():
         start = time.time()
 
         record_video_station.launch(XP_dict)
-        clean_oils_station.launch(XP_dict)
+        clean_oil_station.launch(XP_dict)
         clean_dish_station.launch(XP_dict)
         fill_oil_station.launch(XP_dict)
         fill_dish_station.launch(XP_dict)
         make_droplet_station.load_XP(XP_dict)
 
-        clean_oils_station.wait_until_idle()
+        clean_oil_station.wait_until_idle()
         make_droplet_station.start_filling_syringe_step()
 
         clean_dish_station.wait_until_idle()
