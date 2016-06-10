@@ -28,6 +28,9 @@ OUTLETS = {
 
 TUBE_VOLUME = 0.5  # mL
 
+FILL_HEAD_DIPENSE_LEVEL = 30
+FILL_HEAD_CONTACT_LEVEL = 36
+
 
 def proba_normalize(x):
     x = np.array(x, dtype=float)
@@ -38,9 +41,10 @@ def proba_normalize(x):
 
 class FillOilTube(Task):
 
-    def __init__(self, pump_controller):
+    def __init__(self, pump_controller, fill_head):
         Task.__init__(self)
         self.pump_controller = pump_controller
+        self.fill_head = fill_head
         self.start()
 
     def main(self):
@@ -52,8 +56,12 @@ class FillOilTube(Task):
         normalized_values = proba_normalize(formulation.values())
         oil_volumes = normalized_values * TUBE_VOLUME
 
-        # wait
+        # make sure ready
+        self.fill_head.home()
         self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+
+        # go to dipesning level
+        self.fill_head.move_to(FILL_HEAD_DIPENSE_LEVEL, wait=False)
 
         # pump
         for i in range(len(formulation)):
@@ -65,6 +73,7 @@ class FillOilTube(Task):
             pump.pump(volume_in_ml, inlet)
 
         # wait
+        self.fill_head.wait_until_idle()
         self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
 
         # deliver
@@ -78,3 +87,8 @@ class FillOilTube(Task):
 
         # wait
         self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+
+        # move down to make contact and remove the remaining pending drops
+        self.fill_head.move_to(FILL_HEAD_CONTACT_LEVEL)
+        # go up home
+        self.fill_head.home()

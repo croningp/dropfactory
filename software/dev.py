@@ -35,10 +35,10 @@ import time
 XP_dict = {
     'surfactant_volume': 3.5,
     'formulation': {
-        'octanol': 1,
-        'octanoic': 0.5,
-        'pentanol': 0,
-        'dep': 0.25
+        'octanol': 0,
+        'octanoic': 0,
+        'pentanol': 1,
+        'dep': 0
     },
     'video_info': {
         'path': os.path.join(HERE_PATH, 'video.avi'),
@@ -59,7 +59,7 @@ XP_dict = {
 
 fill_dish_station = FillPetriDish(pump.controller.surfactant)
 
-fill_oil_station = FillOilTube(pump.controller)
+fill_oil_station = FillOilTube(pump.controller, robot.FILL_HEAD_MIXTURE)
 
 clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
                                     pump.controller.waste_dish,
@@ -71,30 +71,3 @@ clean_oil_station = CleanOilParts(robot.XY, robot.Z, robot.SYRINGE, robot.CLEAN_
 make_droplet_station = MakeDroplets(robot.XY, robot.Z, robot.SYRINGE)
 
 record_video_station = RecordVideo()
-
-
-def main():
-    for _ in range(2):
-        start = time.time()
-
-        record_video_station.launch(XP_dict)
-        clean_oil_station.launch(XP_dict)
-        clean_dish_station.launch(XP_dict)
-        fill_oil_station.launch(XP_dict)
-        fill_dish_station.launch(XP_dict)
-        make_droplet_station.load_XP(XP_dict)
-
-        clean_oil_station.wait_until_idle()
-        make_droplet_station.start_filling_syringe_step()
-
-        clean_dish_station.wait_until_idle()
-        fill_oil_station.wait_until_idle()
-        fill_dish_station.wait_until_idle()
-        make_droplet_station.wait_until_idle()
-        record_video_station.wait_until_idle()
-
-        make_droplet_station.make_droplets()
-
-        robot.rotate_geneva_wheels()
-
-        print time.time() - start

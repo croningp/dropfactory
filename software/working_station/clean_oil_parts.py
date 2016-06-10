@@ -39,9 +39,14 @@ N_REPEAT_SYRINGE_ACETONE = 2
 N_REPEAT_SYRINGE_AIR = 4
 
 # tube cleaning
-VOLUME_TUBE = 0.6
+VOLUME_TUBE = 0.7
 VOLUME_EMPTY_TUBE = 2
 N_WASH_TUBE = 5
+FLUSH_SPEED = 12000
+
+# VOLUME_AIR_DRY_ACETONE = 5
+# SPEED_AIR_DRY_ACETONE = 12000
+# N_DRY_ACETONE = 5
 
 
 class CleanOilParts(Task):
@@ -212,13 +217,18 @@ class CleanTube(Task):
 
     def flush_waste(self):
         self.waste_pump.set_valve_position(OUTLET_WASTE)
-        self.waste_pump.go_to_volume(0)
+        self.waste_pump.go_to_volume(0, speed=FLUSH_SPEED)
 
     def load_acetone(self, volume_in_ml):
         self.acetone_pump.pump(volume_in_ml, from_valve=INLET_ACETONE)
 
     def deliver_acetone_to_tube(self):
         self.acetone_pump.deliver(VOLUME_TUBE, to_valve=OUTLET_ACETONE_TUBE)
+
+    # def dry_acetone(self):
+    #     for _ in range(N_DRY_ACETONE):
+    #         self.waste_pump.pump(VOLUME_AIR_DRY_ACETONE, from_valve=INLET_WASTE_TUBE, speed_in=SPEED_AIR_DRY_ACETONE)
+    #         self.flush_waste()
 
     def main(self):
         # wait stuff ready
@@ -244,6 +254,10 @@ class CleanTube(Task):
         # flush waste
         self.wait_until_pumps_idle()
         self.flush_waste()
+
+        # # reempty to have air flow and improve drying
+        # self.wait_until_pumps_idle()
+        # self.dry_acetone()
 
         self.raise_cleaning_head()  # this is blocking
         self.wait_until_pumps_idle()  # to ensure waste finished flushing

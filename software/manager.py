@@ -26,7 +26,7 @@ from working_station.fill_petri_dish import FillPetriDish
 working_station_dict['fill_dish_station'] = FillPetriDish(pump.controller.surfactant)
 
 from working_station.fill_oil_tube import FillOilTube
-working_station_dict['fill_oil_station'] = FillOilTube(pump.controller)
+working_station_dict['fill_oil_station'] = FillOilTube(pump.controller, robot.FILL_HEAD_MIXTURE)
 
 from working_station.clean_petri_dish import CleanPetriDish
 working_station_dict['clean_dish_station'] = CleanPetriDish(robot.CLEAN_HEAD_DISH,

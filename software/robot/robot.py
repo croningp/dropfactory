@@ -12,7 +12,7 @@ sys.path.append(root_path)
 
 from constants import CLEAN_HEAD_MIXTURE_MAX
 from constants import CLEAN_HEAD_DISH_UP
-from constants import FILL_HEAD_OIL_MAX
+from constants import FILL_HEAD_MIXTURE_MAX
 from constants import XY_ABOVE_VIAL
 from constants import Z_FREE_LEVEL
 
@@ -43,7 +43,7 @@ CLEAN_HEAD_DISH = cmdMng.S3
 
 CLEAN_HEAD_MIXTURE = Axis(cmdMng.S2, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, CLEAN_HEAD_MIXTURE_MAX)
 
-FILL_HEAD_OIL = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, FILL_HEAD_OIL_MAX)
+FILL_HEAD_MIXTURE = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, FILL_HEAD_MIXTURE_MAX)
 
 STIRRER = cmdMng.A1
 
@@ -53,14 +53,14 @@ def init():
     raw_input('\n### Robot initialization:\nMake sure the syringe and xyz system can go init safely, then press enter')
     SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
-    FILL_HEAD_OIL.home(wait=False)
+    FILL_HEAD_MIXTURE.home(wait=False)
     CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
     # while other stuff homing, move z up to home
     Z.home() # blocking
     # when z up, move xy home
     XY.home()
     # wait all other stuff finished
-    FILL_HEAD_OIL.wait_until_idle()
+    FILL_HEAD_MIXTURE.wait_until_idle()
     CLEAN_HEAD_MIXTURE.wait_until_idle()
     # init geneva wheel
     GENEVA_DISH.home(wait=False)
@@ -77,13 +77,17 @@ def init():
 
 
 def rotate_geneva_wheels():
-    mixture_head_position = CLEAN_HEAD_MIXTURE.get_current_position()
-    if mixture_head_position != 0:
+    clean_mixture_head_position = CLEAN_HEAD_MIXTURE.get_current_position()
+    if clean_mixture_head_position != 0:
         raise Exception('Cannot rotate geneva wheels, cleaning head mixture is not home')
 
     dish_head_position = CLEAN_HEAD_DISH.get_angle()
     if dish_head_position != CLEAN_HEAD_DISH_UP:
         raise Exception('Cannot rotate geneva wheels, cleaning head dish is not in up position')
+
+    fill_mixture_head_position = FILL_HEAD_MIXTURE.get_current_position()
+    if fill_mixture_head_position != 0:
+        raise Exception('Cannot rotate geneva wheels, filling head mixture is not home')
 
     # we move a bit until the end stop are relased, then we home (thus turn until it touch the end stops)
 
