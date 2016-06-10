@@ -16,6 +16,9 @@ CommandLinearAccelStepperActuator Y(stp_Y, 14, 56);
 AccelStepper stp_Z(AccelStepper::DRIVER, 26, 28);
 CommandLinearAccelStepperActuator Z(stp_Z, 18, 24);
 
+AccelStepper stp_S4(AccelStepper::DRIVER, 36, 34);
+CommandLinearAccelStepperActuator S4(stp_S4, 19, 30);
+
 void setup()
 {
   Serial.begin(115200);
@@ -23,7 +26,7 @@ void setup()
   X.registerToCommandManager(cmdMng, "X");
   Y.registerToCommandManager(cmdMng, "Y");
   Z.registerToCommandManager(cmdMng, "Z");
-
+  S4.registerToCommandManager(cmdMng, "S4");
 
   cmdMng.init();
 }

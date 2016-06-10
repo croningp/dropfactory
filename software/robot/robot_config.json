@@ -55,6 +55,18 @@
         "acceleration": 2000
       }
     },
+    "S4": {
+      "command_id": "S4",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": false,
+        "reverted_direction": true,
+        "speed": 6000,
+        "homing_speed": 6000,
+        "max_speed": 2000,
+        "acceleration": 500
+      }
+    },
     "S1": {
       "command_id": "S1",
       "config": {
@@ -95,6 +107,7 @@
       "config": {
         "reverted_switch": true,
         "enabled_acceleration": false,
+        "reverted_direction": true,
         "speed": 1000,
         "homing_speed": 1000,
         "max_speed": 2000,

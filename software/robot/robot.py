@@ -12,6 +12,7 @@ sys.path.append(root_path)
 
 from constants import CLEAN_HEAD_MIXTURE_MAX
 from constants import CLEAN_HEAD_DISH_UP
+from constants import FILL_HEAD_OIL_MAX
 from constants import XY_ABOVE_VIAL
 from constants import Z_FREE_LEVEL
 
@@ -42,6 +43,8 @@ CLEAN_HEAD_DISH = cmdMng.S3
 
 CLEAN_HEAD_MIXTURE = Axis(cmdMng.S2, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, CLEAN_HEAD_MIXTURE_MAX)
 
+FILL_HEAD_OIL = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, FILL_HEAD_OIL_MAX)
+
 STIRRER = cmdMng.A1
 
 
@@ -50,10 +53,21 @@ def init():
     raw_input('\n### Robot initialization:\nMake sure the syringe and xyz system can go init safely, then press enter')
     SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
+    FILL_HEAD_OIL.home(wait=False)
     CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
-    Z.home()
+    # while other stuff homing, move z up to home
+    Z.home() # blocking
+    # when z up, move xy home
     XY.home()
+    # wait all other stuff finished
+    FILL_HEAD_OIL.wait_until_idle()
     CLEAN_HEAD_MIXTURE.wait_until_idle()
+    # init geneva wheel
+    GENEVA_DISH.home(wait=False)
+    GENEVA_MIXTURE.home(wait=False)
+    GENEVA_DISH.wait_until_idle()
+    GENEVA_MIXTURE.wait_until_idle()
+    # init syringe to zero level
     SYRINGE.wait_until_idle()
     response = raw_input('## Do you want to empty the syringe in the vial [y/N]: ')
     if response in ['y', 'Y']:
@@ -71,8 +85,44 @@ def rotate_geneva_wheels():
     if dish_head_position != CLEAN_HEAD_DISH_UP:
         raise Exception('Cannot rotate geneva wheels, cleaning head dish is not in up position')
 
-    N_STEPS = 200
-    GENEVA_DISH.move(-N_STEPS * MICROSTEP, wait=False)
-    GENEVA_MIXTURE.move(N_STEPS * MICROSTEP, wait=False)
+    # we move a bit until the end stop are relased, then we home (thus turn until it touch the end stops)
+
+    # bootstrap wheel
+    bootstrap_geneva_wheel()
+    # home
+    GENEVA_DISH.home(wait=False)
+    GENEVA_MIXTURE.home(wait=False)
+    # wait
     GENEVA_DISH.wait_until_idle()
     GENEVA_MIXTURE.wait_until_idle()
+
+def bootstrap_geneva_wheel():
+
+    # bootstrap
+    N_BOOTSTRAP_STEPS = - 20 * MICROSTEP
+
+    # check wheel status
+    is_geneva_dish_home = GENEVA_DISH.get_switch_state()
+    is_geneva_mixture_home = GENEVA_MIXTURE.get_switch_state()
+
+    count = 0
+    while is_geneva_dish_home or is_geneva_mixture_home:
+
+        if is_geneva_dish_home:
+            GENEVA_DISH.move(N_BOOTSTRAP_STEPS, wait=False)
+
+        if is_geneva_mixture_home:
+            GENEVA_MIXTURE.move(N_BOOTSTRAP_STEPS, wait=False)
+
+        # wait
+        GENEVA_DISH.wait_until_idle()
+        GENEVA_MIXTURE.wait_until_idle()
+
+        # check status again
+        is_geneva_dish_home = GENEVA_DISH.get_switch_state()
+        is_geneva_mixture_home = GENEVA_MIXTURE.get_switch_state()
+
+        #
+        count += 1
+        if count > 10:
+            raise Exception('Geneva wheels seem to not be moving, please check what is happening')
