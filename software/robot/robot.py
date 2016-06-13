@@ -40,12 +40,14 @@ SYRINGE_AXIS = Axis(cmdMng.S1, LINEAR_STEPPER_UNIT_PER_STEP * SYRINGUE_UNIT_PER_
 SYRINGE = Syringe(SYRINGE_AXIS, SYRINGE_MAX)
 
 CLEAN_HEAD_DISH = cmdMng.S3
+CLEAN_HEAD_DISH_SWITCH = cmdMng.D1
 
 CLEAN_HEAD_MIXTURE = Axis(cmdMng.S2, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, CLEAN_HEAD_MIXTURE_MAX)
 
 FILL_HEAD_MIXTURE = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, FILL_HEAD_MIXTURE_MAX)
 
 STIRRER = cmdMng.A1
+
 
 
 def init():
@@ -88,6 +90,9 @@ def rotate_geneva_wheels():
     fill_mixture_head_position = FILL_HEAD_MIXTURE.get_current_position()
     if fill_mixture_head_position != 0:
         raise Exception('Cannot rotate geneva wheels, filling head mixture is not home')
+
+    if not CLEAN_HEAD_DISH_SWITCH.get_state():  # True when switch not pressed
+        raise Exception('Cannot rotate geneva wheels, the dish cleaning head does not seems to be up')
 
     # we move a bit until the end stop are relased, then we home (thus turn until it touch the end stops)
 

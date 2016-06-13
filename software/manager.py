@@ -30,18 +30,19 @@ working_station_dict['fill_oil_station'] = FillOilTube(pump.controller, robot.FI
 
 from working_station.clean_petri_dish import CleanPetriDish
 working_station_dict['clean_dish_station'] = CleanPetriDish(robot.CLEAN_HEAD_DISH,
-                                    pump.controller.waste_dish,
-                                    pump.controller.water_dish,
-                                    pump.controller.acetone_dish)
+                                                            robot.CLEAN_HEAD_DISH_SWITCH,
+                                                            pump.controller.waste_dish,
+                                                            pump.controller.water_dish,
+                                                            pump.controller.acetone_dish)
 
 
 from working_station.clean_oil_parts import CleanOilParts
 working_station_dict['clean_oil_station'] = CleanOilParts(robot.XY,
-                                   robot.Z,
-                                   robot.SYRINGE,
-                                   robot.CLEAN_HEAD_MIXTURE,
-                                   pump.controller.waste_oil,
-                                   pump.controller.acetone_oil)
+                                                          robot.Z,
+                                                          robot.SYRINGE,
+                                                          robot.CLEAN_HEAD_MIXTURE,
+                                                          pump.controller.waste_oil,
+                                                          pump.controller.acetone_oil)
 
 from working_station.make_droplets import MakeDroplets
 working_station_dict['make_droplet_station'] = MakeDroplets(robot.XY, robot.Z, robot.SYRINGE)

@@ -37,6 +37,7 @@ XP = {
 
 
 clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
+                                    robot.CLEAN_HEAD_DISH_SWITCH,
                                     pump.controller.waste_dish,
                                     pump.controller.water_dish,
                                     pump.controller.acetone_dish)

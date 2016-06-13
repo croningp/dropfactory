@@ -9,6 +9,8 @@ import sys
 root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
+import time
+
 from tools.tasks import Task
 from constants import CLEAN_HEAD_DISH_UP
 from constants import CLEAN_HEAD_DISH_DOWN
@@ -20,11 +22,14 @@ VOLUME_DISH = 3.5
 VOLUME_WASTE = 4
 FINAL_VOLUME_WASTE = 8
 
+SLEEP_TIME_CHECK_HEAD_SWITCH = 1
+
 class CleanPetriDish(Task):
 
-    def __init__(self, clean_head, waste_pump, water_pump, acetone_pump):
+    def __init__(self, clean_head, clean_head_switch, waste_pump, water_pump, acetone_pump):
         Task.__init__(self)
         self.clean_head = clean_head
+        self.clean_head_switch = clean_head_switch
         self.waste_pump = waste_pump
         self.water_pump = water_pump
         self.acetone_pump = acetone_pump
@@ -37,9 +42,17 @@ class CleanPetriDish(Task):
 
     def lower_cleaning_head(self):
         self.clean_head.set_angle(CLEAN_HEAD_DISH_DOWN)
+        # allow for some time second for the head to go down and check it is really down
+        time.sleep(SLEEP_TIME_CHECK_HEAD_SWITCH)
+        if self.clean_head_switch.get_state():  # True when switch not pressed
+            raise Exception('The dish cleaning head does not seems to be down, we raise an exception to avoid flooding!')
 
     def raise_cleaning_head(self):
         self.clean_head.set_angle(CLEAN_HEAD_DISH_UP)
+        # allow for some time for the head to go down and check it is really down
+        time.sleep(SLEEP_TIME_CHECK_HEAD_SWITCH)
+        if not self.clean_head_switch.get_state():  # True when switch not pressed
+            raise Exception('The dish cleaning head does not seems to be up, we raise an exception to avoid breaking things!')
 
     def empty_dish(self, volume_in_ml=VOLUME_WASTE):
         self.waste_pump.pump(volume_in_ml, from_valve=OUTLET)

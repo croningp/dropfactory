@@ -26,6 +26,9 @@ CommandServo cmdServo(17);
 #include <CommandAnalogWrite.h>
 CommandAnalogWrite aw(16);
 
+#include <CommandDigitalRead.h>
+CommandDigitalRead dr(2);
+
 void setup()
 {
   Serial.begin(115200);
@@ -36,7 +39,7 @@ void setup()
   S2.registerToCommandManager(cmdMng, "S2");
   cmdServo.registerToCommandManager(cmdMng, "S3");
   aw.registerToCommandManager(cmdMng, "A1");
-
+  dr.registerToCommandManager(cmdMng, "D1");
 
   cmdMng.init();
 }

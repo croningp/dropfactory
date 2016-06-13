@@ -119,6 +119,9 @@
     },
     "A1": {
       "command_id": "A1"
+    },
+    "D1": {
+      "command_id": "D1"
     }
   }
 }
