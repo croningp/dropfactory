@@ -20,13 +20,13 @@ from constants import XY_ABOVE_DISH
 SLEEP_TIME = 0.1
 
 Z_SYRINGE_IN_OIL = 140
-Z_ABOVE_SURFACTANT = 135
-Z_AT_SURFACTANT = 142
+Z_ABOVE_SURFACTANT = 138
+Z_AT_SURFACTANT = 144
 
 SYRINGE_PRACTICAL_VOLUME = 200  # uL
 SYRINGE_BUFFER_VOLUME = 20  # this a buffer volume reference in addition of the droplets volume, we will use twice that
 
-MAX_DIST_TO_CENTER_DROPLET = 20  # mm
+MAX_DIST_TO_CENTER_DROPLET = 8  # mm
 
 
 class MakeDroplets(threading.Thread):

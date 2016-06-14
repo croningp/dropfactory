@@ -27,8 +27,10 @@ OUTLET_ACETONE_TUBE = 'I'
 OUTLET_ACETONE_VIAL = 'O'
 
 # vial cleaning
-VOLUME_VIAL = 2.5
-VOLUME_EMPTY_VIAL = 5
+VOLUME_VIAL_FIRST = 2.5
+VOLUME_EMPTY_VIAL_FIRST = 5
+VOLUME_VIAL_SECOND = 3
+VOLUME_EMPTY_VIAL_SECOND = 6
 
 SYRINGE_IN_ACETONE_LEVEL = 147
 
@@ -36,7 +38,7 @@ SYRINGE_FILL_AIR_VOLUME = 50  # uL
 SYRINGE_FILL_ACETONE_VOLUME = 100  # uL
 
 N_REPEAT_SYRINGE_ACETONE = 2
-N_REPEAT_SYRINGE_AIR = 4
+N_REPEAT_SYRINGE_AIR = 6
 
 # tube cleaning
 VOLUME_TUBE = 0.7
@@ -68,7 +70,7 @@ class CleanOilParts(Task):
 
         if self.clean_syringe:
             # fill vials with acetone
-            self.clean_syringe_station.fill_vial()  # this is blocking
+            self.clean_syringe_station.fill_vial(VOLUME_VIAL_FIRST)  # this is blocking
             # clean syringe in background thread
             self.clean_syringe_station.start_cleaning_syringe_step()
 
@@ -87,9 +89,9 @@ class CleanOilParts(Task):
 
         if self.clean_syringe:
             # empty vial and clean it
-            self.clean_syringe_station.empty_vial()  # this is blocking
-            self.clean_syringe_station.fill_vial()  # this is blocking
-            self.clean_syringe_station.empty_vial()  # this is blocking
+            self.clean_syringe_station.empty_vial(VOLUME_EMPTY_VIAL_FIRST)  # this is blocking
+            self.clean_syringe_station.fill_vial(VOLUME_VIAL_SECOND)  # this is blocking
+            self.clean_syringe_station.empty_vial(VOLUME_EMPTY_VIAL_SECOND)  # this is blocking
             # wait before closing
             self.clean_syringe_station.wait_until_idle()
 
@@ -132,7 +134,7 @@ class CleanSyringe(threading.Thread):
         while self.cleaning_syringe or self.drying_syringe:
             time.sleep(SLEEP_TIME)
 
-    def fill_vial(self):
+    def fill_vial(self, volume_in_ml):
         # wait for stuff to be ready
         self.xy_axis.wait_until_idle()
         self.acetone_pump.wait_until_idle()
@@ -143,11 +145,11 @@ class CleanSyringe(threading.Thread):
 
         # move above vial
         self.xy_axis.move_to(XY_ABOVE_VIAL, wait=False)
-        self.acetone_pump.transfer(VOLUME_VIAL, from_valve=INLET_ACETONE, to_valve=OUTLET_ACETONE_VIAL)
+        self.acetone_pump.transfer(volume_in_ml, from_valve=INLET_ACETONE, to_valve=OUTLET_ACETONE_VIAL)
 
-    def empty_vial(self):
+    def empty_vial(self, volume_in_ml):
         self.waste_pump.wait_until_idle()
-        self.waste_pump.transfer(VOLUME_EMPTY_VIAL, from_valve=INLET_WASTE_VIAL, to_valve=OUTLET_WASTE)
+        self.waste_pump.transfer(volume_in_ml, from_valve=INLET_WASTE_VIAL, to_valve=OUTLET_WASTE)
 
     def start_cleaning_syringe_step(self):
         self.cleaning_syringe = True
