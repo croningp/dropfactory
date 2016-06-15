@@ -11,6 +11,7 @@ root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
 import time
+import json
 import threading
 
 from constants import N_POSITION
@@ -18,6 +19,11 @@ from constants import N_POSITION
 from xp_queue import XPQueue
 
 SLEEP_TIME = 0.1
+
+
+def save_to_json(data, filename):
+    with open(filename, 'w') as f:
+        json.dump(data, f)
 
 
 class XPManager(threading.Thread):
@@ -43,6 +49,7 @@ class XPManager(threading.Thread):
         self.working_station_dict = working_station_dict
 
         self.is_paused = False
+        self.verbose = True
 
         self.start()
 
@@ -86,10 +93,38 @@ class XPManager(threading.Thread):
         self.is_paused = False
 
     def apply_pause(self):
+        if self.is_paused and self.verbose:
+            print 'Manager paused...'
         while self.is_paused:
             time.sleep(SLEEP_TIME)
+        if self.is_paused and self.verbose:
+            print 'Manager running again'
+
+    def add_start_info_to_XP_dict(self, XP_dict):
+        time_now = time.time()
+        XP_dict['manager_info'] = {}
+        XP_dict['manager_info']['start_time'] = time_now
+        XP_dict['manager_info']['start_ctime'] = time.ctime(time_now)
+
+    def add_end_info_to_XP_dict(self, XP_dict):
+        start_time = XP_dict['manager_info']['start_time']
+
+        end_time = time.time()
+        XP_dict['manager_info']['end_time'] = end_time
+        XP_dict['manager_info']['end_ctime'] = time.ctime(end_time)
+
+        XP_dict['manager_info']['duration'] = end_time - start_time
+
+    def save_run_info(self, XP_dict):
+        if 'run_info' in XP_dict:
+            filename = XP_dict['run_info']['filename']
+            data = XP_dict['manager_info']
+            save_to_json(data, filename)
 
     def handle_XP_ongoing(self):
+
+        if self.verbose:
+            print '###\n{} XP ongoing and {} XP waiting'.format(self.count_XP_ongoing(), self.count_XP_waiting())
 
         # station 1, 5, 6, and 7 are doing nothing just waiting for min_waiting_time
         # fin max waiting time
@@ -118,10 +153,11 @@ class XPManager(threading.Thread):
                 if droplet_XP_dict['droplets'] > 0:
                     clean_syringe = True
 
-        # launch station 0, filling step
+        # launch station 0, filling step and record time of start
         station_id = 0
         XP_dict = self.xp_queue.get_XP_ongoing(station_id)
         if XP_dict is not None:
+            self.add_start_info_to_XP_dict(XP_dict)
             self.working_station_dict['fill_oil_station'].launch(XP_dict)
             self.working_station_dict['fill_dish_station'].launch(XP_dict)
 
@@ -158,7 +194,18 @@ class XPManager(threading.Thread):
         self.working_station_dict['make_droplet_station'].wait_until_idle()
         self.working_station_dict['record_video_station'].wait_until_idle()
 
-        # this is the moment to pause while experiment are runnning
+        # if there was an XP at station 7, the last one, record it
+        station_id = 7
+        XP_dict = self.xp_queue.get_XP_ongoing(station_id)
+        if XP_dict is not None:
+            self.add_end_info_to_XP_dict(XP_dict)
+            self.save_run_info(XP_dict)
+
+            if self.verbose:
+                if 'manager_info' in XP_dict:
+                    print 'XP started on {}, ended at {}, lasted {} seconds'.format( XP_dict['manager_info']['start_ctime'], XP_dict['manager_info']['end_ctime'], XP_dict['manager_info']['duration'])
+
+        # this is the moment to pause all station finished and before placing new droplets
         self.apply_pause()
 
         # launch station 2, make droplets

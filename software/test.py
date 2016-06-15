@@ -20,13 +20,16 @@ XP_dict = {
     'min_waiting_time': 60,
     'surfactant_volume': 3.5,
     'formulation': {
-        'octanol': 25,
-        'octanoic': 20,
-        'pentanol': 25,
-        'dep': 30
+        'octanol': 21,
+        'octanoic': 14,
+        'pentanol': 19,
+        'dep': 46
+    },
+    'run_info': {
+        'filename': os.path.join(HERE_PATH, 'run_info.json')
     },
     'video_info': {
-        'path': os.path.join(HERE_PATH, 'video.avi'),
+        'filename': os.path.join(HERE_PATH, 'video.avi'),
         'duration': 100
     },
     'droplets': [
