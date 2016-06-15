@@ -27,7 +27,7 @@ from working_station.clean_oil_parts import CleanOilParts
 from working_station.fill_oil_tube import FillOilTube
 from working_station.record_video import RecordVideo
 from working_station.make_droplets import MakeDroplets
-
+from working_station.wait_station import WaitStation
 
 import time
 
@@ -72,3 +72,5 @@ clean_oil_station = CleanOilParts(robot.XY, robot.Z, robot.SYRINGE, robot.CLEAN_
 make_droplet_station = MakeDroplets(robot.XY, robot.Z, robot.SYRINGE)
 
 record_video_station = RecordVideo()
+
+wait_station = WaitStation()

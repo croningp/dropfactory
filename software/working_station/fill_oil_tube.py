@@ -12,24 +12,13 @@ sys.path.append(root_path)
 
 from tools.tasks import Task
 
-INLETS = {
-    'dep': 'E',
-    'octanoic': 'E',
-    'octanol': 'I',
-    'pentanol': 'I'
-}
-
-OUTLETS = {
-    'dep': 'O',
-    'octanoic': 'O',
-    'octanol': 'O',
-    'pentanol': 'O'
-}
+INLET = 'I'
+OUTLET = 'O'
 
 TUBE_VOLUME = 0.5  # mL
 
 FILL_HEAD_DIPENSE_LEVEL = 30
-FILL_HEAD_CONTACT_LEVEL = 36
+FILL_HEAD_CONTACT_LEVEL = 37
 
 
 def proba_normalize(x):
@@ -49,46 +38,46 @@ class FillOilTube(Task):
 
     def main(self):
 
-        # get the field of interest
-        formulation = self.XP_dict['formulation']
+        if 'formulation' in self.XP_dict:
 
-        # normallize ratios and compute oil volumes
-        normalized_values = proba_normalize(formulation.values())
-        oil_volumes = normalized_values * TUBE_VOLUME
+            # get the field of interest
+            formulation = self.XP_dict['formulation']
 
-        # make sure ready
-        self.fill_head.home()
-        self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+            # normallize ratios and compute oil volumes
+            normalized_values = proba_normalize(formulation.values())
+            oil_volumes = normalized_values * TUBE_VOLUME
 
-        # go to dipesning level
-        self.fill_head.move_to(FILL_HEAD_DIPENSE_LEVEL, wait=False)
+            # make sure ready
+            self.fill_head.home()
+            self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
 
-        # pump
-        for i in range(len(formulation)):
-            pump_name = formulation.keys()[i]
-            pump = self.pump_controller.pumps[pump_name]
-            volume_in_ml = oil_volumes[i]
-            inlet = INLETS[pump_name]
+            # go to dipesning level
+            self.fill_head.move_to(FILL_HEAD_DIPENSE_LEVEL, wait=False)
 
-            pump.pump(volume_in_ml, inlet)
+            # pump
+            for i in range(len(formulation)):
+                pump_name = formulation.keys()[i]
+                pump = self.pump_controller.pumps[pump_name]
+                volume_in_ml = oil_volumes[i]
 
-        # wait
-        self.fill_head.wait_until_idle()
-        self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+                pump.pump(volume_in_ml, INLET)
 
-        # deliver
-        for i in range(len(formulation)):
-            pump_name = formulation.keys()[i]
-            pump = self.pump_controller.pumps[pump_name]
-            volume_in_ml = oil_volumes[i]
-            outlet = OUTLETS[pump_name]
+            # wait
+            self.fill_head.wait_until_idle()
+            self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
 
-            pump.deliver(volume_in_ml, outlet)
+            # deliver
+            for i in range(len(formulation)):
+                pump_name = formulation.keys()[i]
+                pump = self.pump_controller.pumps[pump_name]
+                volume_in_ml = oil_volumes[i]
 
-        # wait
-        self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+                pump.deliver(volume_in_ml, OUTLET)
 
-        # move down to make contact and remove the remaining pending drops
-        self.fill_head.move_to(FILL_HEAD_CONTACT_LEVEL)
-        # go up home
-        self.fill_head.home()
+            # wait
+            self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+
+            # move down to make contact and remove the remaining pending drops
+            self.fill_head.move_to(FILL_HEAD_CONTACT_LEVEL)
+            # go up home
+            self.fill_head.home()

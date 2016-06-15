@@ -23,6 +23,16 @@ class XPQueue(object):
     def any_XP_ongoing(self):
         return self.XP_ongoing.count(None) != self.queue_size
 
+    def count_XP_ongoing(self):
+        count = 0
+        for i in range(self.queue_size):
+            if self.get_XP_ongoing(i) is not None:
+                count += 1
+        return count
+
+    def count_XP_waiting(self):
+        return len(self.XP_waiting)
+
     def get_XP_ongoing(self, ongoing_XP_number):
         if 0 <= ongoing_XP_number <= self.queue_size - 1:
             ind = self.queue_size - 1 - ongoing_XP_number

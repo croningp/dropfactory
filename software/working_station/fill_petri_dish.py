@@ -23,11 +23,12 @@ class FillPetriDish(Task):
         self.start()
 
     def main(self):
-        # wait
-        self.surfactant_pump.wait_until_idle()
+        if 'surfactant_volume' in self.XP_dict:
+            # wait
+            self.surfactant_pump.wait_until_idle()
 
-        # transfer the correct amount, blocking call
-        self.surfactant_pump.transfer(
-            self.XP_dict['surfactant_volume'],
-            from_valve=INLET,
-            to_valve=OUTLET)
+            # transfer the correct amount, blocking call
+            self.surfactant_pump.transfer(
+                self.XP_dict['surfactant_volume'],
+                from_valve=INLET,
+                to_valve=OUTLET)

@@ -17,12 +17,13 @@ import time
 from manager import manager
 
 XP_dict = {
+    'min_waiting_time': 60,
     'surfactant_volume': 3.5,
     'formulation': {
-        'octanol': 30,
-        'octanoic': 50,
-        'pentanol': 20,
-        'dep': 0
+        'octanol': 25,
+        'octanoic': 20,
+        'pentanol': 25,
+        'dep': 30
     },
     'video_info': {
         'path': os.path.join(HERE_PATH, 'video.avi'),
@@ -50,7 +51,7 @@ XP_dict = {
 
 start_time = time.time()
 
-for _ in range(1):
+for _ in range(4):
     manager.add_XP(XP_dict)
 
 manager.wait_until_XP_finished()

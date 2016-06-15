@@ -41,21 +41,27 @@
       },
       "dep": {
         "switch": "6",
-        "volume": 0.5
+        "initialize_valve_position": "I",
+        "volume": 0.5,
+        "top_velocity": 3000
       },
       "octanoic": {
         "switch": "7",
-        "volume": 0.5
+        "initialize_valve_position": "I",
+        "volume": 0.5,
+        "top_velocity": 3000
       },
       "octanol": {
         "switch": "8",
         "initialize_valve_position": "I",
-        "volume": 0.5
+        "volume": 0.5,
+        "top_velocity": 3000
       },
       "pentanol": {
         "switch": "9",
         "initialize_valve_position": "I",
-        "volume": 0.5
+        "volume": 0.5,
+        "top_velocity": 3000
       }
   }
 }

@@ -50,6 +50,11 @@ working_station_dict['make_droplet_station'] = MakeDroplets(robot.XY, robot.Z, r
 from working_station.record_video import RecordVideo
 working_station_dict['record_video_station'] = RecordVideo()
 
+from working_station.wait_station import WaitStation
+working_station_dict['wait_station'] = WaitStation()
+
+
+
 #
 from tools.xp_manager import XPManager
 manager = XPManager(robot, working_station_dict)

@@ -13,6 +13,8 @@ import sys
 root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
+import time
+
 from constants import Z_FREE_LEVEL
 from constants import XY_ABOVE_TUBE
 from constants import XY_ABOVE_DISH
@@ -163,6 +165,7 @@ class MakeDroplets(threading.Thread):
             # deliver
             self.z_axis.move_to(Z_AT_SURFACTANT)
             self.syringe.deliver(volume)
+            time.sleep(0.5) # small pause to make sure the oil volume went fully out
             self.z_axis.move_to(Z_ABOVE_SURFACTANT)
 
             # come back

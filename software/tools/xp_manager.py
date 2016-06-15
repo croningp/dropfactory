@@ -32,6 +32,7 @@ class XPManager(threading.Thread):
         - clean_oil_station
         - make_droplet_station
         - record_video_station
+        - wait_station
         """
         threading.Thread.__init__(self)
         self.daemon = True
@@ -40,6 +41,8 @@ class XPManager(threading.Thread):
         self.xp_queue = XPQueue(N_POSITION)
         self.robot = robot
         self.working_station_dict = working_station_dict
+
+        self.is_paused = False
 
         self.start()
 
@@ -52,6 +55,12 @@ class XPManager(threading.Thread):
     def empty_XP_queue(self):
         self.xp_queue.empty_XP_waiting()
 
+    def count_XP_ongoing(self):
+        return self.xp_queue.count_XP_ongoing()
+
+    def count_XP_waiting(self):
+        return self.xp_queue.count_XP_waiting()
+
     def wait_until_XP_finished(self):
         while self.xp_queue.any_XP_ongoing() or self.xp_queue.any_XP_waiting():
             time.sleep(SLEEP_TIME)
@@ -62,16 +71,41 @@ class XPManager(threading.Thread):
             if self.xp_queue.any_XP_ongoing():
                 self.handle_XP_ongoing()
                 self.robot.rotate_geneva_wheels()
+            else:
+                self.apply_pause()
             self.xp_queue.cycle()
             time.sleep(SLEEP_TIME)
 
     def stop(self):
         self.interrupted.release()
 
+    def pause(self):
+        self.is_paused = True
+
+    def unpause(self):
+        self.is_paused = False
+
+    def apply_pause(self):
+        while self.is_paused:
+            time.sleep(SLEEP_TIME)
+
     def handle_XP_ongoing(self):
 
-        # station 1, 5, 6, and 7 are doing nothing
+        # station 1, 5, 6, and 7 are doing nothing just waiting for min_waiting_time
+        # fin max waiting time
+        max_min_waiting_time = 0
+        for station_id in [1, 5, 6, 7]:
+            XP_dict = self.xp_queue.get_XP_ongoing(station_id)
+            if XP_dict is not None:
+                if 'min_waiting_time' in XP_dict:
+                    min_waiting_time = XP_dict['min_waiting_time']
+                    if min_waiting_time > max_min_waiting_time:
+                        max_min_waiting_time = min_waiting_time
 
+        waiting_XP_dict = {'min_waiting_time': max_min_waiting_time}
+        self.working_station_dict['wait_station'].launch(waiting_XP_dict)
+
+        # variable for checking what need to be cleaned
         clean_tube = False
         clean_syringe = False
 
@@ -116,12 +150,16 @@ class XPManager(threading.Thread):
             self.working_station_dict['make_droplet_station'].start_filling_syringe_step()
 
         # wait for all to finish
+        self.working_station_dict['wait_station'].wait_until_idle()
         self.working_station_dict['clean_oil_station'].wait_until_idle()
         self.working_station_dict['clean_dish_station'].wait_until_idle()
         self.working_station_dict['fill_oil_station'].wait_until_idle()
         self.working_station_dict['fill_dish_station'].wait_until_idle()
         self.working_station_dict['make_droplet_station'].wait_until_idle()
         self.working_station_dict['record_video_station'].wait_until_idle()
+
+        # this is the moment to pause while experiment are runnning
+        self.apply_pause()
 
         # launch station 2, make droplets
         if droplet_XP_dict is not None:

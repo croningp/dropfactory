@@ -32,8 +32,8 @@ XP_list.append({
     'surfactant_volume': 1,
     'formulation': {
         'octanol': 0,
-        'octanoic': 1,
-        'pentanol': 0,
+        'octanoic': 0,
+        'pentanol': 1,
         'dep': 0
     }
 })
@@ -42,8 +42,8 @@ XP_list.append({
     'surfactant_volume': 1,
     'formulation': {
         'octanol': 0,
-        'octanoic': 0,
-        'pentanol': 1,
+        'octanoic': 1,
+        'pentanol': 0,
         'dep': 0
     }
 })
@@ -58,15 +58,15 @@ XP_list.append({
     }
 })
 
-# start_time = time.time()
+start_time = time.time()
 
 # we do 4 times each
-for _ in range(1):
+for _ in range(4):
     for XP_dict in XP_list:
         manager.add_XP(XP_dict)
 
-# manager.wait_until_XP_finished()
-#
-# elapsed = time.time() - start_time
-#
-# print 'Purge took {} seconds'.format(elapsed)
+manager.wait_until_XP_finished()
+
+elapsed = time.time() - start_time
+
+print 'Purge took {} seconds'.format(elapsed)
