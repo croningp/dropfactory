@@ -28,7 +28,7 @@ def save_to_json(data, filename):
 
 class XPManager(threading.Thread):
 
-    def __init__(self, robot, working_station_dict):
+    def __init__(self, robot, working_station_dict, verbose=True):
         """
         The robot, pumps and working station must be initalized already
         working_station_dict contain all the instance of the useful station, that is, with exact name:
@@ -49,7 +49,7 @@ class XPManager(threading.Thread):
         self.working_station_dict = working_station_dict
 
         self.is_paused = False
-        self.verbose = True
+        self.verbose = verbose
 
         self.start()
 
@@ -203,7 +203,7 @@ class XPManager(threading.Thread):
 
             if self.verbose:
                 if 'manager_info' in XP_dict:
-                    print 'XP started on {}, ended at {}, lasted {} seconds'.format( XP_dict['manager_info']['start_ctime'], XP_dict['manager_info']['end_ctime'], XP_dict['manager_info']['duration'])
+                    print 'XP started at {}, ended at {}, lasted {} seconds'.format( XP_dict['manager_info']['start_ctime'], XP_dict['manager_info']['end_ctime'], XP_dict['manager_info']['duration'])
 
         # this is the moment to pause all station finished and before placing new droplets
         self.apply_pause()

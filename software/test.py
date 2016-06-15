@@ -15,50 +15,20 @@ import time
 
 #
 from manager import manager
+from tools.xp_watcher import XPWatcher
 
-XP_dict = {
-    'min_waiting_time': 60,
-    'surfactant_volume': 3.5,
-    'formulation': {
-        'octanol': 21,
-        'octanoic': 14,
-        'pentanol': 19,
-        'dep': 46
-    },
-    'run_info': {
-        'filename': os.path.join(HERE_PATH, 'run_info.json')
-    },
-    'video_info': {
-        'filename': os.path.join(HERE_PATH, 'video.avi'),
-        'duration': 100
-    },
-    'droplets': [
-        {
-            'volume': 4,
-            'position': [5, 0]
-        },
-        {
-            'volume': 4,
-            'position': [-5, 0]
-        },
-        {
-            'volume': 4,
-            'position': [0, 5]
-        },
-        {
-            'volume': 4,
-            'position': [0, -5]
-        }
-    ]
-}
+from tools.xp_maker import add_XP_to_pool_folder
 
-start_time = time.time()
+oil_ratios = {
+    'octanol': 21,
+    'octanoic': 14,
+    'pentanol': 19,
+    'dep': 46
+    }
+
+pool_folder = os.path.join(HERE_PATH, 'test_pool_folder')
 
 for _ in range(4):
-    manager.add_XP(XP_dict)
+    add_XP_to_pool_folder(oil_ratios, pool_folder)
 
-manager.wait_until_XP_finished()
-
-elapsed = time.time() - start_time
-
-print 'Purge took {} seconds'.format(elapsed)
+watcher = XPWatcher(manager, pool_folder)
