@@ -16,7 +16,7 @@ from working_station.record_video import RecordVideo
 
 XP_dict = {
     'video_info': {
-        'path': os.path.join(HERE_PATH, 'video.avi'),
+        'filename': os.path.join(HERE_PATH, 'video.avi'),
         'duration': 10
     }
 }
