@@ -35,10 +35,10 @@ import time
 XP_dict = {
     'surfactant_volume': 3.5,
     'formulation': {
-        'octanol': 0,
-        'octanoic': 0,
-        'pentanol': 1,
-        'dep': 0
+        'octanol': 21,
+        'octanoic': 14,
+        'pentanol': 19,
+        'dep': 46
     },
     'video_info': {
         'path': os.path.join(HERE_PATH, 'video.avi'),
@@ -46,12 +46,20 @@ XP_dict = {
     },
     'droplets': [
         {
-            'volume': 2,
-            'position': [0, 0]
+            'volume': 4,
+            'position': [5, 0]
         },
         {
             'volume': 4,
-            'position': [10, 0]
+            'position': [-5, 0]
+        },
+        {
+            'volume': 4,
+            'position': [0, 5]
+        },
+        {
+            'volume': 4,
+            'position': [0, -5]
         }
     ]
 }

@@ -61,7 +61,7 @@ XP_list.append({
 start_time = time.time()
 
 # we do 4 times each
-for _ in range(4):
+for _ in range(1):
     for XP_dict in XP_list:
         manager.add_XP(XP_dict)
 

@@ -23,7 +23,7 @@ SLEEP_TIME = 0.1
 
 Z_SYRINGE_IN_OIL = 140
 Z_ABOVE_SURFACTANT = 138
-Z_AT_SURFACTANT = 143.5
+Z_AT_SURFACTANT = 143
 
 SYRINGE_PRACTICAL_VOLUME = 200  # uL
 SYRINGE_BUFFER_VOLUME = 20  # this a buffer volume reference in addition of the droplets volume, we will use twice that
@@ -163,9 +163,9 @@ class MakeDroplets(threading.Thread):
             self.xy_axis.move(relative_position)
 
             # deliver
-            self.z_axis.move_to(Z_AT_SURFACTANT)
             self.syringe.deliver(volume)
             time.sleep(0.5) # small pause to make sure the oil volume went fully out
+            self.z_axis.move_to(Z_AT_SURFACTANT)
             self.z_axis.move_to(Z_ABOVE_SURFACTANT)
 
             # come back
