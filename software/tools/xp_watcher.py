@@ -13,7 +13,6 @@ def read_XP_from_file(filename):
         return json.load(f)
 
 
-
 class XPWatcher(threading.Thread):
 
     def __init__(self, manager, folder_to_watch, param_filename='params.json', ignore_filename='video.avi', verbose=True):

@@ -23,7 +23,7 @@ SLEEP_TIME = 0.1
 
 Z_SYRINGE_IN_OIL = 140
 Z_ABOVE_SURFACTANT = 138
-Z_AT_SURFACTANT = 143
+Z_AT_SURFACTANT = 144
 
 SYRINGE_PRACTICAL_VOLUME = 200  # uL
 SYRINGE_BUFFER_VOLUME = 20  # this a buffer volume reference in addition of the droplets volume, we will use twice that

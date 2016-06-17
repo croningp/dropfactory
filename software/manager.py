@@ -13,8 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 ##
 from pump import pump
-if not pump.controller.are_pumps_initialized():
-    raise Exception('Pumps not initalized, run initialize.py script first')
+pump.controller.smart_initialize()
 
 from robot import robot
 robot.init()

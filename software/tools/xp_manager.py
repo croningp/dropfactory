@@ -19,11 +19,19 @@ from constants import N_POSITION
 from xp_queue import XPQueue
 
 SLEEP_TIME = 0.1
+HOMING_EVERY_N_XP = 1
+MANAGER_STORAGE_FILE = os.path.join(HERE_PATH, 'manager_storage.json')
+MAX_WASTE_VOLUME = 10000  # 10L in ml
 
 
 def save_to_json(data, filename):
     with open(filename, 'w') as f:
         json.dump(data, f)
+
+
+def read_XP_from_file(filename):
+    with open(filename) as f:
+        return json.load(f)
 
 
 class XPManager(threading.Thread):
@@ -50,6 +58,7 @@ class XPManager(threading.Thread):
 
         self.is_paused = False
         self.verbose = verbose
+        self._n_xp_with_droplet_done = 0
 
         self.start()
 
@@ -100,6 +109,60 @@ class XPManager(threading.Thread):
         if self.is_paused and self.verbose:
             print 'Manager running again'
 
+    def create_default_manager_storage_file(self):
+        manager_storage = {}
+        manager_storage['waste_volume'] = MAX_WASTE_VOLUME
+        self.save_manager_storage(manager_storage)
+        if self.verbose:
+            print '-----WARNING-----'
+            print 'Created default manager storage file at {}'.format(MANAGER_STORAGE_FILE)
+            print manager_storage
+
+    def get_manager_storage(self):
+        if not os.path.exists(MANAGER_STORAGE_FILE):
+            self.create_default_manager_storage_file()
+        return read_XP_from_file(MANAGER_STORAGE_FILE)
+
+    def save_manager_storage(self, manager_storage_dict):
+        save_to_json(manager_storage_dict, MANAGER_STORAGE_FILE)
+
+    def get_waste_volume(self):
+        manager_storage = self.get_manager_storage()
+        return manager_storage['waste_volume']
+
+    def set_waste_volume(self, volume_in_ml):
+        manager_storage = self.get_manager_storage()
+        manager_storage['waste_volume'] = volume_in_ml
+        self.save_manager_storage(manager_storage)
+
+    def add_waste_volume(self, volume_in_ml):
+        current_waste_volume = self.get_waste_volume()
+        self.set_waste_volume(current_waste_volume + volume_in_ml)
+
+    def check_waste_volume(self):
+        current_waste_volume = self.get_waste_volume()
+        if self.verbose:
+            print 'Current waste volume is {} mL'.format(current_waste_volume)
+        if  current_waste_volume >= MAX_WASTE_VOLUME:
+            print '-----WARNING-----'
+            print 'Waste seems to be full!, option are:'
+            print '1- The waste is really full, change it, update new volume to zero'
+            print '2- The waste is not full, update new volume'
+            user_input_validated = False
+            while not user_input_validated:
+                response = raw_input('Enter the new volume in mL, 0 if empty: ')
+                if response.isdigit():
+                    new_waste_volume_in_ml = int(response)
+                    if 0 <= new_waste_volume_in_ml <= MAX_WASTE_VOLUME:
+                        self.set_waste_volume(new_waste_volume_in_ml)
+                        user_input_validated = True
+                    else:
+                        print 'New volume must be >=0 and <={}'.format(MAX_WASTE_VOLUME)
+                else:
+                    print '{} is not a valid number, you must provide a positive int or 0'.format(response)
+            print 'Great! manager continue is routine with waste volume = {}'.format(self.get_waste_volume())
+            print '-----------------'
+
     def add_start_info_to_XP_dict(self, XP_dict):
         time_now = time.time()
         XP_dict['manager_info'] = {}
@@ -126,6 +189,8 @@ class XPManager(threading.Thread):
         if self.verbose:
             print '###\n{} XP ongoing and {} XP waiting'.format(self.count_XP_ongoing(), self.count_XP_waiting())
 
+        self.check_waste_volume()
+
         # station 1, 5, 6, and 7 are doing nothing just waiting for min_waiting_time
         # fin max waiting time
         max_min_waiting_time = 0
@@ -140,9 +205,11 @@ class XPManager(threading.Thread):
         waiting_XP_dict = {'min_waiting_time': max_min_waiting_time}
         self.working_station_dict['wait_station'].launch(waiting_XP_dict)
 
-        # variable for checking what need to be cleaned
+        # variable for checking what needs to be cleaned
         clean_tube = False
         clean_syringe = False
+        clean_oil_waste_volume = 0
+        clean_dish_waste_volume = 0
 
         # check if any droplet to be made, thus syringe cleaned
         station_id = 2
@@ -150,7 +217,7 @@ class XPManager(threading.Thread):
         if droplet_XP_dict is not None:
             self.working_station_dict['make_droplet_station'].load_XP(droplet_XP_dict)
             if 'droplets' in droplet_XP_dict:
-                if droplet_XP_dict['droplets'] > 0:
+                if len(droplet_XP_dict['droplets']) > 0:
                     clean_syringe = True
 
         # launch station 0, filling step and record time of start
@@ -168,7 +235,10 @@ class XPManager(threading.Thread):
         if XP_dict is not None:
             self.working_station_dict['record_video_station'].launch(XP_dict)
             if 'droplets' in XP_dict:
-                if XP_dict['droplets'] > 0:
+                if len(XP_dict['droplets']) > 0:
+                    clean_syringe = True
+            if 'force_clean_syringe' in XP_dict:
+                if XP_dict['force_clean_syringe'] is True:
                     clean_syringe = True
 
         # launch station 4, cleaning
@@ -176,9 +246,12 @@ class XPManager(threading.Thread):
         XP_dict = self.xp_queue.get_XP_ongoing(station_id)
         if XP_dict is not None:
             self.working_station_dict['clean_dish_station'].launch(XP_dict)
+            clean_dish_waste_volume = self.working_station_dict['clean_dish_station'].get_added_waste_volume()
             clean_tube = True
 
         self.working_station_dict['clean_oil_station'].launch(XP_dict, clean_tube=clean_tube, clean_syringe=clean_syringe)  # only clean tube or syringe if needed. They share a pump so are combined in one working station with condition. XP_dict does not matter
+        clean_oil_waste_volume = self.working_station_dict['clean_oil_station'].get_added_waste_volume()
+
 
         # launch station 2, prepare droplets only once syringe is cleaned
         if droplet_XP_dict is not None:
@@ -194,7 +267,12 @@ class XPManager(threading.Thread):
         self.working_station_dict['make_droplet_station'].wait_until_idle()
         self.working_station_dict['record_video_station'].wait_until_idle()
 
-        # if there was an XP at station 7, the last one, record it
+        # update the waste
+        print clean_oil_waste_volume
+        print clean_dish_waste_volume
+        self.add_waste_volume(clean_oil_waste_volume + clean_dish_waste_volume)
+
+        # if there was an XP at station 7, the last one, save and print XP info
         station_id = 7
         XP_dict = self.xp_queue.get_XP_ongoing(station_id)
         if XP_dict is not None:
@@ -208,6 +286,14 @@ class XPManager(threading.Thread):
         # this is the moment to pause all station finished and before placing new droplets
         self.apply_pause()
 
+        # before placing new droplet, we home again the robot in case of slight shift on execution
+        if self._n_xp_with_droplet_done > HOMING_EVERY_N_XP:
+            self.robot.init(user_query=False)
+            self._n_xp_with_droplet_done = 0
+
         # launch station 2, make droplets
         if droplet_XP_dict is not None:
+            if 'droplets' in droplet_XP_dict:
+                if len(droplet_XP_dict['droplets']) > 0:
+                    self._n_xp_with_droplet_done += 1
             self.working_station_dict['make_droplet_station'].make_droplets()  # this is a blocking call

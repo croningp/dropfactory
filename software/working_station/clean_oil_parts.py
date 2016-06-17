@@ -16,6 +16,8 @@ from constants import CLEAN_HEAD_MIXTURE_DOWN
 from constants import Z_FREE_LEVEL
 from constants import XY_ABOVE_VIAL
 
+from constants import TUBE_OIL_VOLUME
+
 SLEEP_TIME = 0.1
 
 OUTLET_WASTE = 'E'
@@ -46,10 +48,6 @@ VOLUME_EMPTY_TUBE = 2
 N_WASH_TUBE = 5
 FLUSH_SPEED = 12000
 
-# VOLUME_AIR_DRY_ACETONE = 5
-# SPEED_AIR_DRY_ACETONE = 12000
-# N_DRY_ACETONE = 5
-
 
 class CleanOilParts(Task):
 
@@ -64,6 +62,22 @@ class CleanOilParts(Task):
         self.clean_tube = clean_tube
         self.clean_syringe = clean_syringe
         self.running = True
+
+    def get_added_waste_volume(self):
+        added_waste_volume = 0
+        if self.XP_dict is not None:
+            if self.clean_tube:
+                if 'formulation' in self.XP_dict:
+                    added_waste_volume += TUBE_OIL_VOLUME  # this is the volume of oil dispensed
+                for _ in range(N_WASH_TUBE):
+                    added_waste_volume += VOLUME_TUBE
+
+            if self.clean_syringe:
+                # we neglect oil volume remaining in syringe, shoudl be included in clean_tube already
+                added_waste_volume += VOLUME_VIAL_FIRST
+                added_waste_volume += VOLUME_VIAL_SECOND
+
+        return added_waste_volume
 
     def main(self):
         # The problem is that tube and syringe clean share the same pump..
@@ -227,11 +241,6 @@ class CleanTube(Task):
     def deliver_acetone_to_tube(self):
         self.acetone_pump.deliver(VOLUME_TUBE, to_valve=OUTLET_ACETONE_TUBE)
 
-    # def dry_acetone(self):
-    #     for _ in range(N_DRY_ACETONE):
-    #         self.waste_pump.pump(VOLUME_AIR_DRY_ACETONE, from_valve=INLET_WASTE_TUBE, speed_in=SPEED_AIR_DRY_ACETONE)
-    #         self.flush_waste()
-
     def main(self):
         # wait stuff ready
         self.clean_head.wait_until_idle()
@@ -256,10 +265,6 @@ class CleanTube(Task):
         # flush waste
         self.wait_until_pumps_idle()
         self.flush_waste()
-
-        # # reempty to have air flow and improve drying
-        # self.wait_until_pumps_idle()
-        # self.dry_acetone()
 
         self.raise_cleaning_head()  # this is blocking
         self.wait_until_pumps_idle()  # to ensure waste finished flushing

@@ -14,6 +14,8 @@ from tools.tasks import Task
 INLET = 'E'
 OUTLET = 'O'
 
+MAX_SURFACTANT_VOLUME = 3.5
+
 
 class FillPetriDish(Task):
 
@@ -27,8 +29,9 @@ class FillPetriDish(Task):
             # wait
             self.surfactant_pump.wait_until_idle()
 
+            surfactant_volume = self.XP_dict['surfactant_volume']
+            if surfactant_volume > MAX_SURFACTANT_VOLUME:
+                raise Exception('Surfactant volume of {} is above the max of {}').format(surfactant_volume, MAX_SURFACTANT_VOLUME)
+
             # transfer the correct amount, blocking call
-            self.surfactant_pump.transfer(
-                self.XP_dict['surfactant_volume'],
-                from_valve=INLET,
-                to_valve=OUTLET)
+            self.surfactant_pump.transfer(surfactant_volume, from_valve=INLET, to_valve=OUTLET)

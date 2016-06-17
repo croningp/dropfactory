@@ -10,12 +10,14 @@ import sys
 root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
+##
 from tools.tasks import Task
+
+from constants import TUBE_OIL_VOLUME
+
 
 INLET = 'I'
 OUTLET = 'O'
-
-TUBE_VOLUME = 0.5  # mL
 
 FILL_HEAD_DIPENSE_LEVEL = 30
 FILL_HEAD_CONTACT_LEVEL = 37
@@ -45,7 +47,7 @@ class FillOilTube(Task):
 
             # normallize ratios and compute oil volumes
             normalized_values = proba_normalize(formulation.values())
-            oil_volumes = normalized_values * TUBE_VOLUME
+            oil_volumes = normalized_values * TUBE_OIL_VOLUME
 
             # make sure ready
             self.fill_head.home()

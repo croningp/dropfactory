@@ -50,9 +50,10 @@ STIRRER = cmdMng.A1
 
 
 
-def init():
+def init(user_query=True):
     # order is really important here!
-    raw_input('\n### Robot initialization:\nMake sure the syringe and xyz system can go init safely, then press enter')
+    if user_query:
+        raw_input('\n### Robot initialization:\nMake sure the syringe and xyz system can go init safely, then press enter')
     SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
     FILL_HEAD_MIXTURE.home(wait=False)
@@ -71,10 +72,11 @@ def init():
     GENEVA_MIXTURE.wait_until_idle()
     # init syringe to zero level
     SYRINGE.wait_until_idle()
-    response = raw_input('## Do you want to empty the syringe in the vial [y/N]: ')
-    if response in ['y', 'Y']:
-        XY.move_to(XY_ABOVE_VIAL)
-        Z.move_to(Z_FREE_LEVEL)
+    if user_query:
+        response = raw_input('## Do you want to empty the syringe in the vial [y/N]: ')
+        if response in ['y', 'Y']:
+            XY.move_to(XY_ABOVE_VIAL)
+            Z.move_to(Z_FREE_LEVEL)
     SYRINGE.init()
 
 

@@ -11,6 +11,7 @@ class Task(threading.Thread):
         self.daemon = True
         self.interrupted = threading.Lock()
 
+        self.XP_dict = None
         self.running = False
 
     def run(self):

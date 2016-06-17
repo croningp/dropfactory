@@ -11,37 +11,20 @@ sys.path.append(HERE_PATH)
 import logging
 logging.basicConfig(level=logging.INFO)
 
-##
-from pump import pump
-if not pump.controller.are_pumps_initialized():
-    raise Exception('Pumps not initalized, run initialize.py script first')
-
-from robot import robot
-robot.init()
-
-##
-from working_station.clean_oil_parts import CleanSyringe
-
-from constants import N_POSITION
-
-XP_dict = {}
-
-
-from working_station.clean_oil_parts import CleanOilParts
-clean_oil_station = CleanOilParts(robot.XY,
-                                  robot.Z,
-                                  robot.SYRINGE,
-                                  robot.CLEAN_HEAD_MIXTURE,
-                                  pump.controller.waste_oil,
-                                  pump.controller.acetone_oil)
-
-
 import time
 
-start_time_total = time.time()
+##
+from manager import manager
 
-clean_oil_station.launch(XP_dict, clean_tube=False, clean_syringe=True)
-clean_oil_station.wait_until_idle()
+XP_dict = {
+    'force_clean_syringe': True
+}
 
-elapsed_total = time.time() - start_time_total
-print '###\nCleaning the syringe took {} seconds'.format(elapsed_total)
+start_time = time.time()
+
+manager.add_XP(XP_dict)
+manager.wait_until_XP_finished()
+
+elapsed = time.time() - start_time
+
+print 'Clean syringe took {} seconds'.format(elapsed)

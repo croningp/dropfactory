@@ -73,6 +73,14 @@ class CleanPetriDish(Task):
     def deliver_acetone(self):
         self.acetone_pump.deliver(VOLUME_DISH ,to_valve=OUTLET)
 
+    def get_added_waste_volume(self):
+        added_waste_volume = 0
+        if self.XP_dict is not None:
+            if 'surfactant_volume' in self.XP_dict:
+                added_waste_volume += self.XP_dict['surfactant_volume'] # we suck surfactant first
+            added_waste_volume += VOLUME_DISH * 4  # 1 acetone, 1 water, 2 acetone
+        return added_waste_volume
+
     def main(self):
         # wait stuff ready
         # self.clean_head is always ready it is a servo
