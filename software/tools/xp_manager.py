@@ -267,9 +267,7 @@ class XPManager(threading.Thread):
         self.working_station_dict['make_droplet_station'].wait_until_idle()
         self.working_station_dict['record_video_station'].wait_until_idle()
 
-        # update the waste
-        print clean_oil_waste_volume
-        print clean_dish_waste_volume
+        # update the waste counter
         self.add_waste_volume(clean_oil_waste_volume + clean_dish_waste_volume)
 
         # if there was an XP at station 7, the last one, save and print XP info

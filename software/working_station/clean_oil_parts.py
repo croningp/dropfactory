@@ -65,17 +65,17 @@ class CleanOilParts(Task):
 
     def get_added_waste_volume(self):
         added_waste_volume = 0
-        if self.XP_dict is not None:
-            if self.clean_tube:
+        if self.clean_tube:
+            if self.XP_dict is not None:
                 if 'formulation' in self.XP_dict:
                     added_waste_volume += TUBE_OIL_VOLUME  # this is the volume of oil dispensed
-                for _ in range(N_WASH_TUBE):
-                    added_waste_volume += VOLUME_TUBE
+            for _ in range(N_WASH_TUBE):
+                added_waste_volume += VOLUME_TUBE
 
-            if self.clean_syringe:
-                # we neglect oil volume remaining in syringe, shoudl be included in clean_tube already
-                added_waste_volume += VOLUME_VIAL_FIRST
-                added_waste_volume += VOLUME_VIAL_SECOND
+        if self.clean_syringe:
+            # we neglect oil volume remaining in syringe, shoudl be included in clean_tube already
+            added_waste_volume += VOLUME_VIAL_FIRST
+            added_waste_volume += VOLUME_VIAL_SECOND
 
         return added_waste_volume
 
