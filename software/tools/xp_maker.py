@@ -28,7 +28,7 @@ BASIC_XP_DICT = {
     ],
     'formulation': {},
     'video_info': {
-        'duration': 100
+        'duration': 90
     },
     'run_info': {}
 }

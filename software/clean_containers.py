@@ -16,12 +16,14 @@ import time
 ##
 from manager import manager
 
-XP_dict = {}
+XP_dict = {
+    'min_waiting_time': 60
+}
 
 start_time = time.time()
 
 # we do 8 times each
-for _ in range(1):
+for _ in range(8):
     manager.add_XP(XP_dict)
 
 manager.wait_until_XP_finished()

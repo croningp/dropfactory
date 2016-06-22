@@ -6,8 +6,7 @@
   },
   "default":{
       "micro_step_mode": 2,
-      "initialize_valve_position": "E",
-      "top_velocity": 6000
+      "initialize_valve_position": "E"
   },
   "groups": {
       "oils": ["dep","octanoic","octanol","pentanol"]
@@ -15,11 +14,13 @@
   "pumps": {
       "acetone_oil": {
         "switch": "0",
-        "volume": 5
+        "volume": 5,
+        "top_velocity": 8000
       },
       "waste_oil": {
         "switch": "1",
-        "volume": 12.5
+        "volume": 12.5,
+        "top_velocity": 8000
       },
       "acetone_dish": {
         "switch": "2",
@@ -28,7 +29,8 @@
       },
       "waste_dish": {
         "switch": "3",
-        "volume": 12.5
+        "volume": 12.5,
+        "top_velocity": 12000
       },
       "water_dish": {
         "switch": "4",
@@ -37,7 +39,8 @@
       },
       "surfactant": {
         "switch": "5",
-        "volume": 5
+        "volume": 5,
+        "top_velocity": 6000
       },
       "dep": {
         "switch": "6",

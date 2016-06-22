@@ -32,3 +32,5 @@ for _ in range(4):
     add_XP_to_pool_folder(oil_ratios, pool_folder)
 
 watcher = XPWatcher(manager, pool_folder)
+
+manager.wait_until_XP_finished()

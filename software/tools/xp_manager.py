@@ -19,7 +19,7 @@ from constants import N_POSITION
 from xp_queue import XPQueue
 
 SLEEP_TIME = 0.1
-HOMING_EVERY_N_XP = 1
+HOMING_EVERY_N_XP = 30
 MANAGER_STORAGE_FILE = os.path.join(HERE_PATH, 'manager_storage.json')
 MAX_WASTE_VOLUME = 10000  # 10L in ml
 
@@ -136,6 +136,8 @@ class XPManager(threading.Thread):
         self.save_manager_storage(manager_storage)
 
     def add_waste_volume(self, volume_in_ml):
+        if self.verbose:
+            print 'Adding {} mL to waste'.format(volume_in_ml)
         current_waste_volume = self.get_waste_volume()
         self.set_waste_volume(current_waste_volume + volume_in_ml)
 
@@ -219,6 +221,9 @@ class XPManager(threading.Thread):
             if 'droplets' in droplet_XP_dict:
                 if len(droplet_XP_dict['droplets']) > 0:
                     clean_syringe = True
+            if 'force_clean_syringe' in droplet_XP_dict:
+                if droplet_XP_dict['force_clean_syringe'] is True:
+                    clean_syringe = True
 
         # launch station 0, filling step and record time of start
         station_id = 0
@@ -236,9 +241,6 @@ class XPManager(threading.Thread):
             self.working_station_dict['record_video_station'].launch(XP_dict)
             if 'droplets' in XP_dict:
                 if len(XP_dict['droplets']) > 0:
-                    clean_syringe = True
-            if 'force_clean_syringe' in XP_dict:
-                if XP_dict['force_clean_syringe'] is True:
                     clean_syringe = True
 
         # launch station 4, cleaning
@@ -279,13 +281,15 @@ class XPManager(threading.Thread):
 
             if self.verbose:
                 if 'manager_info' in XP_dict:
-                    print 'XP started at {}, ended at {}, lasted {} seconds'.format( XP_dict['manager_info']['start_ctime'], XP_dict['manager_info']['end_ctime'], XP_dict['manager_info']['duration'])
+                    print 'XP started at {}, ended at {}, lasted {} seconds'.format( XP_dict['manager_info']['start_ctime'], XP_dict['manager_info']['end_ctime'], round(XP_dict['manager_info']['duration'], 2))
 
         # this is the moment to pause all station finished and before placing new droplets
         self.apply_pause()
 
         # before placing new droplet, we home again the robot in case of slight shift on execution
         if self._n_xp_with_droplet_done > HOMING_EVERY_N_XP:
+            if verbose:
+                print 'Robot homing..'
             self.robot.init(user_query=False)
             self._n_xp_with_droplet_done = 0
 

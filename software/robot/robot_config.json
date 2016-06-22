@@ -49,9 +49,9 @@
       "config": {
         "reverted_switch": true,
         "enabled_acceleration": false,
-        "speed": 6000,
-        "homing_speed": 6000,
-        "max_speed": 6000,
+        "speed": 12000,
+        "homing_speed": 12000,
+        "max_speed": 12000,
         "acceleration": 2000
       }
     },
@@ -61,10 +61,10 @@
         "reverted_switch": true,
         "enabled_acceleration": false,
         "reverted_direction": true,
-        "speed": 6000,
-        "homing_speed": 6000,
-        "max_speed": 2000,
-        "acceleration": 500
+        "speed": 12000,
+        "homing_speed": 12000,
+        "max_speed": 12000,
+        "acceleration": 2000
       }
     },
     "S1": {
@@ -73,10 +73,10 @@
         "reverted_switch": true,
         "enabled_acceleration": false,
         "reverted_direction": true,
-        "speed": 6000,
-        "homing_speed": 6000,
-        "max_speed": 2000,
-        "acceleration": 500
+        "speed": 12000,
+        "homing_speed": 12000,
+        "max_speed": 12000,
+        "acceleration": 2000
       }
     },
     "S2": {
@@ -85,10 +85,10 @@
         "reverted_switch": true,
         "enabled_acceleration": false,
         "reverted_direction": true,
-        "speed": 6000,
-        "homing_speed": 6000,
-        "max_speed": 2000,
-        "acceleration": 500
+        "speed": 12000,
+        "homing_speed": 12000,
+        "max_speed": 12000,
+        "acceleration": 2000
       }
     },
     "G1": {
@@ -98,8 +98,8 @@
         "enabled_acceleration": false,
         "speed": 1000,
         "homing_speed": 1000,
-        "max_speed": 2000,
-        "acceleration": 500
+        "max_speed": 1000,
+        "acceleration": 1000
       }
     },
     "G2": {
@@ -110,8 +110,8 @@
         "reverted_direction": true,
         "speed": 1000,
         "homing_speed": 1000,
-        "max_speed": 2000,
-        "acceleration": 500
+        "max_speed": 1000,
+        "acceleration": 1000
       }
     },
     "S3": {
