@@ -162,7 +162,7 @@ class XPManager(threading.Thread):
                         print 'New volume must be >=0 and <={}'.format(MAX_WASTE_VOLUME)
                 else:
                     print '{} is not a valid number, you must provide a positive int or 0'.format(response)
-            print 'Great! manager continue is routine with waste volume = {}'.format(self.get_waste_volume())
+            print 'Great! manager continue his routine with waste volume = {}'.format(self.get_waste_volume())
             print '-----------------'
 
     def add_start_info_to_XP_dict(self, XP_dict):

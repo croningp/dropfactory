@@ -28,7 +28,7 @@ Z_AT_SURFACTANT = 143.5
 SYRINGE_PRACTICAL_VOLUME = 200  # uL
 SYRINGE_BUFFER_VOLUME = 20  # this a buffer volume reference in addition of the droplets volume, we will use twice that
 
-N_SYRINGE_MIXING = 5
+N_SYRINGE_MIXING = 3
 SYRINGE_MIXING_VOLUME = 100  # uL
 
 MAX_DIST_TO_CENTER_DROPLET = 8  # mm
