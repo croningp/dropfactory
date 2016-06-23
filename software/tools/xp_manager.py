@@ -14,6 +14,7 @@ import time
 import json
 import threading
 
+from tools import email_notification
 from constants import N_POSITION
 
 from xp_queue import XPQueue
@@ -23,6 +24,7 @@ HOMING_EVERY_N_XP = 30
 MANAGER_STORAGE_FILE = os.path.join(HERE_PATH, 'manager_storage.json')
 MAX_WASTE_VOLUME = 10000  # 10L in ml
 
+EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
 
 def save_to_json(data, filename):
     with open(filename, 'w') as f:
@@ -32,6 +34,11 @@ def save_to_json(data, filename):
 def read_XP_from_file(filename):
     with open(filename) as f:
         return json.load(f)
+
+
+def send_email_notification(subject, body):
+    for toaddr in EMAILS_TO_NOTIFY:
+        email_notification.send_email_notification(toaddr, subject, body)
 
 
 class XPManager(threading.Thread):
@@ -146,6 +153,7 @@ class XPManager(threading.Thread):
         if self.verbose:
             print 'Current waste volume is {} mL'.format(current_waste_volume)
         if  current_waste_volume >= MAX_WASTE_VOLUME:
+            send_email_notification('[Dropfactory] Waste is full', 'Waste seems to be full, go change it.')
             print '-----WARNING-----'
             print 'Waste seems to be full!, option are:'
             print '1- The waste is really full, change it, update new volume to zero'

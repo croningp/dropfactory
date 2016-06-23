@@ -15,7 +15,7 @@ def read_json_file(filename):
         return json.load(f)
 
 
-def send_notification(toaddr, subject, body):
+def send_email_notification(toaddr, subject, body):
 
     credentials = read_json_file(CREDENTIALS_FILE)
     fromaddr = credentials['user']
