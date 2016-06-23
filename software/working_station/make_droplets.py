@@ -21,12 +21,15 @@ from constants import XY_ABOVE_DISH
 
 SLEEP_TIME = 0.1
 
-Z_SYRINGE_IN_OIL = 140
+Z_SYRINGE_IN_OIL = 136
 Z_ABOVE_SURFACTANT = 138
 Z_AT_SURFACTANT = 143.5
 
 SYRINGE_PRACTICAL_VOLUME = 200  # uL
 SYRINGE_BUFFER_VOLUME = 20  # this a buffer volume reference in addition of the droplets volume, we will use twice that
+
+N_SYRINGE_MIXING = 5
+SYRINGE_MIXING_VOLUME = 100  # uL
 
 MAX_DIST_TO_CENTER_DROPLET = 8  # mm
 
@@ -97,12 +100,18 @@ class MakeDroplets(threading.Thread):
 
         # check syringe is empty first
         if not self.syringe.is_empty():
-            raise Exception('Syringe is not empty!!! so probably not clear')
+            raise Exception('Syringe is not empty!!! so probably not clean')
 
         # move syringe into tube
         self.xy_axis.move_to(XY_ABOVE_TUBE)
         self.z_axis.move_to(Z_SYRINGE_IN_OIL)
 
+        # we pump and deliver in the tube to ensure mixing even more
+        for _ in range(N_SYRINGE_MIXING):
+            self.syringe.pump(SYRINGE_MIXING_VOLUME)
+            self.syringe.deliver(SYRINGE_MIXING_VOLUME)
+
+        # we pump the actual volume we need + some buffer
         self.syringe.pump(self.oil_volume_to_pump)
         self.syringe.deliver(SYRINGE_BUFFER_VOLUME)  # we drop one buffer to make the plunger ready, there is some backslash so by going down a bit we remove such issue
 

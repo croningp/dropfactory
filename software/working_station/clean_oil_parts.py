@@ -30,16 +30,14 @@ OUTLET_ACETONE_VIAL = 'O'
 
 # vial cleaning
 VOLUME_VIAL_FIRST = 2.5
-# VOLUME_EMPTY_VIAL_FIRST = 5
 VOLUME_VIAL_SECOND = 3
-# VOLUME_EMPTY_VIAL_SECOND = 6
 
 SYRINGE_IN_ACETONE_LEVEL = 147
 
 SYRINGE_FILL_AIR_VOLUME = 50  # uL
 SYRINGE_FILL_ACETONE_VOLUME = 100  # uL
 
-N_REPEAT_SYRINGE_ACETONE = 2
+N_REPEAT_SYRINGE_ACETONE = 3
 N_REPEAT_SYRINGE_AIR = 8
 
 # tube cleaning
@@ -103,10 +101,7 @@ class CleanOilParts(Task):
 
         if self.clean_syringe:
             # empty vial and clean it
-            self.clean_syringe_station.final_clean_vial(VOLUME_VIAL_SECOND)
-            # self.clean_syringe_station.empty_vial(VOLUME_EMPTY_VIAL_FIRST)  # this is blocking
-            # self.clean_syringe_station.fill_vial(VOLUME_VIAL_SECOND)  # this is blocking
-            # self.clean_syringe_station.empty_vial(VOLUME_EMPTY_VIAL_SECOND)  # this is blocking
+            self.clean_syringe_station.final_clean_vial(VOLUME_VIAL_SECOND) # this is blocking
             # wait before closing
             self.clean_syringe_station.wait_until_idle()
 

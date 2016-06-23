@@ -188,6 +188,8 @@ class XPManager(threading.Thread):
 
     def handle_XP_ongoing(self):
 
+        start_time = time.time()
+
         if self.verbose:
             print '###\n{} XP ongoing and {} XP waiting'.format(self.count_XP_ongoing(), self.count_XP_waiting())
 
@@ -268,6 +270,11 @@ class XPManager(threading.Thread):
         self.working_station_dict['fill_dish_station'].wait_until_idle()
         self.working_station_dict['make_droplet_station'].wait_until_idle()
         self.working_station_dict['record_video_station'].wait_until_idle()
+
+        # check time to execute all stations
+        if self.verbose:
+            elapsed = time.time() - start_time
+            print 'Running all station before droplet placing took {} seconds'.format(round(elapsed, 2))
 
         # update the waste counter
         self.add_waste_volume(clean_oil_waste_volume + clean_dish_waste_volume)
