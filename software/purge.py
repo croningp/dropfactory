@@ -19,6 +19,7 @@ from manager import manager
 XP_list = []
 
 XP_list.append({
+    'min_waiting_time': 60,
     'surfactant_volume': 1,
     'formulation': {
         'octanol': 1,
@@ -29,6 +30,7 @@ XP_list.append({
 })
 
 XP_list.append({
+    'min_waiting_time': 60,
     'surfactant_volume': 1,
     'formulation': {
         'octanol': 0,
@@ -39,6 +41,7 @@ XP_list.append({
 })
 
 XP_list.append({
+    'min_waiting_time': 60,
     'surfactant_volume': 1,
     'formulation': {
         'octanol': 0,
@@ -49,6 +52,7 @@ XP_list.append({
 })
 
 XP_list.append({
+    'min_waiting_time': 60,
     'surfactant_volume': 1,
     'formulation': {
         'octanol': 0,
@@ -61,7 +65,7 @@ XP_list.append({
 start_time = time.time()
 
 # we do 4 times each
-for _ in range(1):
+for _ in range(4):
     for XP_dict in XP_list:
         manager.add_XP(XP_dict)
 
