@@ -34,7 +34,6 @@ BASIC_XP_DICT = {
 }
 
 
-
 def save_to_json(data, filename):
     with open(filename, 'w') as f:
         json.dump(data, f)
@@ -61,11 +60,29 @@ def make_and_save_XP_dict(oil_ratios, xp_folder, save_filename):
     save_to_json(XP_dict, save_filename)
 
 
+def generate_XP_foldername(pool_folder, xp_number):
+    fname = filetools.generate_n_digit_name(xp_number, n_digit=5)
+    return os.path.join(pool_folder, fname)
+
+
+def save_XP_to_folder(oil_ratios, xp_folder):
+    # make the XP_dict and save it there
+    filetools.ensure_dir(xp_folder)
+    XP_filename = os.path.join(xp_folder, 'params.json')
+    make_and_save_XP_dict(oil_ratios, xp_folder, XP_filename)
+
+
 def add_XP_to_pool_folder(oil_ratios, pool_folder, n_digit=5):
+    # save incremetaly in pool_folder
     # ensure pool_folder exist and create incremetal foldername
     filetools.ensure_dir(pool_folder)
     xp_folder = filetools.generate_incremental_foldername(pool_folder, n_digit=n_digit)
-    filetools.ensure_dir(xp_folder)
-    # make the XP_dict and save it there
-    XP_filename = os.path.join(xp_folder, 'params.json')
-    make_and_save_XP_dict(oil_ratios, xp_folder, XP_filename)
+    save_XP_to_folder(oil_ratios, xp_folder)
+
+
+def count_XP_in_pool_folder(pool_folder):
+    # a pool folder must contain only XP folder, so we just count the number of folder
+    if os.path.exists(pool_folder):
+        return len(filetools.list_folders(pool_folder))
+    else:
+        return 0
