@@ -26,6 +26,7 @@ MAX_WASTE_VOLUME = 10000  # 10L in ml
 
 EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
 
+
 def save_to_json(data, filename):
     with open(filename, 'w') as f:
         json.dump(data, f)
@@ -152,7 +153,7 @@ class XPManager(threading.Thread):
         current_waste_volume = self.get_waste_volume()
         if self.verbose:
             print 'Current waste volume is {} mL'.format(current_waste_volume)
-        if  current_waste_volume >= MAX_WASTE_VOLUME:
+        if current_waste_volume >= MAX_WASTE_VOLUME:
             send_email_notification('[Dropfactory] Waste is full', 'Waste seems to be full, go change it.')
             print '-----WARNING-----'
             print 'Waste seems to be full!, option are:'
@@ -264,7 +265,6 @@ class XPManager(threading.Thread):
         self.working_station_dict['clean_oil_station'].launch(XP_dict, clean_tube=clean_tube, clean_syringe=clean_syringe)  # only clean tube or syringe if needed. They share a pump so are combined in one working station with condition. XP_dict does not matter
         clean_oil_waste_volume = self.working_station_dict['clean_oil_station'].get_added_waste_volume()
 
-
         # launch station 2, prepare droplets only once syringe is cleaned
         if droplet_XP_dict is not None:
             self.working_station_dict['clean_oil_station'].wait_until_idle()
@@ -296,14 +296,14 @@ class XPManager(threading.Thread):
 
             if self.verbose:
                 if 'manager_info' in XP_dict:
-                    print 'XP started at {}, ended at {}, lasted {} seconds'.format( XP_dict['manager_info']['start_ctime'], XP_dict['manager_info']['end_ctime'], round(XP_dict['manager_info']['duration'], 2))
+                    print 'XP started at {}, ended at {}, lasted {} seconds'.format(XP_dict['manager_info']['start_ctime'], XP_dict['manager_info']['end_ctime'], round(XP_dict['manager_info']['duration'], 2))
 
         # this is the moment to pause all station finished and before placing new droplets
         self.apply_pause()
 
         # before placing new droplet, we home again the robot in case of slight shift on execution
         if self._n_xp_with_droplet_done > HOMING_EVERY_N_XP:
-            if verbose:
+            if self.verbose:
                 print 'Robot homing..'
             self.robot.init(user_query=False)
             self._n_xp_with_droplet_done = 0
