@@ -24,8 +24,8 @@ configfile = os.path.join(HERE_PATH, 'robot_config.json')
 cmdMng = CommandManager.from_configfile(configfile)
 
 MICROSTEP = 32.0
-LINEAR_STEPPER_UNIT_PER_STEP = 0.05  #08  # mm/step
-SYRINGUE_UNIT_PER_MM =  250 / 59.70 #  59.70mm for 250ul
+LINEAR_STEPPER_UNIT_PER_STEP = 0.05  # 08  # mm/step
+SYRINGUE_UNIT_PER_MM = 250 / 59.70  # 59.70mm for 250ul
 
 X = Axis(cmdMng.X, 0.00935, 0, 160)
 Y = Axis(cmdMng.Y, 0.00935, 0, 100)
@@ -49,7 +49,6 @@ FILL_HEAD_MIXTURE = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0,
 STIRRER = cmdMng.A1
 
 
-
 def init(user_query=True):
     # order is really important here!
     if user_query:
@@ -59,7 +58,7 @@ def init(user_query=True):
     FILL_HEAD_MIXTURE.home(wait=False)
     CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
     # while other stuff homing, move z up to home
-    Z.home() # blocking
+    Z.home()  # blocking
     # when z up, move xy home
     XY.home()
     # wait all other stuff finished
@@ -106,6 +105,7 @@ def rotate_geneva_wheels():
     # wait
     GENEVA_DISH.wait_until_idle()
     GENEVA_MIXTURE.wait_until_idle()
+
 
 def bootstrap_geneva_wheel():
 

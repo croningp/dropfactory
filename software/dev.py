@@ -29,8 +29,6 @@ from working_station.record_video import RecordVideo
 from working_station.make_droplets import MakeDroplets
 from working_station.wait_station import WaitStation
 
-import time
-
 
 XP_dict = {
     'surfactant_volume': 3.5,

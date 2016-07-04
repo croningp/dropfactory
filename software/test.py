@@ -11,8 +11,6 @@ sys.path.append(HERE_PATH)
 import logging
 logging.basicConfig(level=logging.INFO)
 
-import time
-
 #
 from manager import manager
 from tools.xp_watcher import XPWatcher
@@ -24,7 +22,7 @@ oil_ratios = {
     'octanoic': 14,
     'pentanol': 19,
     'dep': 46
-    }
+}
 
 pool_folder = os.path.join(HERE_PATH, 'test_pool_folder')
 

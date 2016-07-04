@@ -55,3 +55,7 @@ working_station_dict['wait_station'] = WaitStation()
 #
 from tools.xp_manager import XPManager
 manager = XPManager(robot, working_station_dict)
+
+# manager.add_clean_syringe_XP()
+# manager.add_clean_containers_XP()
+# manager.add_purge_sequence_XP()
