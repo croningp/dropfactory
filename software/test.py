@@ -19,9 +19,9 @@ from tools.xp_maker import add_XP_to_pool_folder
 
 oil_ratios = {
     'octanol': 21,
-    'octanoic': 14,
+    'octanoic': 2.8,
     'pentanol': 19,
-    'dep': 46
+    'dep': 57.2
 }
 
 pool_folder = os.path.join(HERE_PATH, 'test_pool_folder')

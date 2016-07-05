@@ -49,11 +49,12 @@ FILL_HEAD_MIXTURE = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0,
 STIRRER = cmdMng.A1
 
 
-def init(user_query=True):
+def init(user_query=True, init_syringe=True, init_syringe_above_vial=True, init_geneva_wheel=True):
     # order is really important here!
     if user_query:
         raw_input('\n### Robot initialization:\nMake sure the syringe and xyz system can go init safely, then press enter')
-    SYRINGE.home(wait=False)
+    if init_syringe:
+        SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
     FILL_HEAD_MIXTURE.home(wait=False)
     CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
@@ -65,18 +66,27 @@ def init(user_query=True):
     FILL_HEAD_MIXTURE.wait_until_idle()
     CLEAN_HEAD_MIXTURE.wait_until_idle()
     # init geneva wheel
-    GENEVA_DISH.home(wait=False)
-    GENEVA_MIXTURE.home(wait=False)
-    GENEVA_DISH.wait_until_idle()
-    GENEVA_MIXTURE.wait_until_idle()
-    # init syringe to zero level
-    SYRINGE.wait_until_idle()
-    if user_query:
-        response = raw_input('## Do you want to empty the syringe in the vial [y/N]: ')
-        if response in ['y', 'Y']:
+    if init_geneva_wheel:
+        GENEVA_DISH.home(wait=False)
+        GENEVA_MIXTURE.home(wait=False)
+        GENEVA_DISH.wait_until_idle()
+        GENEVA_MIXTURE.wait_until_idle()
+    #
+    if init_syringe:
+        # init syringe to zero level
+        SYRINGE.wait_until_idle()
+
+        if user_query:
+            response = raw_input('## Do you want to empty the syringe in the vial [y/N]: ')
+            if response in ['y', 'Y']:
+                init_syringe_above_vial = True
+            else:
+                init_syringe_above_vial = False
+        #
+        if init_syringe_above_vial:
             XY.move_to(XY_ABOVE_VIAL)
             Z.move_to(Z_FREE_LEVEL)
-    SYRINGE.init()
+        SYRINGE.init()
 
 
 def rotate_geneva_wheels():

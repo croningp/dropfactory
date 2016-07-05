@@ -204,6 +204,13 @@ class XPManager(threading.Thread):
 
         self.check_waste_volume()
 
+        # before starting and every HOMING_EVERY_N_XP, we home again the robot in case of slight shift on execution
+        if self._n_xp_with_droplet_done >= HOMING_EVERY_N_XP:
+            if self.verbose:
+                print 'Robot homing..'
+            self.robot.init(user_query=False, init_syringe=True, init_syringe_above_vial=True, init_geneva_wheel=False)
+            self._n_xp_with_droplet_done = 0
+
         # station 1, 5, 6, and 7 are doing nothing just waiting for min_waiting_time
         # fin max waiting time
         max_min_waiting_time = 0
@@ -300,13 +307,6 @@ class XPManager(threading.Thread):
 
         # this is the moment to pause all station finished and before placing new droplets
         self.apply_pause()
-
-        # before placing new droplet, we home again the robot in case of slight shift on execution
-        if self._n_xp_with_droplet_done > HOMING_EVERY_N_XP:
-            if self.verbose:
-                print 'Robot homing..'
-            self.robot.init(user_query=False)
-            self._n_xp_with_droplet_done = 0
 
         # launch station 2, make droplets
         if droplet_XP_dict is not None:
