@@ -23,6 +23,7 @@ SLEEP_TIME = 0.1
 HOMING_EVERY_N_XP = 30
 MANAGER_STORAGE_FILE = os.path.join(HERE_PATH, 'manager_storage.json')
 MAX_WASTE_VOLUME = 10000  # 10L in ml
+WASTE_CORRECTION = 0.9  # waste correction
 
 EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
 
@@ -202,8 +203,6 @@ class XPManager(threading.Thread):
         if self.verbose:
             print '###\n{} XP ongoing and {} XP waiting'.format(self.count_XP_ongoing(), self.count_XP_waiting())
 
-        self.check_waste_volume()
-
         # before starting and every HOMING_EVERY_N_XP, we home again the robot in case of slight shift on execution
         if self._n_xp_with_droplet_done >= HOMING_EVERY_N_XP:
             if self.verbose:
@@ -292,7 +291,9 @@ class XPManager(threading.Thread):
             print 'Running all station before droplet placing took {} seconds'.format(round(elapsed, 2))
 
         # update the waste counter
-        self.add_waste_volume(clean_oil_waste_volume + clean_dish_waste_volume)
+        to_add_waste_volume = clean_oil_waste_volume + clean_dish_waste_volume
+        self.add_waste_volume(WASTE_CORRECTION * to_add_waste_volume)
+        self.check_waste_volume()
 
         # if there was an XP at station 7, the last one, save and print XP info
         station_id = 7
