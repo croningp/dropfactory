@@ -12,7 +12,9 @@ sys.path.append(root_path)
 
 import time
 import json
+import tempfile
 import threading
+import subprocess
 
 from tools import email_notification
 from constants import N_POSITION
@@ -24,6 +26,7 @@ HOMING_EVERY_N_XP = 30
 MANAGER_STORAGE_FILE = os.path.join(HERE_PATH, 'manager_storage.json')
 MAX_WASTE_VOLUME = 10000  # 10L in ml
 WASTE_CORRECTION = 0.9  # waste correction
+TIMEOUT_WASTE = 300
 
 EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
 
@@ -41,6 +44,30 @@ def read_XP_from_file(filename):
 def send_email_notification(subject, body):
     for toaddr in EMAILS_TO_NOTIFY:
         email_notification.send_email_notification(toaddr, subject, body)
+
+
+def timeout_editor_input(timeout=20, sleep_time=0.1, editor='gedit'):
+    # generate tmp file
+    tmpwastefilename = tempfile.NamedTemporaryFile().name
+
+    # open a gedit file
+    proc = subprocess.Popen([editor, tmpwastefilename])
+
+    # Wait until process terminates
+    start_time = time.time()
+    elapsed = 0
+    while elapsed <  timeout:
+        if proc.poll() is not None:
+            if os.path.exists(tmpwastefilename):
+                with open(tmpwastefilename) as f:
+                    return f.readline().strip()
+            else:
+                return ''
+        time.sleep(sleep_time)
+        elapsed = time.time() - start_time
+        time.sleep(sleep_time)
+    proc.terminate()
+    return ''
 
 
 class XPManager(threading.Thread):
@@ -68,6 +95,7 @@ class XPManager(threading.Thread):
         self.is_paused = False
         self.verbose = verbose
         self._n_xp_with_droplet_done = 0
+        self.bypass_waste_security = False
 
         self.start()
 
@@ -162,16 +190,21 @@ class XPManager(threading.Thread):
             print '2- The waste is not full, update new volume'
             user_input_validated = False
             while not user_input_validated:
-                response = raw_input('Enter the new volume in mL, 0 if empty: ')
-                if response.isdigit():
-                    new_waste_volume_in_ml = int(response)
-                    if 0 <= new_waste_volume_in_ml <= MAX_WASTE_VOLUME:
-                        self.set_waste_volume(new_waste_volume_in_ml)
-                        user_input_validated = True
-                    else:
-                        print 'New volume must be >=0 and <={}'.format(MAX_WASTE_VOLUME)
+                if self.bypass_waste_security:
+                    print 'Warning: Bypassing waste security!'
+                    user_input_validated = True
                 else:
-                    print '{} is not a valid number, you must provide a positive int or 0'.format(response)
+                    print 'Enter the new volume in mL on the first line of the open file, save and quit, put 0 if empty (timeout {}sec): '.format(TIMEOUT_WASTE)
+                    response = timeout_editor_input(TIMEOUT_WASTE)
+                    if response.isdigit():
+                        new_waste_volume_in_ml = int(response)
+                        if 0 <= new_waste_volume_in_ml <= MAX_WASTE_VOLUME:
+                            self.set_waste_volume(new_waste_volume_in_ml)
+                            user_input_validated = True
+                        else:
+                            print 'New volume must be >=0 and <={}'.format(MAX_WASTE_VOLUME)
+                    else:
+                        print '{} is not a valid number, you must provide a positive int or 0'.format(response)
             print 'Great! manager continue his routine with waste volume = {}'.format(self.get_waste_volume())
             print '-----------------'
 
