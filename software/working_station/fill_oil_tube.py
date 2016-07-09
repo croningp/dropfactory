@@ -65,8 +65,10 @@ class FillOilTube(Task):
                 pump.pump(volume_in_ml, INLET)
 
             # wait
-            self.fill_head.wait_until_idle()
             self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+            self.fill_head.wait_until_idle()
+            if self.fill_head.get_switch_state():
+                raise Exception('Fill head oil mixture did not go down, stepper might be broken...')
 
             # deliver
             for i in range(len(formulation)):

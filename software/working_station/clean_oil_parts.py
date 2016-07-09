@@ -101,7 +101,7 @@ class CleanOilParts(Task):
 
         if self.clean_syringe:
             # empty vial and clean it
-            self.clean_syringe_station.final_clean_vial(VOLUME_VIAL_SECOND) # this is blocking
+            self.clean_syringe_station.final_clean_vial(VOLUME_VIAL_SECOND)  # this is blocking
             # wait before closing
             self.clean_syringe_station.wait_until_idle()
 
@@ -181,7 +181,6 @@ class CleanSyringe(threading.Thread):
 
         self.empty_vial(2 * volume_in_ml)
 
-
     def start_cleaning_syringe_step(self):
         self.cleaning_syringe = True
 
@@ -241,6 +240,8 @@ class CleanTube(Task):
 
     def lower_cleaning_head(self):
         self.clean_head.move_to(CLEAN_HEAD_MIXTURE_DOWN)
+        if self.clean_head.get_switch_state():
+            raise Exception('Clean head oil mixture did not go down, stepper might be broken...')
 
     def raise_cleaning_head(self):
         self.clean_head.home()
