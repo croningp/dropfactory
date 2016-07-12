@@ -72,7 +72,7 @@ def timeout_editor_input(timeout=20, sleep_time=0.1, editor='gedit'):
 
 class XPManager(threading.Thread):
 
-    def __init__(self, robot, working_station_dict, verbose=True):
+    def __init__(self, pump, robot, working_station_dict, verbose=True):
         """
         The robot, pumps and working station must be initalized already
         working_station_dict contain all the instance of the useful station, that is, with exact name:
@@ -89,6 +89,7 @@ class XPManager(threading.Thread):
         self.interrupted = threading.Lock()
 
         self.xp_queue = XPQueue(N_POSITION)
+        self.pump = pump
         self.robot = robot
         self.working_station_dict = working_station_dict
 
@@ -375,3 +376,52 @@ class XPManager(threading.Thread):
 
         for _ in range(n_purge):
             self.add_XP(XP_dict)
+
+    def clean_oil_head(self, n_clean=4):
+        if self.xp_queue.any_XP_ongoing() or self.xp_queue.any_XP_waiting():
+            print 'XP still running or waiting, for security reasons, we do not allow to run this function!'
+            return
+
+        from constants import CLEAN_HEAD_MIXTURE_DOWN
+
+        VOLUME_TUBE = 0.8
+        FILL_HEAD_CLEAN_LEVEL = 38
+        VOLUME_OIL_CLEAN = 0.1
+        VALVE_OIL_CLEAN = 'O'
+
+        INLET_ACETONE = 'E'
+        OUTLET_ACETONE_TUBE = 'I'
+
+        for _ in range(n_clean):
+            # fill tube with acetone
+            self.pump.controller.acetone_oil.pump(VOLUME_TUBE, from_valve=INLET_ACETONE)
+            self.robot.CLEAN_HEAD_MIXTURE.move_to(CLEAN_HEAD_MIXTURE_DOWN)
+            if self.robot.CLEAN_HEAD_MIXTURE.get_switch_state():
+                raise Exception('Clean head oil mixture did not go down, stepper might be broken...')
+            self.pump.controller.acetone_oil.wait_until_idle()
+            self.pump.controller.acetone_oil.deliver(VOLUME_TUBE, to_valve=OUTLET_ACETONE_TUBE, wait=True)
+            self.robot.CLEAN_HEAD_MIXTURE.home()
+
+            # move tube to oil filling station
+            for _ in range(4):
+                self.robot.rotate_geneva_wheels()
+
+            # clean fill head in acetone
+            self.robot.FILL_HEAD_MIXTURE.move_to(FILL_HEAD_CLEAN_LEVEL)
+            if self.robot.FILL_HEAD_MIXTURE.get_switch_state():
+                raise Exception('Fill head oil mixture did not go down, stepper might be broken...')
+            for _ in range(4):
+                self.pump.controller.transfer(self.pump.controller.groups['oils'], VOLUME_OIL_CLEAN, from_valve=VALVE_OIL_CLEAN, to_valve=VALVE_OIL_CLEAN)
+            self.robot.FILL_HEAD_MIXTURE.home()
+
+            # move tube to cleaning station
+            for _ in range(4):
+                self.robot.rotate_geneva_wheels()
+
+            # clean
+            self.working_station_dict['clean_oil_station'].launch({}, clean_tube=True, clean_syringe=False)
+            self.working_station_dict['clean_oil_station'].wait_until_idle()
+            clean_oil_waste_volume = self.working_station_dict['clean_oil_station'].get_added_waste_volume()
+
+            total_volume_to_waste = VOLUME_TUBE + clean_oil_waste_volume
+            self.add_waste_volume(WASTE_CORRECTION * total_volume_to_waste)
