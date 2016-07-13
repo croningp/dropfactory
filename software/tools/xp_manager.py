@@ -425,3 +425,38 @@ class XPManager(threading.Thread):
 
             total_volume_to_waste = VOLUME_TUBE + clean_oil_waste_volume
             self.add_waste_volume(WASTE_CORRECTION * total_volume_to_waste)
+
+    def clean_surfactant_pump(self):
+        if self.xp_queue.any_XP_ongoing() or self.xp_queue.any_XP_waiting():
+            print 'XP still running or waiting, for security reasons, we do not allow to run this function!'
+            return
+
+        VOLUME_DISH = 3.5
+        INLET_WATER = 'I'
+        OUTLET_DISH = 'O'
+        SYRINGE_VOLUME = self.pump.controller.surfactant.total_volume
+        N_SYRINGE_UP_DOWN = 4
+
+        # ensure water all over tubing
+        for _ in range(2):
+            self.pump.controller.surfactant.transfer(VOLUME_DISH, INLET_WATER, OUTLET_DISH)
+            self.robot.rotate_geneva_wheels()
+
+        # go and back N_SYRINGE_UP_DOWN time with water to clean
+        self.pump.controller.surfactant.transfer(N_SYRINGE_UP_DOWN * SYRINGE_VOLUME, INLET_WATER, INLET_WATER)
+
+        # ensure to get rid of all remaining by flushing water all over tubing
+        for _ in range(2):
+            self.pump.controller.surfactant.transfer(VOLUME_DISH, INLET_WATER, OUTLET_DISH)
+            self.robot.rotate_geneva_wheels()
+
+        # clean
+        for _ in range(4):
+            self.working_station_dict['clean_dish_station'].launch({})
+            self.working_station_dict['clean_dish_station'].wait_until_idle()
+            clean_dish_waste_volume = self.working_station_dict['clean_dish_station'].get_added_waste_volume()
+
+            total_volume_to_waste = VOLUME_DISH + clean_dish_waste_volume
+            self.add_waste_volume(WASTE_CORRECTION * total_volume_to_waste)
+
+            self.robot.rotate_geneva_wheels()
