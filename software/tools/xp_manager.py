@@ -17,6 +17,7 @@ import threading
 import subprocess
 
 from tools import email_notification
+from tools.watchdog import Watchdog
 from constants import N_POSITION
 
 from xp_queue import XPQueue
@@ -29,6 +30,8 @@ WASTE_CORRECTION = 0.9  # waste correction
 TIMEOUT_WASTE = 300
 
 EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
+
+WATCHDOG_TIMEOUT = 600
 
 
 def save_to_json(data, filename):
@@ -44,6 +47,10 @@ def read_XP_from_file(filename):
 def send_email_notification(subject, body):
     for toaddr in EMAILS_TO_NOTIFY:
         email_notification.send_email_notification(toaddr, subject, body)
+
+
+def send_watchdog_email():
+    send_email_notification('[Dropfactory] Watchdog timout', 'Watchdog raised, something might be wrong with dropfactory')
 
 
 def timeout_editor_input(timeout=20, sleep_time=0.1, editor='gedit'):
@@ -121,6 +128,7 @@ class XPManager(threading.Thread):
 
     def run(self):
         self.interrupted.acquire()
+        self.watchdog = Watchdog(WATCHDOG_TIMEOUT, send_watchdog_email)
         while self.interrupted.locked():
             if self.xp_queue.any_XP_ongoing():
                 self.handle_XP_ongoing()
@@ -128,6 +136,7 @@ class XPManager(threading.Thread):
             else:
                 self.apply_pause()
             self.xp_queue.cycle()
+            self.watchdog.reset()  # we do a reset here because watchdog can be raised for reason other that a bug/exception, e.g. when the waste is full or manager is paused
             time.sleep(SLEEP_TIME)
 
     def stop(self):
