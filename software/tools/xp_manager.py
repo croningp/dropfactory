@@ -136,7 +136,7 @@ class XPManager(threading.Thread):
             else:
                 self.apply_pause()
             self.xp_queue.cycle()
-            self.watchdog.reset()  # we do a reset here because watchdog can be raised for reason other that a bug/exception, e.g. when the waste is full or manager is paused
+            self.watchdog.reset()  # we do a reset here because watchdog can be raised for reasons other than a bug/exception, e.g. when the waste is full or manager is paused
             time.sleep(SLEEP_TIME)
 
     def stop(self):
