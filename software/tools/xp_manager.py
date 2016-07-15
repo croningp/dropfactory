@@ -133,10 +133,12 @@ class XPManager(threading.Thread):
             if self.xp_queue.any_XP_ongoing():
                 self.handle_XP_ongoing()
                 self.robot.rotate_geneva_wheels()
+                # ping the watchdog here so we get a message when no more experiments are running
+                self.watchdog.reset()  # we do a reset here because watchdog can be raised for reasons other than a bug/exception/no more XP, e.g. when the waste is full or manager is paused
             else:
+                # a pause is done inside the handle_XP_ongoing main, but if there is not XP ongoing, it is still useful to be able to pause
                 self.apply_pause()
             self.xp_queue.cycle()
-            self.watchdog.reset()  # we do a reset here because watchdog can be raised for reasons other than a bug/exception, e.g. when the waste is full or manager is paused
             time.sleep(SLEEP_TIME)
 
     def stop(self):

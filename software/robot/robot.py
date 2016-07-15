@@ -10,6 +10,8 @@ import sys
 root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
+import time
+
 from constants import CLEAN_HEAD_MIXTURE_MAX
 from constants import CLEAN_HEAD_DISH_UP
 from constants import FILL_HEAD_MIXTURE_MAX
@@ -47,6 +49,9 @@ CLEAN_HEAD_MIXTURE = Axis(cmdMng.S2, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0
 FILL_HEAD_MIXTURE = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, FILL_HEAD_MIXTURE_MAX)
 
 STIRRER = cmdMng.A1
+
+GENEVA_TIMEOUT = 30
+SLEEP_TIME = 0.5
 
 
 def init(user_query=True, init_syringe=True, init_syringe_above_vial=True, init_geneva_wheel=True):
@@ -112,9 +117,17 @@ def rotate_geneva_wheels():
     # home
     GENEVA_DISH.home(wait=False)
     GENEVA_MIXTURE.home(wait=False)
-    # wait
-    GENEVA_DISH.wait_until_idle()
-    GENEVA_MIXTURE.wait_until_idle()
+
+    start_time = time.time()
+    while GENEVA_DISH.is_moving or GENEVA_MIXTURE.is_moving:
+        time.sleep(SLEEP_TIME)
+
+        elapsed = time.time() - start_time
+        if elapsed > GENEVA_TIMEOUT:
+            GENEVA_DISH.stop()
+            GENEVA_MIXTURE.stop()
+            raise Exception('Geneva wheels seem to not be moving, please check what is happening')
+
 
 
 def bootstrap_geneva_wheel():
