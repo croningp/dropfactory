@@ -3,7 +3,7 @@ import inspect
 HERE_PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 from pycont.controller import MultiPumpController
 

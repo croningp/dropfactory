@@ -255,17 +255,17 @@ class XPManager(threading.Thread):
             self.robot.init(user_query=False, init_syringe=True, init_syringe_above_vial=True, init_geneva_wheel=False)
             self._n_xp_with_droplet_done = 0
 
-        # station 1, 5, 6, and 7 are doing nothing just waiting for min_waiting_time
-        # fin max waiting time
+        # station 5, 6, and 7 are doing nothing just waiting for min_waiting_time for evaporation
+        # find max waiting time
         max_min_waiting_time = 0
-        for station_id in [1, 5, 6, 7]:
+        for station_id in [5, 6, 7]:
             XP_dict = self.xp_queue.get_XP_ongoing(station_id)
             if XP_dict is not None:
                 if 'min_waiting_time' in XP_dict:
                     min_waiting_time = XP_dict['min_waiting_time']
                     if min_waiting_time > max_min_waiting_time:
                         max_min_waiting_time = min_waiting_time
-
+        # apply max min waiting time
         waiting_XP_dict = {'min_waiting_time': max_min_waiting_time}
         self.working_station_dict['wait_station'].launch(waiting_XP_dict)
 
