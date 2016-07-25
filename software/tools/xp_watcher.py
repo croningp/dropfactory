@@ -38,7 +38,6 @@ class XPWatcher(threading.Thread):
             folders.sort()
             for folder in folders:
                 if folder not in self.processed_folder:
-                    self.processed_folder.append(folder)
                     param_file = os.path.join(folder, self.param_filename)
                     ignore_file = os.path.join(folder, self.ignore_filename)
                     if os.path.exists(param_file) and not os.path.exists(ignore_file):
@@ -46,6 +45,7 @@ class XPWatcher(threading.Thread):
                             print 'Adding {} to manager queue'.format(param_file)
                         XP_dict = read_XP_from_file(param_file)
                         self.manager.add_XP(XP_dict)
+                        self.processed_folder.append(folder)
             time.sleep(SLEEP_TIME)
 
     def stop(self):
