@@ -395,7 +395,7 @@ class XPManager(threading.Thread):
 
         from constants import CLEAN_HEAD_MIXTURE_DOWN
 
-        VOLUME_TUBE = 0.8
+        VOLUME_TUBE = 0.7
         FILL_HEAD_CLEAN_LEVEL = 38
         VOLUME_OIL_CLEAN = 0.1
         VALVE_OIL_CLEAN = 'O'
