@@ -8,7 +8,6 @@ root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
 
-
 from chemobot_tools.v4l2 import V4L2
 from chemobot_tools.video_recorder import VideoRecorder
 

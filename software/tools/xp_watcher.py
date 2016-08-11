@@ -7,6 +7,9 @@ import filetools
 
 SLEEP_TIME = 1
 
+XP_PARAMS_FILENAME = 'params.json'
+VIDEO_FILENAME = 'video.avi'
+
 
 def read_XP_from_file(filename):
     with open(filename) as f:
@@ -15,7 +18,7 @@ def read_XP_from_file(filename):
 
 class XPWatcher(threading.Thread):
 
-    def __init__(self, manager, folder_to_watch, param_filename='params.json', ignore_filename='video.avi', verbose=True):
+    def __init__(self, manager, folder_to_watch, param_filename=XP_PARAMS_FILENAME, ignore_filename=VIDEO_FILENAME, verbose=True):
         threading.Thread.__init__(self)
         self.daemon = True
         self.interrupted = threading.Lock()
