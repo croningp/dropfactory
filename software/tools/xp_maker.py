@@ -3,6 +3,10 @@ import json
 
 import filetools
 
+from filenaming import XP_PARAMS_FILENAME
+from filenaming import VIDEO_FILENAME
+from filenaming import RUN_INFO_FILENAME
+
 DEFAULT_DROPLET_VOLUME = 4
 
 BASIC_XP_DICT = {
@@ -47,9 +51,9 @@ def make_XP_dict(oil_ratios, xp_folder):
     for oil_name in oil_names:
         XP_dict['formulation'][oil_name] = oil_ratios[oil_name]
 
-    XP_dict['run_info']['filename'] = os.path.join(xp_folder, 'run_info.json')
+    XP_dict['run_info']['filename'] = os.path.join(xp_folder, RUN_INFO_FILENAME)
 
-    XP_dict['video_info']['filename'] = os.path.join(xp_folder, 'video.avi')
+    XP_dict['video_info']['filename'] = os.path.join(xp_folder, VIDEO_FILENAME)
 
     return XP_dict
 
@@ -68,7 +72,7 @@ def generate_XP_foldername(pool_folder, xp_number):
 def save_XP_to_folder(oil_ratios, xp_folder):
     # make the XP_dict and save it there
     filetools.ensure_dir(xp_folder)
-    XP_filename = os.path.join(xp_folder, 'params.json')
+    XP_filename = os.path.join(xp_folder, XP_PARAMS_FILENAME)
     make_and_save_XP_dict(oil_ratios, xp_folder, XP_filename)
 
 

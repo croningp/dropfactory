@@ -7,8 +7,8 @@ import filetools
 
 SLEEP_TIME = 1
 
-XP_PARAMS_FILENAME = 'params.json'
-VIDEO_FILENAME = 'video.avi'
+from filenaming import XP_PARAMS_FILENAME
+from filenaming import VIDEO_FILENAME
 
 
 def read_XP_from_file(filename):
