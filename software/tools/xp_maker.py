@@ -7,6 +7,8 @@ from filenaming import XP_PARAMS_FILENAME
 from filenaming import VIDEO_FILENAME
 from filenaming import RUN_INFO_FILENAME
 
+FOLDERNAME_N_DIGIT = 5
+
 DEFAULT_DROPLET_VOLUME = 4
 
 BASIC_XP_DICT = {
@@ -65,7 +67,7 @@ def make_and_save_XP_dict(oil_ratios, xp_folder, save_filename):
 
 
 def generate_XP_foldername(pool_folder, xp_number):
-    fname = filetools.generate_n_digit_name(xp_number, n_digit=5)
+    fname = filetools.generate_n_digit_name(xp_number, n_digit=FOLDERNAME_N_DIGIT)
     return os.path.join(pool_folder, fname)
 
 
@@ -76,7 +78,7 @@ def save_XP_to_folder(oil_ratios, xp_folder):
     make_and_save_XP_dict(oil_ratios, xp_folder, XP_filename)
 
 
-def add_XP_to_pool_folder(oil_ratios, pool_folder, n_digit=5):
+def add_XP_to_pool_folder(oil_ratios, pool_folder, n_digit=FOLDERNAME_N_DIGIT):
     # save incremetaly in pool_folder
     # ensure pool_folder exist and create incremetal foldername
     filetools.ensure_dir(pool_folder)
