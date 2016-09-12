@@ -24,16 +24,19 @@
       },
       "acetone_dish": {
         "switch": "2",
+        "initialize_valve_position": "O",
         "volume": 5,
         "top_velocity": 12000
       },
       "waste_dish": {
         "switch": "3",
+        "initialize_valve_position": "O",
         "volume": 12.5,
         "top_velocity": 12000
       },
       "water_dish": {
         "switch": "4",
+        "initialize_valve_position": "O",
         "volume": 5,
         "top_velocity": 12000
       },

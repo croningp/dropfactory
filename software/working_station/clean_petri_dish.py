@@ -15,7 +15,7 @@ from tools.tasks import Task
 from constants import CLEAN_HEAD_DISH_UP
 from constants import CLEAN_HEAD_DISH_DOWN
 
-INLET = 'E'
+INLET = 'O'
 OUTLET = 'I'
 
 VOLUME_DISH = 4.5
