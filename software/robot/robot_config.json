@@ -117,11 +117,11 @@
     "S3": {
       "command_id": "S3"
     },
-    "A1": {
-      "command_id": "A1"
-    },
     "D1": {
       "command_id": "D1"
+    },
+    "SHT15": {
+      "command_id": "SHT15"
     }
   }
 }

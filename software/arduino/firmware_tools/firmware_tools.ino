@@ -23,9 +23,6 @@ CommandLinearAccelStepperActuator S2(stp_S2, 19, 30);
 #include <CommandServo.h>
 CommandServo cmdServo(17);
 
-#include <CommandAnalogWrite.h>
-CommandAnalogWrite aw(16);
-
 #include <CommandDigitalRead.h>
 CommandDigitalRead dr(2);
 
@@ -38,7 +35,6 @@ void setup()
   S1.registerToCommandManager(cmdMng, "S1");
   S2.registerToCommandManager(cmdMng, "S2");
   cmdServo.registerToCommandManager(cmdMng, "S3");
-  aw.registerToCommandManager(cmdMng, "A1");
   dr.registerToCommandManager(cmdMng, "D1");
 
   cmdMng.init();
