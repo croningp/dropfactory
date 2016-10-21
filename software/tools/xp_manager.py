@@ -226,6 +226,14 @@ class XPManager(threading.Thread):
         XP_dict['manager_info']['start_time'] = time_now
         XP_dict['manager_info']['start_ctime'] = time.ctime(time_now)
 
+
+    def add_temperature_info_to_XP_dict(self, XP_dict):
+        XP_dict['manager_info']['temperature'] = self.robot.TEMPERATURE_SENSOR.get_celsius()
+        XP_dict['manager_info']['humidity'] = self.robot.TEMPERATURE_SENSOR.get_humidity()
+        temp_time = time.time()
+        XP_dict['manager_info']['temp_time'] = temp_time
+        XP_dict['manager_info']['temp_ctime'] = time.ctime(temp_time)
+
     def add_end_info_to_XP_dict(self, XP_dict):
         start_time = XP_dict['manager_info']['start_time']
 
@@ -356,6 +364,7 @@ class XPManager(threading.Thread):
 
         # launch station 2, make droplets
         if droplet_XP_dict is not None:
+            self.add_temperature_info_to_XP_dict(droplet_XP_dict)
             if 'droplets' in droplet_XP_dict:
                 if len(droplet_XP_dict['droplets']) > 0:
                     self._n_xp_with_droplet_done += 1
