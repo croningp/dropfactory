@@ -29,7 +29,7 @@ MAX_WASTE_VOLUME = 10000  # 10L in ml
 WASTE_CORRECTION = 0.9  # waste correction
 TIMEOUT_WASTE = 300
 
-EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
+EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk', 'l.points.1@research.gla.ac.uk']  # must be a list
 
 WATCHDOG_TIMEOUT = 600
 
