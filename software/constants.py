@@ -4,8 +4,8 @@
 N_POSITION = 8
 
 # petri dish cleaning
-CLEAN_HEAD_DISH_UP = 50
-CLEAN_HEAD_DISH_DOWN = 20
+CLEAN_HEAD_DISH_UP = 35
+CLEAN_HEAD_DISH_DOWN = 5
 
 # tube mixture of oil cleaning
 CLEAN_HEAD_MIXTURE_DOWN = 28
