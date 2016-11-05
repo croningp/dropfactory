@@ -256,6 +256,22 @@ class XPManager(threading.Thread):
         if self.verbose:
             print '###\n{} XP ongoing and {} XP waiting'.format(self.count_XP_ongoing(), self.count_XP_waiting())
 
+        # variable for checking what needs to be cleaned
+        clean_tube = False
+        clean_syringe = False
+        clean_oil_waste_volume = 0
+        clean_dish_waste_volume = 0
+
+        # launch station 3 (recording video) before all else, we home from time to time and this delays the start of the other station
+        # also check if droplet was just made before, hence is step 3 filming
+        station_id = 3
+        XP_dict = self.xp_queue.get_XP_ongoing(station_id)
+        if XP_dict is not None:
+            self.working_station_dict['record_video_station'].launch(XP_dict)
+            if 'droplets' in XP_dict:
+                if len(XP_dict['droplets']) > 0:
+                    clean_syringe = True
+
         # before starting and every HOMING_EVERY_N_XP, we home again the robot in case of slight shift on execution
         if self._n_xp_with_droplet_done >= HOMING_EVERY_N_XP:
             if self.verbose:
@@ -277,12 +293,6 @@ class XPManager(threading.Thread):
         waiting_XP_dict = {'min_waiting_time': max_min_waiting_time}
         self.working_station_dict['wait_station'].launch(waiting_XP_dict)
 
-        # variable for checking what needs to be cleaned
-        clean_tube = False
-        clean_syringe = False
-        clean_oil_waste_volume = 0
-        clean_dish_waste_volume = 0
-
         # check if any droplet to be made, thus syringe cleaned
         station_id = 2
         droplet_XP_dict = self.xp_queue.get_XP_ongoing(station_id)
@@ -302,16 +312,6 @@ class XPManager(threading.Thread):
             self.add_start_info_to_XP_dict(XP_dict)
             self.working_station_dict['fill_oil_station'].launch(XP_dict)
             self.working_station_dict['fill_dish_station'].launch(XP_dict)
-
-        # launch station 3, recording video
-        # also check if droplet was just made before, hence is step 3 filming
-        station_id = 3
-        XP_dict = self.xp_queue.get_XP_ongoing(station_id)
-        if XP_dict is not None:
-            self.working_station_dict['record_video_station'].launch(XP_dict)
-            if 'droplets' in XP_dict:
-                if len(XP_dict['droplets']) > 0:
-                    clean_syringe = True
 
         # launch station 4, cleaning
         station_id = 4
