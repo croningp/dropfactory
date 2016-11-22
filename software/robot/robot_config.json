@@ -91,6 +91,18 @@
         "acceleration": 2000
       }
     },
+    "S3": {
+      "command_id": "S3",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": false,
+        "reverted_direction": true,
+        "speed": 12000,
+        "homing_speed": 12000,
+        "max_speed": 12000,
+        "acceleration": 2000
+      }
+    },
     "G1": {
       "command_id": "G1",
       "config": {
@@ -113,12 +125,6 @@
         "max_speed": 1000,
         "acceleration": 1000
       }
-    },
-    "S3": {
-      "command_id": "S3"
-    },
-    "D1": {
-      "command_id": "D1"
     },
     "SHT15": {
       "command_id": "SHT15"

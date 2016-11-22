@@ -39,7 +39,7 @@ XP_dict = {
         'dep': 46
     },
     'video_info': {
-        'path': os.path.join(HERE_PATH, 'video.avi'),
+        'filename': os.path.join(HERE_PATH, 'video.avi'),
         'duration': 10
     },
     'droplets': [
@@ -68,7 +68,6 @@ fill_dish_station = FillPetriDish(pump.controller.surfactant)
 fill_oil_station = FillOilTube(pump.controller, robot.FILL_HEAD_MIXTURE)
 
 clean_dish_station = CleanPetriDish(robot.CLEAN_HEAD_DISH,
-                                    robot.CLEAN_HEAD_DISH_SWITCH,
                                     pump.controller.waste_dish,
                                     pump.controller.water_dish,
                                     pump.controller.acetone_dish)

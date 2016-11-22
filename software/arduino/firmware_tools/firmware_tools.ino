@@ -19,12 +19,8 @@ CommandLinearAccelStepperActuator S1(stp_S1, 18, 24);
 AccelStepper stp_S2(AccelStepper::DRIVER, 36, 34);
 CommandLinearAccelStepperActuator S2(stp_S2, 19, 30);
 
-#include <Servo.h>
-#include <CommandServo.h>
-CommandServo cmdServo(17);
-
-#include <CommandDigitalRead.h>
-CommandDigitalRead dr(2);
+AccelStepper stp_S3(AccelStepper::DRIVER, 46, 48);
+CommandLinearAccelStepperActuator S3(stp_S3, 2, 62);
 
 void setup()
 {
@@ -34,8 +30,7 @@ void setup()
   G2.registerToCommandManager(cmdMng, "G2");
   S1.registerToCommandManager(cmdMng, "S1");
   S2.registerToCommandManager(cmdMng, "S2");
-  cmdServo.registerToCommandManager(cmdMng, "S3");
-  dr.registerToCommandManager(cmdMng, "D1");
+  S3.registerToCommandManager(cmdMng, "S3");
 
   cmdMng.init();
 }

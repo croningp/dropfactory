@@ -13,7 +13,7 @@ sys.path.append(root_path)
 import time
 
 from constants import CLEAN_HEAD_MIXTURE_MAX
-from constants import CLEAN_HEAD_DISH_UP
+from constants import CLEAN_HEAD_DISH_MAX
 from constants import FILL_HEAD_MIXTURE_MAX
 from constants import XY_ABOVE_VIAL
 from constants import Z_FREE_LEVEL
@@ -41,10 +41,9 @@ SYRINGE_MAX = 235
 SYRINGE_AXIS = Axis(cmdMng.S1, LINEAR_STEPPER_UNIT_PER_STEP * SYRINGUE_UNIT_PER_MM / MICROSTEP, 0, SYRINGE_MAX)
 SYRINGE = Syringe(SYRINGE_AXIS, SYRINGE_MAX)
 
-CLEAN_HEAD_DISH = cmdMng.S3
-CLEAN_HEAD_DISH_SWITCH = cmdMng.D1
-
 CLEAN_HEAD_MIXTURE = Axis(cmdMng.S2, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, CLEAN_HEAD_MIXTURE_MAX)
+
+CLEAN_HEAD_DISH = Axis(cmdMng.S3, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, CLEAN_HEAD_DISH_MAX)
 
 FILL_HEAD_MIXTURE = Axis(cmdMng.S4, LINEAR_STEPPER_UNIT_PER_STEP / MICROSTEP, 0, FILL_HEAD_MIXTURE_MAX)
 
@@ -61,15 +60,16 @@ def init(user_query=True, init_syringe=True, init_syringe_above_vial=True, init_
     if init_syringe:
         SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
+    CLEAN_HEAD_DISH.home(wait=False)
     FILL_HEAD_MIXTURE.home(wait=False)
-    CLEAN_HEAD_DISH.set_angle(CLEAN_HEAD_DISH_UP)
     # while other stuff homing, move z up to home
     Z.home()  # blocking
     # when z up, move xy home
     XY.home()
     # wait all other stuff finished
-    FILL_HEAD_MIXTURE.wait_until_idle()
     CLEAN_HEAD_MIXTURE.wait_until_idle()
+    CLEAN_HEAD_DISH.wait_until_idle()
+    FILL_HEAD_MIXTURE.wait_until_idle()
     # init geneva wheel
     if init_geneva_wheel:
         GENEVA_DISH.home(wait=False)
@@ -95,23 +95,16 @@ def init(user_query=True, init_syringe=True, init_syringe_above_vial=True, init_
 
 
 def rotate_geneva_wheels():
-    clean_mixture_head_position = CLEAN_HEAD_MIXTURE.get_current_position()
-    if clean_mixture_head_position != 0:
+    if not CLEAN_HEAD_MIXTURE.get_switch_state():
         raise Exception('Cannot rotate geneva wheels, cleaning head mixture is not home')
 
-    dish_head_position = CLEAN_HEAD_DISH.get_angle()
-    if dish_head_position != CLEAN_HEAD_DISH_UP:
+    if not CLEAN_HEAD_DISH.get_switch_state():
         raise Exception('Cannot rotate geneva wheels, cleaning head dish is not in up position')
 
-    fill_mixture_head_position = FILL_HEAD_MIXTURE.get_current_position()
-    if fill_mixture_head_position != 0:
+    if not FILL_HEAD_MIXTURE.get_switch_state():
         raise Exception('Cannot rotate geneva wheels, filling head mixture is not home')
 
-    if not CLEAN_HEAD_DISH_SWITCH.get_state():  # True when switch not pressed
-        raise Exception('Cannot rotate geneva wheels, the dish cleaning head does not seems to be up')
-
     # we move a bit until the end stop are relased, then we home (thus turn until it touch the end stops)
-
     # bootstrap wheel
     bootstrap_geneva_wheel()
     # home

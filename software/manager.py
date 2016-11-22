@@ -29,7 +29,6 @@ working_station_dict['fill_oil_station'] = FillOilTube(pump.controller, robot.FI
 
 from working_station.clean_petri_dish import CleanPetriDish
 working_station_dict['clean_dish_station'] = CleanPetriDish(robot.CLEAN_HEAD_DISH,
-                                                            robot.CLEAN_HEAD_DISH_SWITCH,
                                                             pump.controller.waste_dish,
                                                             pump.controller.water_dish,
                                                             pump.controller.acetone_dish)
@@ -55,7 +54,3 @@ working_station_dict['wait_station'] = WaitStation()
 #
 from tools.xp_manager import XPManager
 manager = XPManager(pump, robot, working_station_dict)
-
-# manager.add_clean_syringe_XP()
-# manager.add_clean_containers_XP()
-# manager.add_purge_sequence_XP()
