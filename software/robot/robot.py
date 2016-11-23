@@ -57,8 +57,6 @@ def init(user_query=True, init_syringe=True, init_syringe_above_vial=True, init_
     # order is really important here!
     if user_query:
         raw_input('\n### Robot initialization:\nMake sure the syringe and xyz system can go init safely, then press enter')
-    if init_syringe:
-        SYRINGE.home(wait=False)
     CLEAN_HEAD_MIXTURE.home(wait=False)
     CLEAN_HEAD_DISH.home(wait=False)
     FILL_HEAD_MIXTURE.home(wait=False)
@@ -70,15 +68,19 @@ def init(user_query=True, init_syringe=True, init_syringe_above_vial=True, init_
     CLEAN_HEAD_MIXTURE.wait_until_idle()
     CLEAN_HEAD_DISH.wait_until_idle()
     FILL_HEAD_MIXTURE.wait_until_idle()
+
+    # we do this here because moving the Z axis and the syringe creates vibration that disturb the image acquisition
+    if init_syringe:
+        SYRINGE.home(wait=False)
+
     # init geneva wheel
     if init_geneva_wheel:
         GENEVA_DISH.home(wait=False)
         GENEVA_MIXTURE.home(wait=False)
         GENEVA_DISH.wait_until_idle()
         GENEVA_MIXTURE.wait_until_idle()
-    #
+
     if init_syringe:
-        # init syringe to zero level
         SYRINGE.wait_until_idle()
 
         if user_query:

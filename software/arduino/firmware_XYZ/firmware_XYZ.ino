@@ -16,8 +16,9 @@ CommandLinearAccelStepperActuator Y(stp_Y, 14, 56);
 AccelStepper stp_Z(AccelStepper::DRIVER, 26, 28);
 CommandLinearAccelStepperActuator Z(stp_Z, 18, 24);
 
-AccelStepper stp_S4(AccelStepper::DRIVER, 36, 34);
-CommandLinearAccelStepperActuator S4(stp_S4, 19, 30);
+AccelStepper stp_S1(AccelStepper::DRIVER, 36, 34);
+CommandLinearAccelStepperActuator S1(stp_S1, 19, 30);
+
 
 #include <SHT1X.h>
 #include <CommandSHT1X.h>
@@ -30,7 +31,7 @@ void setup()
   X.registerToCommandManager(cmdMng, "X");
   Y.registerToCommandManager(cmdMng, "Y");
   Z.registerToCommandManager(cmdMng, "Z");
-  S4.registerToCommandManager(cmdMng, "S4");
+  S1.registerToCommandManager(cmdMng, "S1");
   SHT15.registerToCommandManager(cmdMng, "SHT15");
 
   cmdMng.init();
