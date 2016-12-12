@@ -24,11 +24,28 @@ oil_ratios = {
     "pentanol": 0.84013885086802531
 }
 
+oil_ratios_2 = {
+    "dep": 1.0,
+    "octanol": 0.0,
+    "octanoic": 0.0,
+    "pentanol": 0.0
+}
+
+oil_ratios_3 =  {
+    "dep": 0.0,
+    "octanol": 0.57284714859204744,
+    "octanoic": 0.91965021960068283,
+    "pentanol": 0.56743951850035534
+}
+
 pool_folder = os.path.join(HERE_PATH, 'test_pool_folder')
 
-for _ in range(4):
+for _ in range(2):
     add_XP_to_pool_folder(oil_ratios, pool_folder)
+    add_XP_to_pool_folder(oil_ratios_2, pool_folder)
+    add_XP_to_pool_folder(oil_ratios_3, pool_folder)
+
 
 watcher = XPWatcher(manager, pool_folder)
 
-manager.wait_until_XP_finished()
+# manager.wait_until_XP_finished()
