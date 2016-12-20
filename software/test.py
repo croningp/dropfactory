@@ -38,13 +38,13 @@ oil_ratios_3 =  {
     "pentanol": 0.56743951850035534
 }
 
+
 pool_folder = os.path.join(HERE_PATH, 'test_pool_folder')
 
-for _ in range(2):
+for _ in range(5):
     add_XP_to_pool_folder(oil_ratios, pool_folder)
     add_XP_to_pool_folder(oil_ratios_2, pool_folder)
     add_XP_to_pool_folder(oil_ratios_3, pool_folder)
-
 
 watcher = XPWatcher(manager, pool_folder)
 
