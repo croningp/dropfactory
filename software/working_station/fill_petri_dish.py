@@ -36,20 +36,24 @@ class FillPetriDish(Task):
 
         if 'surfactant_formulation' in self.XP_dict:
             if 'surfactant_volume' in self.XP_dict:
-                #
+                # get the fields of interest
                 surfactant_volume = self.XP_dict['surfactant_volume']
                 if surfactant_volume > MAX_SURFACTANT_VOLUME:
                     raise Exception('Surfactant volume of {} is above the max of {}').format(surfactant_volume, MAX_SURFACTANT_VOLUME)
 
-                # wait pumps ready
-                self.pump_controller.apply_command_to_pumps(SURFACTANT_PUMP_CHEMICALS.keys(), 'wait_until_idle')
-
-                # get the field of interest
                 surfactant_formulation = self.XP_dict['surfactant_formulation']
+
+                # check surfactants are loaded on the machine
+                for surfactant_name in surfactant_formulation.keys():
+                    if surfactant_name not in SURFACTANT_PUMP_CHEMICALS.values():
+                        raise Exception('{} is not loaded in the any of the surfactant pumps'.format(surfactant_name))
 
                 # normalize ratios and compute surfactant volumes
                 normalized_values = proba_normalize(surfactant_formulation.values())
                 surfactant_volumes = normalized_values * surfactant_volume
+
+                # wait pumps ready
+                self.pump_controller.apply_command_to_pumps(SURFACTANT_PUMP_CHEMICALS.keys(), 'wait_until_idle')
 
                 # pump
                 for i, surfactant_name in enumerate(surfactant_formulation.keys()):

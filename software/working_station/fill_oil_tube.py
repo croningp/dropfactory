@@ -45,6 +45,11 @@ class FillOilTube(Task):
             # get the field of interest
             oil_formulation = self.XP_dict['oil_formulation']
 
+            # check oils are loaded on the machine
+            for oil_name in oil_formulation.keys():
+                if oil_name not in OIL_PUMP_CHEMICALS.values():
+                    raise Exception('{} is not loaded in the any of the oil pumps'.format(oil_name))
+
             # normalize ratios and compute oil volumes
             normalized_values = proba_normalize(oil_formulation.values())
             oil_volumes = normalized_values * TUBE_OIL_VOLUME
