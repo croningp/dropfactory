@@ -14,7 +14,7 @@ sys.path.append(root_path)
 from tools.tasks import Task
 
 from constants import TUBE_OIL_VOLUME
-
+from constants import OIL_PUMP_CHEMICALS
 
 INLET = 'I'
 OUTLET = 'O'
@@ -40,46 +40,46 @@ class FillOilTube(Task):
 
     def main(self):
 
-        if 'formulation' in self.XP_dict:
+        if 'oil_formulation' in self.XP_dict:
 
             # get the field of interest
-            formulation = self.XP_dict['formulation']
+            oil_formulation = self.XP_dict['oil_formulation']
 
-            # normallize ratios and compute oil volumes
-            normalized_values = proba_normalize(formulation.values())
+            # normalize ratios and compute oil volumes
+            normalized_values = proba_normalize(oil_formulation.values())
             oil_volumes = normalized_values * TUBE_OIL_VOLUME
 
             # make sure ready
             self.fill_head.home()
-            self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+            self.pump_controller.apply_command_to_pumps(oil_formulation.keys(), 'wait_until_idle')
 
             # go to dipesning level
             self.fill_head.move_to(FILL_HEAD_DIPENSE_LEVEL, wait=False)
 
             # pump
-            for i in range(len(formulation)):
-                pump_name = formulation.keys()[i]
+            for i, oil_name in enumerate(oil_formulation.keys()):
+                pump_name = OIL_PUMP_CHEMICALS.keys()[OIL_PUMP_CHEMICALS.values().index(oil_name)]
                 pump = self.pump_controller.pumps[pump_name]
                 volume_in_ml = oil_volumes[i]
 
-                pump.pump(volume_in_ml, INLET)
+                pump.pump(volume_in_ml, from_valve=INLET)
 
             # wait
-            self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+            self.pump_controller.apply_command_to_pumps(oil_formulation.keys(), 'wait_until_idle')
             self.fill_head.wait_until_idle()
             if self.fill_head.get_switch_state():
                 raise Exception('Fill head oil mixture did not go down, stepper might be broken...')
 
-            # deliver
-            for i in range(len(formulation)):
-                pump_name = formulation.keys()[i]
+            # pump
+            for i, oil_name in enumerate(oil_formulation.keys()):
+                pump_name = OIL_PUMP_CHEMICALS.keys()[OIL_PUMP_CHEMICALS.values().index(oil_name)]
                 pump = self.pump_controller.pumps[pump_name]
                 volume_in_ml = oil_volumes[i]
 
-                pump.deliver(volume_in_ml, OUTLET)
+                pump.deliver(volume_in_ml, to_valve=OUTLET)
 
             # wait
-            self.pump_controller.apply_command_to_pumps(formulation.keys(), 'wait_until_idle')
+            self.pump_controller.apply_command_to_pumps(oil_formulation.keys(), 'wait_until_idle')
 
             # move down to make contact and remove the remaining pending drops
             self.fill_head.move_to(FILL_HEAD_CONTACT_LEVEL)

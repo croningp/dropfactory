@@ -45,25 +45,25 @@
         "volume": 5,
         "top_velocity": 6000
       },
-      "dep": {
+      "oil_1": {
         "switch": "6",
         "initialize_valve_position": "I",
         "volume": 0.5,
         "top_velocity": 3000
       },
-      "octanoic": {
+      "oil_2": {
         "switch": "7",
         "initialize_valve_position": "I",
         "volume": 0.5,
         "top_velocity": 3000
       },
-      "octanol": {
+      "oil_3": {
         "switch": "8",
         "initialize_valve_position": "I",
         "volume": 0.5,
         "top_velocity": 3000
       },
-      "pentanol": {
+      "oil_4": {
         "switch": "9",
         "initialize_valve_position": "I",
         "volume": 0.5,

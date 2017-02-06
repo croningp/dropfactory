@@ -11,10 +11,18 @@ sys.path.append(root_path)
 
 from tools.tasks import Task
 
+from constants import MAX_SURFACTANT_VOLUME
+from constants import SURFACTANT_PUMP_CHEMICALS
+
 INLET = 'E'
 OUTLET = 'O'
 
-MAX_SURFACTANT_VOLUME = 3.5
+
+def proba_normalize(x):
+    x = np.array(x, dtype=float)
+    if np.sum(x) == 0:
+        x = np.ones(x.shape)
+    return x / np.sum(x, dtype=float)
 
 
 class FillPetriDish(Task):
@@ -25,13 +33,46 @@ class FillPetriDish(Task):
         self.start()
 
     def main(self):
-        if 'surfactant_volume' in self.XP_dict:
-            # wait
-            self.surfactant_pump.wait_until_idle()
 
-            surfactant_volume = self.XP_dict['surfactant_volume']
-            if surfactant_volume > MAX_SURFACTANT_VOLUME:
-                raise Exception('Surfactant volume of {} is above the max of {}').format(surfactant_volume, MAX_SURFACTANT_VOLUME)
+        if 'surfactant_formulation' in self.XP_dict:
+            if 'surfactant_volume' in self.XP_dict:
+                #
+                surfactant_volume = self.XP_dict['surfactant_volume']
+                if surfactant_volume > MAX_SURFACTANT_VOLUME:
+                    raise Exception('Surfactant volume of {} is above the max of {}').format(surfactant_volume, MAX_SURFACTANT_VOLUME)
 
-            # transfer the correct amount, blocking call
-            self.surfactant_pump.transfer(surfactant_volume, from_valve=INLET, to_valve=OUTLET)
+                # wait pumps ready
+                self.pump_controller.apply_command_to_pumps(SURFACTANT_PUMP_CHEMICALS.keys(), 'wait_until_idle')
+
+                # get the field of interest
+                surfactant_formulation = self.XP_dict['surfactant_formulation']
+
+                # normalize ratios and compute surfactant volumes
+                normalized_values = proba_normalize(surfactant_formulation.values())
+                surfactant_volumes = normalized_values * surfactant_volume
+
+                # pump
+                for i, surfactant_name in enumerate(surfactant_formulation.keys()):
+                    pump_name = SURFACTANT_PUMP_CHEMICALS.keys()[SURFACTANT_PUMP_CHEMICALS.values().index(surfactant_name)]
+                    pump = self.pump_controller.pumps[pump_name]
+                    volume_in_ml = surfactant_volumes[i]
+
+                    pump.pump(volume_in_ml, from_valve=INLET)
+
+                # wait
+                self.pump_controller.apply_command_to_pumps(SURFACTANT_PUMP_CHEMICALS.keys(), 'wait_until_idle')
+
+                # deliver
+                for i, surfactant_name in enumerate(surfactant_formulation.keys()):
+                    pump_name = SURFACTANT_PUMP_CHEMICALS.keys()[SURFACTANT_PUMP_CHEMICALS.values().index(surfactant_name)]
+                    pump = self.pump_controller.pumps[pump_name]
+                    volume_in_ml = surfactant_volumes[i]
+
+                    pump.deliver(volume_in_ml, to_valve=OUTLET)
+
+                # wait
+                self.pump_controller.apply_command_to_pumps(SURFACTANT_PUMP_CHEMICALS.keys(), 'wait_until_idle')
+
+
+            else:
+                raise Exception('No surfactant volume specified!')

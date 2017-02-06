@@ -12,8 +12,14 @@ FOLDERNAME_N_DIGIT = 5
 DEFAULT_DROPLET_VOLUME = 4
 
 BASIC_XP_DICT = {
-    'min_waiting_time': 60,
-    'surfactant_volume': 3.5,
+    'run_info': {},
+    'min_waiting_time': 60,  # s
+    'video_info': {
+        'duration': 90  # s
+    },
+    'oil_formulation': {},
+    'surfactant_volume': 3.5,  # mL
+    'surfactant_formulation': {'TTAB': 1.0},
     'droplets': [
         {
             'volume': DEFAULT_DROPLET_VOLUME,
@@ -31,12 +37,7 @@ BASIC_XP_DICT = {
             'volume': DEFAULT_DROPLET_VOLUME,
             'position': [0, -5]
         }
-    ],
-    'formulation': {},
-    'video_info': {
-        'duration': 90
-    },
-    'run_info': {}
+    ]
 }
 
 
@@ -48,17 +49,11 @@ def save_to_json(data, filename):
 def make_XP_dict(oil_ratios, xp_folder):
 
     XP_dict = BASIC_XP_DICT
-
-    oil_names = ['octanol', 'octanoic', 'pentanol', 'dep']
-    for oil_name in oil_names:
-        XP_dict['formulation'][oil_name] = oil_ratios[oil_name]
-
     XP_dict['run_info']['filename'] = os.path.join(xp_folder, RUN_INFO_FILENAME)
-
     XP_dict['video_info']['filename'] = os.path.join(xp_folder, VIDEO_FILENAME)
+    XP_dict['oil_formulation'] = oil_ratios
 
     return XP_dict
-
 
 def make_and_save_XP_dict(oil_ratios, xp_folder, save_filename):
 
