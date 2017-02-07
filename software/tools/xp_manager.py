@@ -19,6 +19,9 @@ import subprocess
 from tools import email_notification
 from tools.watchdog import Watchdog
 from constants import N_POSITION
+from constants import OIL_PUMP_CHEMICALS
+from constants import SURFACTANT_PUMP_CHEMICALS
+from constants import ARENA_TYPE
 
 from xp_queue import XPQueue
 
@@ -108,7 +111,34 @@ class XPManager(threading.Thread):
         self.start()
 
     def add_XP(self, XP_dict):
-        self.xp_queue.add_XP(XP_dict)
+        if self.check_XP_valid(XP_dict):
+            self.xp_queue.add_XP(XP_dict)
+        else:
+            print 'XP is not valid and will not be run on the platform, see messages above'
+
+    def check_XP_valid(self, XP_dict):
+        # check oils
+        if 'oil_formulation' in self.XP_dict:
+            oil_formulation = self.XP_dict['oil_formulation']
+            for oil_name in oil_formulation.keys():
+                if oil_name not in OIL_PUMP_CHEMICALS.values():
+                    print '{} is not loaded in the any of the oil pumps'.format(oil_name)
+                    return False
+        # check surfactants
+        if 'surfactant_formulation' in self.XP_dict:
+            surfactant_formulation = self.XP_dict['surfactant_formulation']
+            for surfactant_name in surfactant_formulation.keys():
+                if surfactant_name not in SURFACTANT_PUMP_CHEMICALS.values():
+                    print '{} is not loaded in the any of the surfactant pumps'.format(surfactant_name)
+                    return False
+        # check arena
+        if 'arena_type' in self.XP_dict:
+            arena_type = self.XP_dict['arena_type']
+            if arena_type != ARENA_TYPE:
+                print '{} arenas are not loaded on dropfactory'.format(arena_type)
+                return False
+        #
+        return True
 
     def remove_XP(self, XP_dict):
         self.xp_queue.remove_XP(XP_dict)

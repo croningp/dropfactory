@@ -9,7 +9,7 @@
       "initialize_valve_position": "E"
   },
   "groups": {
-      "oils": ["dep","octanoic","octanol","pentanol"]
+      "oils": ["oil_1","oil_2","oil_3","oil_4"]
   },
   "pumps": {
       "acetone_oil": {

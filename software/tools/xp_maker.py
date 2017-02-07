@@ -17,9 +17,10 @@ BASIC_XP_DICT = {
     'video_info': {
         'duration': 90  # s
     },
+    'arena_type': 'petri_dish',
     'oil_formulation': {},
     'surfactant_volume': 3.5,  # mL
-    'surfactant_formulation': {'TTAB': 1.0},
+    'surfactant_formulation': {'TTAB': 1.0}, # those are ratios
     'droplets': [
         {
             'volume': DEFAULT_DROPLET_VOLUME,

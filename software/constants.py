@@ -35,3 +35,6 @@ OIL_PUMP_CHEMICALS =  {
 SURFACTANT_PUMP_CHEMICALS = {
     'surfactant': 'TTAB'
 }
+
+# current arena
+ARENA_TYPE = 'petri_dish'
