@@ -1,5 +1,4 @@
 import os
-import numpy as np
 
 # this get our current location in the file system
 import inspect
@@ -11,6 +10,8 @@ root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
 ##
+import numpy as np
+
 from tools.tasks import Task
 
 from constants import TUBE_OIL_VOLUME
@@ -56,7 +57,7 @@ class FillOilTube(Task):
 
             # make sure ready
             self.fill_head.home()
-            self.pump_controller.apply_command_to_pumps(oil_formulation.keys(), 'wait_until_idle')
+            self.pump_controller.apply_command_to_pumps(OIL_PUMP_CHEMICALS.keys(), 'wait_until_idle')
 
             # go to dipesning level
             self.fill_head.move_to(FILL_HEAD_DIPENSE_LEVEL, wait=False)
@@ -70,7 +71,7 @@ class FillOilTube(Task):
                 pump.pump(volume_in_ml, from_valve=INLET)
 
             # wait
-            self.pump_controller.apply_command_to_pumps(oil_formulation.keys(), 'wait_until_idle')
+            self.pump_controller.apply_command_to_pumps(OIL_PUMP_CHEMICALS.keys(), 'wait_until_idle')
             self.fill_head.wait_until_idle()
             if self.fill_head.get_switch_state():
                 raise Exception('Fill head oil mixture did not go down, stepper might be broken...')
@@ -84,7 +85,7 @@ class FillOilTube(Task):
                 pump.deliver(volume_in_ml, to_valve=OUTLET)
 
             # wait
-            self.pump_controller.apply_command_to_pumps(oil_formulation.keys(), 'wait_until_idle')
+            self.pump_controller.apply_command_to_pumps(OIL_PUMP_CHEMICALS.keys(), 'wait_until_idle')
 
             # move down to make contact and remove the remaining pending drops
             self.fill_head.move_to(FILL_HEAD_CONTACT_LEVEL)

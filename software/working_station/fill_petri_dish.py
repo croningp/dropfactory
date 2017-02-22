@@ -9,6 +9,9 @@ import sys
 root_path = os.path.join(HERE_PATH, '..')
 sys.path.append(root_path)
 
+##
+import numpy as np
+
 from tools.tasks import Task
 
 from constants import MAX_SURFACTANT_VOLUME
@@ -27,9 +30,9 @@ def proba_normalize(x):
 
 class FillPetriDish(Task):
 
-    def __init__(self, surfactant_pump):
+    def __init__(self, pump_controller):
         Task.__init__(self)
-        self.surfactant_pump = surfactant_pump
+        self.pump_controller = pump_controller
         self.start()
 
     def main(self):

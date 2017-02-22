@@ -118,22 +118,22 @@ class XPManager(threading.Thread):
 
     def check_XP_valid(self, XP_dict):
         # check oils
-        if 'oil_formulation' in self.XP_dict:
-            oil_formulation = self.XP_dict['oil_formulation']
+        if 'oil_formulation' in XP_dict:
+            oil_formulation = XP_dict['oil_formulation']
             for oil_name in oil_formulation.keys():
                 if oil_name not in OIL_PUMP_CHEMICALS.values():
                     print '{} is not loaded in the any of the oil pumps'.format(oil_name)
                     return False
         # check surfactants
-        if 'surfactant_formulation' in self.XP_dict:
-            surfactant_formulation = self.XP_dict['surfactant_formulation']
+        if 'surfactant_formulation' in XP_dict:
+            surfactant_formulation = XP_dict['surfactant_formulation']
             for surfactant_name in surfactant_formulation.keys():
                 if surfactant_name not in SURFACTANT_PUMP_CHEMICALS.values():
                     print '{} is not loaded in the any of the surfactant pumps'.format(surfactant_name)
                     return False
         # check arena
-        if 'arena_type' in self.XP_dict:
-            arena_type = self.XP_dict['arena_type']
+        if 'arena_type' in XP_dict:
+            arena_type = XP_dict['arena_type']
             if arena_type != ARENA_TYPE:
                 print '{} arenas are not loaded on dropfactory'.format(arena_type)
                 return False

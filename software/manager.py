@@ -22,7 +22,7 @@ robot.init()
 # load station
 working_station_dict = {}
 from working_station.fill_petri_dish import FillPetriDish
-working_station_dict['fill_dish_station'] = FillPetriDish(pump.controller.surfactant)
+working_station_dict['fill_dish_station'] = FillPetriDish(pump.controller)
 
 from working_station.fill_oil_tube import FillOilTube
 working_station_dict['fill_oil_station'] = FillOilTube(pump.controller, robot.FILL_HEAD_MIXTURE)

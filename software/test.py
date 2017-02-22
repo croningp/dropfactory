@@ -45,7 +45,7 @@ oil_ratios = {
 
 pool_folder = os.path.join(HERE_PATH, 'test_pool_folder')
 
-for _ in range(15):
+for _ in range(4):
     add_XP_to_pool_folder(oil_ratios, pool_folder)
     # add_XP_to_pool_folder(oil_ratios_2, pool_folder)
     # add_XP_to_pool_folder(oil_ratios_3, pool_folder)
