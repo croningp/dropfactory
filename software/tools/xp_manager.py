@@ -415,15 +415,21 @@ class XPManager(threading.Thread):
         for _ in range(N_POSITION):
             self.add_XP(XP_dict)
 
-    def add_purge_sequence_XP(self, oils_to_purge=['octanol', 'octanoic', 'pentanol', 'dep'], surfactant_volume=2, n_purge=16):
+    def add_purge_sequence_XP(self, surfactant_volume=2, n_purge=16):
 
         XP_dict = {}
         XP_dict['min_waiting_time'] = 60
-        XP_dict['surfactant_volume'] = surfactant_volume
-        XP_dict['formulation'] = {}
-        for oil_name in oils_to_purge:
-            XP_dict['formulation'][oil_name] = 1
 
+        XP_dict['oil_formulation'] = {}
+        for oil_name in OIL_PUMP_CHEMICALS.values():
+            XP_dict['oil_formulation'][oil_name] = 1
+
+        XP_dict['surfactant_volume'] = surfactant_volume
+        XP_dict['surfactant_formulation'] = {}
+        for surfactant_name in SURFACTANT_PUMP_CHEMICALS.values():
+            XP_dict['surfactant_formulation'][surfactant_name] = 1
+
+        #
         for _ in range(n_purge):
             self.add_XP(XP_dict)
 
