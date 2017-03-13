@@ -126,9 +126,14 @@ class MakeDroplets(threading.Thread):
         if not self.any_droplet_to_make:
             return
 
+        # this function can only start if we are in the correct position, this step is really sensible and starting it from a bad position is likelly to break something
+        if not self.is_ready_to_make_droplet():
+            raise Exception('Deliver droplet can only start if we are in the correct position, this step is really sensible and starting it from a bad position is likelly to break something')
+
         # make all droplets
         for droplet_info in self.droplet_list:
             self.deliver_droplet(droplet_info)
+        # go above all
         self.z_axis.move_to(Z_FREE_LEVEL)
 
 
@@ -158,27 +163,31 @@ class MakeDroplets(threading.Thread):
 
 
     def deliver_droplet(self, droplet_info):
-        # this function can only start if we are in the correct position, this step is really sensible and starting it from a bad position is likelly to break something
-        if not self.is_ready_to_make_droplet():
-            raise Exception('Deliver droplet can only start if we are in the correct position, this step is really sensible and starting it from a bad position is likelly to break something')
 
         volume = droplet_info['volume']
         relative_position = droplet_info['position']
+        relative_x = relative_position[0]
+        relative_y = relative_position[1]
 
         # if relative position is valid
         if self.is_droplet_position_valid(relative_position):
 
-            # move relative
-            self.xy_axis.move(relative_position)
+            center_x = XY_ABOVE_DISH[0]
+            center_y = XY_ABOVE_DISH[1]
+
+            absolute_position_x = center_x + relative_x
+            absolute_position_y = center_y + relative_y
+            absolute_position = [absolute_position_x, absolute_position_y]
+
+            # move to position
+            self.xy_axis.move_to(absolute_position)
 
             # deliver
             self.syringe.deliver(volume)
             time.sleep(0.5) # small pause to make sure the oil volume went fully out
+            # go down to surface and up again
             self.z_axis.move_to(Z_AT_SURFACTANT)
             self.z_axis.move_to(Z_ABOVE_SURFACTANT)
-
-            # come back
-            self.xy_axis.move_to(XY_ABOVE_DISH)
 
         else:
             print 'Skipping droplet at position {}, not valid position'

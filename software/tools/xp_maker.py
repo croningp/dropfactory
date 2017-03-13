@@ -24,7 +24,7 @@ BASIC_XP_DICT = {
     'droplets': [
         {
             'volume': DEFAULT_DROPLET_VOLUME,
-            'position': [5, 0]
+            'position': [0, 0]
         },
         {
             'volume': DEFAULT_DROPLET_VOLUME,
@@ -32,11 +32,11 @@ BASIC_XP_DICT = {
         },
         {
             'volume': DEFAULT_DROPLET_VOLUME,
-            'position': [0, 5]
+            'position': [2.5, 4.33]
         },
         {
             'volume': DEFAULT_DROPLET_VOLUME,
-            'position': [0, -5]
+            'position': [2.5, -4.33]
         }
     ]
 }

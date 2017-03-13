@@ -45,7 +45,7 @@ XP_dict = {
     'droplets': [
         {
             'volume': 4,
-            'position': [5, 0]
+            'position': [0, 0]
         },
         {
             'volume': 4,
@@ -53,11 +53,11 @@ XP_dict = {
         },
         {
             'volume': 4,
-            'position': [0, 5]
+            'position': [2.5, 4.33]
         },
         {
             'volume': 4,
-            'position': [0, -5]
+            'position': [2.5, -4.33]
         }
     ]
 }
