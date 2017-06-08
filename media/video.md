@@ -14,6 +14,7 @@ Playlist: https://www.youtube.com/playlist?list=PLBppiRCztuKoLdw_cc4hVg8oFJaySeC
 - Oil Cleaning: https://www.youtube.com/watch?v=vuSbGqEvNPU
 - Dish Filling: https://www.youtube.com/watch?v=RBeclG4bZSc
 - Dish Cleaning: https://www.youtube.com/watch?v=eZBr9EsQKLc
+- Making Droplets: https://www.youtube.com/watch?v=BPY1zyb-Gb0
 - Droplet Placement: https://www.youtube.com/watch?v=23sXEIOUkyw
 - Syringe Cleaning: https://www.youtube.com/watch?v=D9TM6lLt240
 - Pumps In Action: https://www.youtube.com/watch?v=tYG90OaSkag
