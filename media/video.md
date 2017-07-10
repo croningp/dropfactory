@@ -18,3 +18,8 @@ Playlist: https://www.youtube.com/playlist?list=PLBppiRCztuKoLdw_cc4hVg8oFJaySeC
 - Droplet Placement: https://www.youtube.com/watch?v=23sXEIOUkyw
 - Syringe Cleaning: https://www.youtube.com/watch?v=D9TM6lLt240
 - Pumps In Action: https://www.youtube.com/watch?v=tYG90OaSkag
+
+## Droplets and Previous Robots
+
+- Compilation of Droplets Behaviors: https://www.youtube.com/watch?v=ysEswhRS5CQ
+- Compilation of Chemobot Platforms: https://www.youtube.com/watch?v=IiTAi5so2TA
