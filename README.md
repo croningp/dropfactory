@@ -4,7 +4,7 @@ Dropfactory is a robotics platform able to perform and record oil-in-water dropl
 
 ![Dropfactory](media/gif/dropfactory.gif)
 
-Dropfactory is capable of running, in total autonomy, an arbitrary droplet experiment lasting 1min30sec every 1min50sec on average. We routinely performed more than 350 Experiments per working day on this platform. This enabled us to explore the efficiency of exploration and optimization algorithms directly on our physicochemical system, directly sampling the real world.
+Dropfactory is capable of running, in total autonomy, an arbitrary droplet experiment lasting 1min30sec every 1min50sec. We routinely performed more than 350 Experiments per working day on this platform. This enabled us to explore the efficiency of exploration and optimization algorithms directly on our physicochemical system, that is directly sampling the real world.
 
 Here is an example of droplets behaviors:
 
@@ -16,7 +16,7 @@ The platform is organized as a little factory, enabling to fully parallelize all
 
 To be able to run continuously such experiments, the platform must be able to mix, sample, clean and dry both oils and aqueous phases. Previous design had to do all such step in sequence, Dropfactory does them in parrallel thanks to its design around two geneva wheel mecanisms.
 
-TODO: Schematic of the platform
+![Diagram](media/diagram/dropfactory.png)
 
 This design allows to move the oil vials and the petri dish at specialized working stations, rather than having the tools move to those containers. As a results, Dropfactory is:
 
@@ -24,7 +24,7 @@ This design allows to move the oil vials and the petri dish at specialized worki
 - **easier to maintain**, because all working stations are clearly separated, both physically and digitally, identifying a bug or a mechanically failure is quick and fixing them is easier.
 - **fast**, because while an oil mixture is prepare, a previous one is being cleaned, another three are being dried, another is sampled by a syringe to be placed on a previously filled petri dish. At the same time, another petri dish is being filled, one is being cleaned, three are drying, and one contains droplets and is being recorded under a camera.
 
-All this enabled us to record 1 experiments of 1min30sec every 1min50sec, gaining a factor of 6 versus our previous sequential platform. Thanks to its robustness, the platform was consistently running for months in the lab collecting more than 30,000 droplet experiments.
+Dropfactory enables to record 1 experiments of 1min30sec every 1min50sec, gaining a factor of 6 versus our previous sequential platform. Thanks to its robustness, the platform was consistently running for months in the lab collecting more than 30,000 droplet experiments.
 
 ## Repository Organization
 
