@@ -1,6 +1,6 @@
 # Dropfactory
 
-Dropfactory is a robotics platform able to perform and record oil-in-water droplets experiments at a large scale.
+Dropfactory is a robotic platform able to perform and record oil-in-water droplets experiments at a large scale.
 
 ![Dropfactory](media/gif/dropfactory.gif)
 
