@@ -53,9 +53,9 @@ EXAMPLE_XP_DICT = {
         'TTAB': 1.0
     },
     # 'droplets' is the placement information for droplet, it is a list where each elements
-    # corresponds to one droplet. Each droplets is then described by its 'volume' and 'position'.
-    # 'volume' is in uL and 'position' is in mm relative to the center of the dish.
-    # Here we have 4 droplets, one at the center and three equally spread around on a circle of radius 5mm.
+    # corresponds to one droplet. Each droplets is then described by its 'volume' (in uL) and
+    # 'position' (in mm relative to the center of the dish). Here we have 4 droplets,
+    # one at the center and three equally spread around on a circle of radius 5mm.
     # DEFAULT_DROPLET_VOLUME = 4 uL.
     'droplets': [
         {
