@@ -4,11 +4,15 @@ Dropfactory is a robotic platform able to perform and record oil-in-water drople
 
 ![Dropfactory](media/gif/dropfactory.gif)
 
+[[Dropfactory Cycle Video]](https://www.youtube.com/watch?v=o8ZTkoZ-j6M)
+
 Dropfactory is capable of running, in total autonomy, an arbitrary droplet experiment lasting 1min30sec every 1min50sec. We routinely performed more than 350 Experiments per working day on this platform. This enabled us to explore the efficiency of exploration and optimization algorithms directly on our physicochemical system, that is directly sampling the real world.
 
 Here is an example of droplets behaviors:
 
 ![Droplets](media/gif/droplets.gif)
+
+[[Droplet Compilation Video]](https://www.youtube.com/watch?v=ysEswhRS5CQ)
 
 ## Principles
 

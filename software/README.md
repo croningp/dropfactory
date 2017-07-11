@@ -2,7 +2,7 @@
 
 This code implemented and orchestrates all the working stations, that are specialized modules implemented as threads and able to performs one simple task well, into a fully functional platform able to accept experimental files and execute them in a parallel fashion.
 
-The [manager.py](manager.py) file is the entry point and only file to import for using Dropfactory. It ocntains a ```add_XP(XP_dict)``` function that adds an experimental configuration (```XP_dict```) to the manager. The ```XP_dict``` can be created as showed in [xp_maker.py](tools/xp_maker.py).
+The [manager.py](manager.py) file is the entry point and only file to import for using Dropfactory. It contains a ```add_XP(XP_dict)``` function that adds an experimental configuration (```XP_dict```) to the manager. The ```XP_dict``` can be created as showed in [xp_maker.py](tools/xp_maker.py).
 
 ### Experiment description
 
