@@ -11,4 +11,4 @@ The modular syringe actuator is fully described here: https://github.com/croning
 
 Link and reference to most materials used to build the platform are found in [material_references.md](material_references.md)
 
-More detailed on the principles and inner working of Dropfactory are documented in the [doc](../doc) folder.
+More detailed on the principles and inner working of Dropfactory are documented in the [doc](./doc) folder.
