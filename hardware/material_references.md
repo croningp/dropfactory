@@ -57,8 +57,8 @@ Fully documented subparts:
 
 ### Mini Stirrer
 
--STIRRER MICRO 07 + UK TELEMODUL 7W, from H + P LABORTECHNIK. Supplied at VWR, catalog number is 442-3116: https://uk.vwr.com/store/product/442-3116/stirrer-micro-07-%2B-uk-telemodul-7w-1-1-items
--Stir bars - plain economy 4.0x0.8. Magnetic stirring bars, plain, economy. Supplied from VWR, catalog number is 442-0484: https://uk.vwr.com/store/catalog/product.jsp?catalog_number=442-0484
+- STIRRER MICRO 07 + UK TELEMODUL 7W, from H + P LABORTECHNIK. Supplied at VWR, catalog number is 442-3116: https://uk.vwr.com/store/product/442-3116/stirrer-micro-07-%2B-uk-telemodul-7w-1-1-items
+- Stir bars - plain economy 4.0x0.8. Magnetic stirring bars, plain, economy. Supplied from VWR, catalog number is 442-0484: https://uk.vwr.com/store/catalog/product.jsp?catalog_number=442-0484
 
 ### Syringe
 
