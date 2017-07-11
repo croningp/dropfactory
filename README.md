@@ -18,7 +18,7 @@ Here is an example of droplets behaviors:
 
 The platform is organized as a little factory, enabling to fully parallelize all required operations (mixing, droplet placing, recording, cleaning, drying). An oil-in-water experiments consist of placing small oil droplets (made from an arbitrary mixture of oils) at the surface of an aqueous medium (made from a mixture of aqueous phases), we then need to video record the droplet movements to later analyse then.
 
-To be able to run continuously such experiments, the platform must be able to mix, sample, clean and dry both oils and aqueous phases. Previous design had to do all such step in sequence, Dropfactory does them in parrallel thanks to its design around two geneva wheel mecanisms.
+To be able to run continuously such experiments, the platform must be able to mix, sample, clean and dry both oils and aqueous phases. Previous design had to do all such step in sequence, Dropfactory does them in parallel thanks to its design around two geneva wheel mechanisms.
 
 ![Diagram](media/diagram/dropfactory.png)
 
