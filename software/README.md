@@ -10,20 +10,33 @@ An experiment is fully described by a json file with the following fields. Note 
 
 ```python
 EXAMPLE_XP_DICT = {
-    ## Dropfactory outputs some informaiton about the experimental conditions, such as the time of the day it was run, the temperature, the humidity. The 'run_info' field tell the platform where to save that information for this particualr experiment. If the experiment video will be stored place in the "xp_folder" folder, a good practice is to save it at the same place. By convention we use RUN_INFO_FILENAME = 'run_info.json' (see software/tools/filenaming.py)
+    # Dropfactory outputs some informaiton about the experimental conditions, such as the time of the day
+    # it was run, the temperature, the humidity. The 'run_info' field tell the platform where to save
+    # that information for this particualr experiment. If the experiment video will be stored place in
+    # the "xp_folder" folder, a good practice is to save it at the same place.
+    # By convention we use RUN_INFO_FILENAME = 'run_info.json' (see software/tools/filenaming.py)
     'run_info': {
         'filename': os.path.join(xp_folder, RUN_INFO_FILENAME)
     },
-    ## 'min_waiting_time' is the minimum time a dish should stay at any station, this is to ensure proper drying at the drying stations.
+    # 'min_waiting_time' is the minimum time a dish should stay at any station,
+    # this is to ensure proper drying at the drying stations.
     'min_waiting_time': 60,  # in seconds
-    ## 'video_info' tells the platform how long the record an experiment for and where to save that video. as with he 'run_info' field, it is a good practice is to save it at the same place. By convention we use VIDEO_FILENAME = 'video.avi' (see software/tools/filenaming.py)
+    # 'video_info' tells the platform how long the record an experiment for and where to save that video.
+    # As with he 'run_info' field, it is a good practice is to save it at the same place.
+    # By convention we use VIDEO_FILENAME = 'video.avi' (see software/tools/filenaming.py)
     'video_info': {
         'filename': os.path.join(xp_folder, VIDEO_FILENAME)
         'duration': 90  # in seconds
     },
-    ## 'arena_type' tell what type of dish the experiment should be using. Dish should be changed manually, only one dish type can be present at the same time on the platform and the ARENA_TYPE field should be changed accordingly in software/constants.py. This field is mostly a security/memory field, we never used other dishes that a plain glass petri_dish.
+    # 'arena_type' tell what type of dish the experiment should be using. Dish should be changed manually,
+    # only one dish type can be present at the same time on the platform and the ARENA_TYPE field should
+    # be changed accordingly in software/constants.py. This field is mostly a security/memory field,
+    # we never used other dishes that a plain glass petri_dish.
     'arena_type': 'petri_dish',
-    ## 'oil_formulation' describe the composition of the oil droplets. The number will be normalized to sum to 1.0. The association between the compounds and the associated pumps is defined in software/constants.py. Changes should be reported there accordingly.
+    # 'oil_formulation' describe the composition of the oil droplets.
+    # The number will be normalized to sum to 1.0.
+    # The association between the compounds and the associated pumps is defined in software/constants.py.
+    # Changes should be reported there accordingly.
     'oil_formulation': {
         'dep': 0.36,
         'octanol': 0.29,
@@ -32,11 +45,18 @@ EXAMPLE_XP_DICT = {
     },
     ## 'surfactant_volume' how much aqueous phase to pour in the dish
     'surfactant_volume': 3.5,  # in mL
-    ## 'surfactant_formulation' is similar 'oil_formulation' but for the aqueous phase, which can be a mixture of multiple aqueous phases.  The number will be normalized to sum to 1.0. As for oils, the association between the compounds and the associated pumps is defined in software/constants.py. Changes should be reported there accordingly.
+    # 'surfactant_formulation' is similar 'oil_formulation' but for the aqueous phase,
+    # which can be a mixture of multiple aqueous phases. The number will be normalized to sum to 1.0.
+    # As for oils, the association between the compounds and the associated pumps is defined
+    # in software/constants.py. Changes should be reported there accordingly.
     'surfactant_formulation': {
         'TTAB': 1.0
     },
-    ## 'droplets' is the placement information for droplet, it is a list where each elements corresponds to one droplet. Each droplets is then described by its 'volume' and 'position'. 'volume' is in uL and 'position' is in mm relative to the center of the dish. Here we have 4 droplets, one at the center and three equally spread around on a circle of radius 5mm. DEFAULT_DROPLET_VOLUME = 4 uL.
+    # 'droplets' is the placement information for droplet, it is a list where each elements
+    # corresponds to one droplet. Each droplets is then described by its 'volume' and 'position'.
+    # 'volume' is in uL and 'position' is in mm relative to the center of the dish.
+    # Here we have 4 droplets, one at the center and three equally spread around on a circle of radius 5mm.
+    # DEFAULT_DROPLET_VOLUME = 4 uL.
     'droplets': [
         {
             'volume': DEFAULT_DROPLET_VOLUME, # in uL
