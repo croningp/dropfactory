@@ -40,7 +40,7 @@ This repository contains only the hardware and software used to build and operat
 - [dropfactory_exploration](https://github.com/croningp/dropfactory_exploration) for the algorithms that use the dropfactory platform as a mean to sample the real world.
 - [dropfactory_analysis](https://github.com/croningp/dropfactory_analysis) for all the analysis and display of the results of our various droplets experiments and algorithms comparison.
 
-### Author
+## Author
 
 Design and code by [Jonathan Grizou](http://jgrizou.com/) while working in the CroninGroup.
 
