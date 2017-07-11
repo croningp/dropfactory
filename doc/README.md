@@ -14,7 +14,11 @@ To achieve this, we designed the platform around three important mechanisms:
 - two [geneva wheels](geneva_wheel.md), one for the oils, one for the aqueous phase. They allow to move the containers from one working station to another in a simple and robust way.
 - [working stations](working_stations) that perform only one simple task. The vials and dishes are displaced to the working station thanks to the Geneval wheels. Having specialized working station makes the all system easier to design, build, and fix. In addition, a lot less cables and tubes will be in motion, reducing again the possibility of failure in the system.
 
-In addition, we made a point to not over-design or over-specify the platform before building it. Rather we left ourselves room for iterating on the platform while building it and as we encountered problems. For example, most working stations have been redesigned 2 or 3 times after receiving real-world feedback from practical experience. To achieve this flexibility we based most of our design on [3D printing](https://en.wikipedia.org/wiki/3D_printing) combined with [aluminium profile](http://ooznest.co.uk/V-Slot) technology - enabling us to tune the system on site. This also explain why there is not overall 3D design specifying every details of the platform down to the last millimetres. Dropfactory has been conceived with modularity in mind and we hope the interested reader will adopt a similar approach if willing to build its own robot based on our design.
+In addition, **we made a point to not over-design or over-specify the platform before building it**. Rather we left ourselves room for iterating on the platform while building it and as we encountered problems. For example, most working stations have been redesigned 2 or 3 times after receiving real-world feedback from practical experience.
+
+To achieve this flexibility we based most of our design on [3D printing](https://en.wikipedia.org/wiki/3D_printing) combined with [aluminium profile](http://ooznest.co.uk/V-Slot) technology - enabling us to tune the system on site. This also explain why there is no overall 3D design specifying every details of the platform down to the last millimetres.
+
+**Dropfactory is a research platform, it has been conceived with modularity in mind** and we encourage the interested reader to adopt a similar approach if willing to build its own robot based on our design.
 
 Below are links with more details on each sub-part of Dropfactory:
 
