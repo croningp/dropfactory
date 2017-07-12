@@ -10,3 +10,5 @@ The platform is controlled via python on an external computer using our [command
 
 - the firmware for both Arduino boards is in the [software/arduino](../software/arduino) folder
 - the corresponding python robot controller is in the [software/robot](../software/robot) folder
+
+The frame design and 3D files are [available on Onshape]( https://cad.onshape.com/documents/3aeb7616c1e547bfaae38ba3/w/426b95792e7c48a8b6dd7727/e/af7f485263ee4608affce6e3)
