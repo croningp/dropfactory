@@ -1,6 +1,6 @@
 ## Pumps
 
-The platform need to handle various liquids such as oils, aqueous phases and acetone. To do so, our group is using [Tricontinent C-Series Syringe Pumps](https://www.tricontinent.com/products/syringe-pumps-and-rotary-valves/c-series-syringe-pumps.html). Dropfactory uses 10 of them.
+The platform needs to handle various liquids such as oils, aqueous phases and acetone. Our group is using [Tricontinent C-Series Syringe Pumps](https://www.tricontinent.com/products/syringe-pumps-and-rotary-valves/c-series-syringe-pumps.html). Dropfactory uses 10 of them.
 
 Here is a top view of the pumps and the reageant containers:
 
