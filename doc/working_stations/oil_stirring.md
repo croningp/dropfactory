@@ -1,6 +1,6 @@
 ## Oil Stirring Station
 
-In each oil vials, there is a small magnetic stirrer. At the stirring station a compact magnetic stirrer ensure the oils are fully mixed before being sampled my the syringe. Such small magnetic stirrers tends to over heat, for this reason a fan has been positioned below the stirrer to regulate its temperature.
+In each oil vials, there is a small magnetic stirrer. At the stirring station a compact magnetic stirrer ensure the oils are fully mixed before being sampled by the syringe. Such small magnetic stirrers tends to over heat, for this reason a fan has been positioned below the stirrer to regulate its temperature.
 
 ![Oil Stirring](../../media/img/working_stations/oil_stirring.png)
 
@@ -13,6 +13,6 @@ In each oil vials, there is a small magnetic stirrer. At the stirring station a 
 
 #### 3D designs
 
-- [STL Stirrer Holder](../../hardware/3d_parts/oil_mixing/stirrer - stirrer_holder.stl)
-- [STL Stirrer Fan Holder](../../hardware/3d_parts/oil_mixing/stirrer - fan_holder.stl)
+- [STL Stirrer Holder](../../hardware/3d_parts/oil_mixing/stirrer_holder.stl)
+- [STL Stirrer Fan Holder](../../hardware/3d_parts/oil_mixing/stirrer_fan_holder.stl)
 - [Onshape 3D model](https://cad.onshape.com/documents/62d832e8b2dc4f2c03b85d68/w/e45d0051d41b139c7004414d/e/7f2bc6ac687a7f6977a3b478)
