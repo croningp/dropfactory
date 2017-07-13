@@ -1,6 +1,6 @@
 ## Dish Recording station
 
-Once the droplet are placed on the aqueous phase, the dish is moved under a camera for the droplet behaviour to be recorded and saved as a video file.
+Once the droplet are placed on the aqueous phase, the dish is moved under a camera (position 4 of the aqueous wheel) for the droplet behaviour to be recorded and saved as a video file.
 
 ![Camera Real](../../media/img/working_stations/camera.jpg)
 

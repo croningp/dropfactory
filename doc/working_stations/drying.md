@@ -1,6 +1,6 @@
 ## Drying Station
 
-The drying station is a simple fan blowing air into a container that was previously cleaned with water and acetone. We made sure this additional air flow did not impact our droplet experiments.
+The drying station is a simple fan blowing air into a container that was previously cleaned with water and acetone. We made sure this additional air flow did not impact our droplet experiments. The drying station are at the position 6, 7, and 8 of both oil and aqueous wheels.
 
 ![Drying STL](../../hardware/3d_parts/various/evaporator.png)
 
