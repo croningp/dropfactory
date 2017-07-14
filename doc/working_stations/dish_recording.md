@@ -14,7 +14,7 @@ We use a simple webcam for recording but need to ensure the lighting condition a
 
 #### Materials
 
-- [MICROSOFT  6CH-00002](http://onecall.farnell.com/microsoft/6ch-00002/webcam-lifecam-cinema-business/dp/CS25782)
+- [MICROSOFT  6CH-00002](https://www.microsoft.com/accessories/en-gb/business/lifecam-cinema-for-business/6ch-00002)
 
 ### 3D designs
 

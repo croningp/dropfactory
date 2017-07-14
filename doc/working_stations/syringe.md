@@ -50,7 +50,7 @@ The syringe is used for droplet placements, that is it move to collect the oil m
 ### 3D designs
 
 - [Modular Actuator](https://github.com/croningp/ModularSyringeDriver)
-- [STL Cleaning Vial Holder](hardware/3d_parts/various/vial_holder.stl)
+- [STL Cleaning Vial Holder](../../hardware/3d_parts/various/vial_holder.stl)
 - [Onshape Cleaning Vial Holder](https://cad.onshape.com/documents/62d832e8b2dc4f2c03b85d68/w/e45d0051d41b139c7004414d/e/640ac0deb1f80bf00c4bdb79)
 
 ### Code
@@ -58,4 +58,4 @@ The syringe is used for droplet placements, that is it move to collect the oil m
 The code managing the syringe is split into two files:
 
 - [software/working_station/clean_oil_parts.py](../../software/working_station/clean_oil_parts.py) for cleaning the syringe, this is because the pumps for acetone and waste are shared between the [oil vial cleaning station](oil_cleaning.md).
-- [software/working_station/clean_oil_parts.py](../../software/working_station/clean_oil_parts.py) that takes care of the sampling of oils and the droplet placement.
+- [software/working_station/make_droplets.py](../../software/working_station/make_droplets.py) that takes care of the sampling of oils and the droplet placement.
