@@ -9,7 +9,7 @@ To be able to run continuously such experiments, the platform must be able to mi
 The working station are as follow:
 
 - [Oil filling station](oil_filling.md) prepares the correct mixture of oils in a small vial. Position 1 of the oil wheel.
-- [Dish filling station](dish_cleaning.md) prepares the correct mixture of aqueous phase into the petri dish.  Position 1 of the aqueous wheel.
+- [Dish filling station](dish_filling.md) prepares the correct mixture of aqueous phase into the petri dish.  Position 1 of the aqueous wheel.
 - [Oil stirring station](oil_stirring.md) makes sure the oil are properly mixed with magnetic stirrers. Position 3 of the oil wheel.
 - [Droplet Placement](syringe.md) utilize a syringe to sample the oils and dispense them as droplet on surface of the aqueous phase of the petri dish . Droplet sampling and placement are done on position 3 of their respective wheel.
 - [Dish recording](dish_recording.md) simple record using a webcam the droplet behaviour following placement. Position 4 of the aqueous wheel.
