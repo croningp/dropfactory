@@ -82,10 +82,10 @@ EXAMPLE_XP_DICT = {
 
 The code is segmented by functionalities as follows:
 
-- [arduino](arduino) holds the firmware for the two arduino boards that are used to control the all platform. It is based on our [Arduino-CommandTools](https://github.com/croningp/Arduino-CommandTools) that allows to quickly and flexibly prototype Arduino based robots.
-- [pump](pump) holds the pump configurations for the 10 Tricontinent C3000 pumps used to handle liquids used for droplet experiments. That is oils and aqueous phases + waste management + cleaning liquids (acetone and water). It make use of our easy to use [pycont](https://github.com/croningp/pycont) python library.
-- [robot](robot) contains all the utilities to actuate the platform. Such as rotating the geneva wheels or precisely pumping and deliver liquid via our syringe systems. It is base on our [commanduino](https://github.com/croningp/commanduino) tool-kit that allows to quickly and flexibly control Arduino based robot through Python.
-- [tools](tools) holds various tools used to manage and organize dropfactory. The most important file is [xp_manager.py](tools/xp_manager.py) that orchestrate the parallelized operation of the robot.
+- [arduino](arduino) holds the firmware for the two arduino boards that are used to control the entirety of the platform. It is based on our [Arduino-CommandTools](https://github.com/croningp/Arduino-CommandTools) that allows to quickly and flexibly prototype Arduino based robots.
+- [pump](pump) holds the pump configurations for the 10 Tricontinent C3000 pumps used to handle liquids for droplet experiments. That is oils and aqueous phases + waste management + cleaning liquids (acetone and water). It utilises our easy to use [pycont](https://github.com/croningp/pycont) python library.
+- [robot](robot) contains all the utilities to actuate the platform, such as rotating the geneva wheels or precisely pumping and delivering liquids via our syringe systems. It is based on our [commanduino](https://github.com/croningp/commanduino) tool-kit that allows to quickly and flexibly control Arduino based robots through Python.
+- [tools](tools) holds various tools used to manage and organize dropfactory. The most important file is [xp_manager.py](tools/xp_manager.py) that orchestrates the parallelized operation of the robot.
 - [webcam](webcam) contains the camera configuration for the MICROSOFT 6CH-00002 we use to video record the droplets. It is based on our [chemobot_tools](https://github.com/croningp/chemobot_tools) library used to detect and analyse droplets.
 - [working_station](working_station) contains all the individuals working station that fulfil a single task such as cleaning the oil containers, or placing droplet with the syringe. Those stations are implemented as threads and orchestrated by the [xp_manager.py](tools/xp_manager.py) in the [tools](tools) folder.
 
