@@ -25,7 +25,7 @@ Useful links:
 
 We designed our Geneva wheel system to be modular, compact, and at the same scale as our aluminium profile system, that is by multiple of 20mm.
 
-The basic Geneva module utilize a stepper motor that rotate the driving wheel. The rotating shaft/plateau is dimensioned to have 8 steps per turn and has some fixation patterns enabling to mount different types of plateau on top of the wheel.
+The basic Geneva module utilizes a stepper motor that rotates the driving wheel. The rotating shaft/plateau is dimensioned to have 8 steps per turn and has some fixation patterns enabling to mount different types of plateau on top of the wheel.
 
 ![Geneva Module Top](../hardware/3d_parts/geneva_wheel/geneva_wheel_top.png)
 
@@ -40,7 +40,7 @@ We designed two plateaus, one for handling the oil containers and one for holdin
 
 ![Genava Wheel Top](../hardware/3d_parts/geneva_wheel/geneva_wheel_plateau_top.png)
 
-Finally, to improve the smoothness of the motion we designed a stabilizer that come into contact with both wheel and dampen possible jerk in the wheel motion. The stabilizer is made of two bearing on a sliding axis that are push against one another and contact with the side of the Geneva wheels, providing a slight damping that is enough to stabilize the motion.
+Finally, to improve the smoothness of the motion we designed a stabilizer that comes into contact with both wheel and dampens possible jerks in the wheel motion. The stabilizer is made of two bearings on a sliding axis that are pushed against one another and contact with the side of the Geneva wheels, providing a slight damping that is enough to stabilize the motion.
 
 ![Stabilizer](../hardware/3d_parts/geneva_wheel/geneva_wheel_stabilizer.png)
 
@@ -55,4 +55,4 @@ The CAD design file are available on Onshape:
 - [Geneva Wheel](https://cad.onshape.com/documents/3aeb7616c1e547bfaae38ba3/w/426b95792e7c48a8b6dd7727/e/30b62a18352c4a91b6bc9828)
 - [Geneva Wheel Stabilizer](https://cad.onshape.com/documents/5789121ee4b07256e8184139/w/a0a9bcb1b97b6c43ac68f81e/e/801990910dc3689559c2009a)
 
-The code controlling the synchronous rotation of both wheels is in the [software/robot/robot.py](../software/robot/robot.py) file, more specifically the `rotate_geneva_wheels()` function. That function first make sure nothing is in the way of the Geneva wheels, then move the driving stepper motor one full turn, which in turn produces a 1/8 rotation of the plateau. We ensure the stepper actually did one turn using a homing switch and raise an error if the stepper does not reach the switch within 30 seconds, indicating the system got stuck somehow.
+The code controlling the synchronous rotation of both wheels is in the [software/robot/robot.py](../software/robot/robot.py) file, more specifically the `rotate_geneva_wheels()` function. That function first makes sure nothing is in the way of the Geneva wheels, then moves the driving stepper motor one full turn, which in turn produces a 1/8 rotation of the plateau. We ensure thhat the stepper actually does one turn by using a homing switch and raise an error if the stepper does not reach the switch within 30 seconds, indicating that the system got stuck somehow.
