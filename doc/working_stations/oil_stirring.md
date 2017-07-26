@@ -1,6 +1,6 @@
 ## Oil Stirring Station
 
-In each oil vials, there is a small magnetic stirrer. At the stirring station (position 3 of the oil wheel) a compact magnetic stirrer ensure the oils are fully mixed before being sampled by the syringe. Such small magnetic stirrers tends to over heat, for this reason a fan has been positioned below the stirrer to regulate its temperature.
+In each oil vial, there is a small magnetic stirrer. At the stirring station (position 3 of the oil wheel) a compact magnetic stirrer ensures that the oils are fully mixed before being sampled by the syringe. Such small magnetic stirrers tend to overheat, for this reason a fan has been positioned below the stirrer to regulate its temperature.
 
 ![Oil Stirring](../../media/img/working_stations/oil_stirring.png)
 
