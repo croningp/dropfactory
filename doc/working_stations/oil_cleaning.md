@@ -1,6 +1,6 @@
 ## Oil Cleaning
 
-This station handle two tubes, one to dispense acetone and one to empty the vials content to the waste. This later needs to be dipped into the dish, we use our [modular_linear_actuator](../modular_linear_actuator.md) for that.
+This station handles two tubes, one to dispense acetone and one to empty the vials' content to the waste. This later needs to be dipped into the dish, we use our [modular_linear_actuator](../modular_linear_actuator.md) for that.
 
 ![Oil Cleaning Real](../../media/img/working_stations/oil_cleaning_station.jpg)
 
@@ -8,12 +8,12 @@ This station handle two tubes, one to dispense acetone and one to empty the vial
 
 ### Procedure
 
-An oil vial is cleaned following the following protocol:
+An oil vial is cleaned usiing the following protocol:
 
-- pump vial content to waste, 2mL largely exceeding vial volume
+- pump vial content to waste, 2mL (largely exceeding vial volume)
 - repeat 5 times:
     - add 0.7mL of acetone into vial
-    - pump vial content to waste, 2mL largely exceeding vial volume
+    - pump vial content to waste, 2mL (largely exceeding vial volume)
 
 ### Sources
 
@@ -26,4 +26,4 @@ An oil vial is cleaned following the following protocol:
 
 ### Code
 
-The code managing the oil cleaning working station is here: [software/working_station/clean_oil_parts.py](../../software/working_station/clean_oil_parts.py). This file also manage the cleaning of the syringe.
+The code managing the oil cleaning working station is here: [software/working_station/clean_oil_parts.py](../../software/working_station/clean_oil_parts.py). This file also manages the cleaning of the syringe.

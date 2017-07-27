@@ -1,6 +1,6 @@
 ## Oil Filling
 
-This station handle 4 tubes, one fro each of the 4 oils we used in most of our experiments. To ensure accurate dispensing, we lower down the dispnesing head into the vial using our [modular_linear_actuator](../modular_linear_actuator.md).
+This station handles 4 tubes, one for each of the 4 oils we used in most of our experiments. To ensure accurate dispensing, we lower down the dispnesing head into the vial using our [modular_linear_actuator](../modular_linear_actuator.md).
 
 ![Oil Filling Real](../../media/img/working_stations/oil_filling_station.jpg)
 
@@ -8,10 +8,10 @@ This station handle 4 tubes, one fro each of the 4 oils we used in most of our e
 
 ### Procedure
 
-- the head is lowered down so the tips of the dispensing needles comes into the vials.
+- the head is lowered down so the tips of the dispensing needles comes into the vials
 - the desired oils are dispensed with a given ratio to a total volume of 0.5mL
-- the head is lowered down so the tips of the dispensing needles comes into contact with the surface of the oil mixture, this is to remove any pending drops remaining on the tips of the droplets.
-- the head come back to its home position
+- the head is lowered down so the tips of the dispensing needles comes into contact with the surface of the oil mixture, this is to remove any pending drops remaining on the tips of the droplets
+- the head comes back to its home position
 
 
 ### Sources

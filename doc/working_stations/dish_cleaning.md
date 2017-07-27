@@ -1,6 +1,6 @@
 ## Dish Cleaning
 
-This station handle three tubes, one to dispense water, one to dispense acetone, and one to empty the dish content to the waste. This later needs to be dipped into the dish, we use our [modular_linear_actuator](../modular_linear_actuator.md) for that.
+This station handles three tubes, one to dispense water, one to dispense acetone, and one to empty the dish content to the waste. This later needs to be dipped into the dish, we use our [modular_linear_actuator](../modular_linear_actuator.md) for that.
 
 ![Dish Cleaning Real](../../media/img/working_stations/dish_cleaning_station.jpg)
 
@@ -8,9 +8,9 @@ This station handle three tubes, one to dispense water, one to dispense acetone,
 
 ### Procedure
 
-A petri dish is cleaned following the following protocol:
+A petri dish is cleaned using the following protocol:
 
-- empty petri dish of experiment content
+- empty petri dish of previous experiment's content
 - add 4.5mL of acetone into petri dish
 - empty petri dish
 - add 4.5mL of water into petri dish

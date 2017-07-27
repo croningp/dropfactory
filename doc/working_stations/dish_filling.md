@@ -19,4 +19,4 @@ In most of our experiments we used only one aqueous phase of TTAB at PH 13.
 
 The code managing the dish filling working station is here: [software/working_station/fill_petri_dish.py](../../software/working_station/fill_petri_dish.py).
 
-It simply normalizes the quantity given in the experiment description file (see [software](../../software)) and fill the dish with the given ratios of each aqueous phase given their associated pump and for the defined volume.
+It simply normalizes the quantity given in the experiment description file (see [software](../../software)) and fills the dish with the given ratios of each aqueous phase given their associated pump and for the defined volume.
