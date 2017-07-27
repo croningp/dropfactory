@@ -48,6 +48,8 @@ This repository contains only the hardware and software used to build and operat
 
 Design and code by [Jonathan Grizou](http://jgrizou.com/) while working in the CroninGroup.
 
+Many thanks to Vasilis Duros and Graham Keenan for proofreading the documentation. 
+
 ## License
 
 [![LGPL V3](http://www.gnu.org/graphics/lgplv3-147x51.png)](http://www.gnu.org/licenses/lgpl-3.0.en.html)
