@@ -32,10 +32,11 @@ MAX_WASTE_VOLUME = 10000  # 10L in ml
 WASTE_CORRECTION = 0.9  # waste correction
 TIMEOUT_WASTE = 300
 
-EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
+# EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk']  # must be a list
 # EMAILS_TO_NOTIFY = ['jonathan.grizou@glasgow.ac.uk', 'l.points.1@research.gla.ac.uk']  # must be a list
+EMAILS_TO_NOTIFY = ['l.points.1@research.gla.ac.uk']  # must be a list
 
-WATCHDOG_TIMEOUT = 600
+WATCHDOG_TIMEOUT = 1000
 
 
 def save_to_json(data, filename):
@@ -54,7 +55,7 @@ def send_email_notification(subject, body):
 
 
 def send_watchdog_email():
-    send_email_notification('[Dropfactory] Watchdog timout', 'Watchdog raised, something might be wrong with dropfactory')
+    send_email_notification('[Dropfactory] Watchdog timeout', 'Watchdog raised, something might be wrong with dropfactory')
 
 
 def timeout_editor_input(timeout=20, sleep_time=0.1, editor='gedit'):
