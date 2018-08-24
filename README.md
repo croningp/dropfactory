@@ -32,6 +32,12 @@ This design allows to move the oil vials and the petri dish at specialized worki
 
 Dropfactory enables to record 1 experiment of 1min30sec every 1min50sec, gaining a factor of 6 versus our previous sequential platform. Thanks to its robustness, the platform was consistently running for months in the lab collecting more than 30,000 droplet experiments.
 
+Below is a video showing the operation of the parallelized droplet robot with details of each working station. The first ca. 45 seconds gives a general overview of the working platform, whilst the remainder of the video shows each working station in operation in detail.
+
+![Dropfactory_Station](media/gif/dropfactory.gif)
+
+[[Dropfactory Station Video]](https://youtu.be/bY5OoRBJkf0)
+
 ## Repository Organization
 
 A detailed README is available for all folders:
