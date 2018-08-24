@@ -38,7 +38,7 @@ Below is a speed up video showing the operation of the parallelized droplet robo
 
 Feel free to watch the [real time video](https://youtu.be/bY5OoRBJkf0) and [a playlist with all indivual station](https://www.youtube.com/playlist?list=PLBppiRCztuKoLdw_cc4hVg8oFJaySeC6U).
 
-## Repository Organization
+## Documentation
 
 A detailed README is available for all folders:
 
