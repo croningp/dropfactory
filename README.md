@@ -4,7 +4,7 @@
 
 Dropfactory is a robotic platform able to perform and record oil-in-water droplet experiments at a large scale.
 
-![Dropfactory](media/gif/dropfactory.gif)
+[![Dropfactory](media/gif/dropfactory.gif)](https://www.youtube.com/watch?v=o8ZTkoZ-j6M)
 
 [[Dropfactory Cycle Video]](https://www.youtube.com/watch?v=o8ZTkoZ-j6M)
 
