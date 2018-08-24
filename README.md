@@ -46,10 +46,10 @@ This repository contains only the hardware and software used to build and operat
 
 ## Author
 
-Design and code by [Jonathan Grizou](http://jgrizou.com/) while working in the CroninGroup.
+Design and code by [Jonathan Grizou](http://jgrizou.com/) while working in the [CroninGroup](http://www.chem.gla.ac.uk/cronin/).
 
-Many thanks to Vasilis Duros and Graham Keenan for proofreading the documentation. 
+Thanks to Vasilis Duros and Graham Keenan for proofreading the documentation.
 
 ## License
 
-[![LGPL V3](http://www.gnu.org/graphics/lgplv3-147x51.png)](http://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![LGPL V3](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl.html)
