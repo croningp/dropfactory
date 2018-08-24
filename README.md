@@ -12,7 +12,7 @@ Dropfactory is capable of running, in total autonomy, an arbitrary droplet exper
 
 Here is an example of droplet behaviors:
 
-![Droplets](media/gif/droplets.gif)
+[![Droplets](media/gif/droplets.gif)](https://www.youtube.com/watch?v=ysEswhRS5CQ)
 
 [[Droplet Compilation Video]](https://www.youtube.com/watch?v=ysEswhRS5CQ)
 
@@ -37,6 +37,8 @@ Below is a video showing the operation of the parallelized droplet robot with de
 ![Dropfactory_Station](media/gif/dropfactory.gif)
 
 [[Dropfactory Station Video]](https://youtu.be/bY5OoRBJkf0)
+
+You can find a playlist with all indivual station at this link: https://www.youtube.com/playlist?list=PLBppiRCztuKoLdw_cc4hVg8oFJaySeC6U
 
 ## Repository Organization
 
