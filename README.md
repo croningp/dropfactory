@@ -1,4 +1,4 @@
-> This repository is associated to the paper "A soft matter discovery robot driven by child-like curiosity" by Jonathan Grizou, Laurie J. Points, Abhishek Sharma and Leroy Cronin. A draft version of the paper is [available on Chemarxiv](https://chemrxiv.org/articles/A_Closed_Loop_Discovery_Robot_Driven_by_a_Curiosity_Algorithm_Discovers_Proto-Cells_That_Show_Complex_and_Emergent_Behaviours/6958334) and a brief overview of the scientific approach can be found at https://croningp.github.io/tutorial_icdl_epirob_2017/.
+> This repository is associated to the paper "Exploration of Self-Propelling Droplets Using a Curiosity Driven Robotic Assistant. Grizou, J., Points, L. J., Sharma, A. & Cronin, L. (2019). [[arXiv]](https://arxiv.org/abs/1904.12635) [[pdf]](https://arxiv.org/pdf/1904.12635.pdf). An overview of the scientific approach can be found at https://jgrizou.com/projects/chemobot.
 
 # Dropfactory
 
