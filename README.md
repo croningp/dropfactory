@@ -1,4 +1,6 @@
-> This repository is associated to the paper "Exploration of Self-Propelling Droplets Using a Curiosity Driven Robotic Assistant. Grizou, J., Points, L. J., Sharma, A. & Cronin, L. (2019). [[arXiv]](https://arxiv.org/abs/1904.12635) [[pdf]](https://arxiv.org/pdf/1904.12635.pdf). An overview of the scientific approach can be found at https://jgrizou.com/projects/chemobot.
+> This repository is associated to the paper "A curious formulation robot enables the discovery of a novel protocell behavior" by Grizou, J., Points, L. J., Sharma, A. & Cronin, L. (2020) [[PDF in open Access @ Science Advances]](https://advances.sciencemag.org/content/6/5/eaay4237). An overview of the scientific approach can be found at https://jgrizou.com/projects/chemobot.
+
+
 
 # Dropfactory
 
